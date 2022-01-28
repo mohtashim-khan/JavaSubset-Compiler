@@ -1,3 +1,3 @@
 # CPSC 411 Compiler
 
-Compiler Project
+Compiler Project - Hello World
