@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb  1 19:29:15 2022
+# Make data base, printed on Wed Feb  2 13:37:50 2022
 
 # Variables
 
@@ -14,11 +14,11 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 GDK_BACKEND = x11
 # environment
 LC_ALL = C
-# makefile (from 'makefile', line 25)
-COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
+# makefile (from 'makefile', line 30)
+COMPILE_FLAGS = -std=c++11 -Wall -Wextra -O2
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/mohtashim/.gtkrc:/home/mohtashim/.config/gtkrc
-# makefile (from 'makefile', line 4)
+# makefile (from 'makefile', line 8)
 SRC_PATH = ./src
 # environment
 VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-4b5fa563-d90f-4e4e-8864-b811455dfb6f.sock
@@ -28,7 +28,7 @@ KONSOLE_DBUS_SERVICE = :1.108
 VSCODE_CWD = /home/mohtashim/CPSC411/cpsc-411-compiler
 # environment
 WINDOWID = 4194311
-# makefile (from 'makefile', line 28)
+# makefile (from 'makefile', line 33)
 LIBS = 
 # default
 MAKE_COMMAND := make
@@ -42,7 +42,6 @@ KONSOLE_VERSION = 201203
 VSCODE_HANDLES_UNCAUGHT_ERRORS = true
 # default
 .VARIABLES := 
- 
 # environment
 PWD = /home/mohtashim/CPSC411/cpsc-411-compiler
 # automatic
@@ -115,6 +114,8 @@ VSCODE_PID = 17781
 XDG_SESSION_TYPE = x11
 # automatic
 ?D = $(patsubst %/,%,$(dir $?))
+# makefile (from 'makefile', line 14)
+BIN_NAME_DEBUG = output_debug
 # environment
 SESSION_MANAGER = local/mohtashim-Swift-SF314-42:@/tmp/.ICE-unix/4375,unix/mohtashim-Swift-SF314-42:/tmp/.ICE-unix/4375
 # automatic
@@ -155,9 +156,9 @@ LANGUAGE = en_CA:en
 ^F = $(notdir $^)
 # environment
 VSCODE_LOG_NATIVE = false
-# makefile (from 'makefile', line 5)
-BUILD_PATH = build
-# makefile (from 'makefile', line 6)
+# makefile (from 'makefile', line 9)
+BUILD_PATH = objectFiles
+# makefile (from 'makefile', line 10)
 BIN_PATH = $(BUILD_PATH)/bin
 # environment
 LESSCLOSE = /usr/bin/lesspipe %s %s
@@ -181,13 +182,13 @@ XDG_SEAT_PATH = /org/freedesktop/DisplayManager/Seat0
 DESKTOP_SESSION = plasma
 # environment
 ORIGINAL_XDG_CURRENT_DESKTOP = KDE
-# makefile (from 'makefile', line 12)
+# makefile (from 'makefile', line 17)
 SRC_EXT = cpp
-# makefile (from 'makefile', line 20)
+# makefile (from 'makefile', line 25)
 OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 # 'override' directive
 GNUMAKEFLAGS := 
-# makefile (from 'makefile', line 9)
+# makefile (from 'makefile', line 13)
 BIN_NAME = output
 # environment
 QT_SCREEN_SCALE_FACTORS = eDP=1.25;HDMI-A-0=1.25;DisplayPort-0=1.25;
@@ -245,7 +246,7 @@ XCURSOR_SIZE = 24
 .RECIPEPREFIX := 
 # automatic
 <F = $(notdir $<)
-# makefile (from 'makefile', line 22)
+# makefile (from 'makefile', line 27)
 DEPS = $(OBJECTS:.o=.d)
 # default
 SUFFIXES := 
@@ -255,20 +256,22 @@ QT_AUTO_SCREEN_SCALE_FACTOR = 0
 VSCODE_CLI = 1
 # environment
 ELECTRON_NO_ATTACH_CONSOLE = 1
+# makefile (from 'makefile', line 31)
+DEBUG_FLAGS = -std=c++11 -Wall -Wextra -g
 # environment
 SHELL_SESSION_ID = 5e07285a1c59433682a3af865396f7b6
 # environment
 KDE_SESSION_VERSION = 5
 # default
 .FEATURES := target-specific order-only second-expansion else-if shortest-stem undefine oneshell nocomment grouped-target extra-prereqs archives jobserver output-sync check-symlink load
-# makefile (from 'makefile', line 1)
+# makefile (from 'makefile', line 5)
 CXX = g++
-# makefile (from 'makefile', line 17)
+# makefile (from 'makefile', line 22)
 SOURCES = $(shell find $(SRC_PATH) -name '*.$(SRC_EXT)' | sort -k 1nr | cut -f2-)
 # environment
 KDE_FULL_SESSION = true
 # variable set hash-table stats:
-# Load=128/1024=12%, Rehash=0, Collisions=13/199=7%
+# Load=130/1024=13%, Rehash=0, Collisions=17/232=7%
 
 # Pattern-specific Variable Values
 
@@ -276,49 +279,59 @@ KDE_FULL_SESSION = true
 
 # Directories
 
-# src (device 66309, inode 3842174): 5 files, no impossibilities so far.
+# src (device 66309, inode 3842174): 6 files, no impossibilities so far.
 # . (device 66309, inode 3745567): 8 files, no impossibilities.
 
-# 13 files, no impossibilities in 2 directories.
+# 14 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
-build/%.o: src/%.cpp
-#  recipe to execute (from 'makefile', line 69):
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+objectFiles/%.o: src/%.cpp
+#  recipe to execute (from 'makefile', line 93):
+	$(CXX) $(CXXFLAGS) -MP -MMD -c $< -o $@
 
 # 1 implicit rules, 0 (0.0%) terminal.
 # Files
 
-build/bin/output: build/main.o build/message.o
-#  Implicit rule search has not been done.
-#  File does not exist.
-#  File has been updated.
-#  Needs to be updated (-q is set).
-# variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
-#  recipe to execute (from 'makefile', line 60):
-	$(CXX) $(OBJECTS) -o $@ ${LIBS}
-
-default_target: release
+default_target: debug
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
+
+ 
+# makefile (from 'makefile', line 46)
+debug: CXXFLAGS :=  -std=c++11 -Wall -Wextra -g 
+debug: dirs
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
+#  File does not exist.
+#  File has not been updated.
+# variable set hash-table stats:
+# Load=1/32=3%, Rehash=0, Collisions=0/4=0%
+#  recipe to execute (from 'makefile', line 48):
+	@$(MAKE) debug_build
 
 dirs:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 40):
+#  recipe to execute (from 'makefile', line 53):
 	@mkdir -p $(dir $(OBJECTS))
 	@mkdir -p $(BIN_PATH)
 
 # Not a target:
+objectFiles/main.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
 src/main.cpp:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-01 19:27:58.735
+#  Last modified 2022-02-02 11:37:11.819005939
 #  File has been updated.
 #  Successfully updated.
 
@@ -327,15 +340,20 @@ clean:
 #  Implicit rule search has not been done.
 #  File does not exist.
 #  File has not been updated.
-#  recipe to execute (from 'makefile', line 45):
-	@echo "Deleting $(BIN_NAME) symlink"
+#  recipe to execute (from 'makefile', line 58):
 	@$(RM) $(BIN_NAME)
-	@echo "Deleting directories"
+	@$(RM) $(BIN_NAME_DEBUG)
 	@$(RM) -r $(BUILD_PATH)
 	@$(RM) -r $(BIN_PATH)
 
 # Not a target:
-build/message.o:
+objectFiles/message.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+# Not a target:
+objectFiles/test.o:
 #  Implicit rule search has not been done.
 #  Modification time never checked.
 #  File has not been updated.
@@ -346,7 +364,14 @@ build/message.o:
 #  Modification time never checked.
 #  File has not been updated.
 
-all: build/bin/output
+objectFiles/bin/output_debug: objectFiles/main.o objectFiles/message.o objectFiles/test.o
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 84):
+	$(CXX) $(OBJECTS) -o $@ ${LIBS}
+
+all: objectFiles/bin/output
 #  Phony target (prerequisite of .PHONY).
 #  Command line target.
 #  Implicit rule search has not been done.
@@ -354,35 +379,43 @@ all: build/bin/output
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # variable set hash-table stats:
-# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
-#  recipe to execute (from 'makefile', line 54):
-	@echo "Making symlink: $(BIN_NAME) -> $<"
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
+#  recipe to execute (from 'makefile', line 66):
 	@$(RM) $(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
-# Not a target:
-build/main.d:
-#  Implicit rule search has been done.
+debug_build: objectFiles/bin/output_debug
+#  Phony target (prerequisite of .PHONY).
+#  Implicit rule search has not been done.
 #  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
-
-# Not a target:
-build/message.d:
-#  Implicit rule search has been done.
-#  File does not exist.
-#  File has been updated.
-#  Failed to be updated.
+#  File has not been updated.
+#  recipe to execute (from 'makefile', line 79):
+	@$(RM) $(BIN_NAME_DEBUG)
+	@ln -s $(BIN_PATH)/$(BIN_NAME_DEBUG) $(BIN_NAME_DEBUG)
 
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-01 19:28:13.730532838
+#  Last modified 2022-02-02 13:35:55.699749081
 #  File has been updated.
 #  Successfully updated.
 
-# makefile (from 'makefile', line 34)
-release: CXXFLAGS :=  -std=c++11 -Wall -Wextra -g
+# Not a target:
+objectFiles/message.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# Not a target:
+objectFiles/test.d:
+#  Implicit rule search has been done.
+#  File does not exist.
+#  File has been updated.
+#  Failed to be updated.
+
+# makefile (from 'makefile', line 40)
+release: CXXFLAGS :=  -std=c++11 -Wall -Wextra -O2 
 release: dirs
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
@@ -390,17 +423,22 @@ release: dirs
 #  File has not been updated.
 # variable set hash-table stats:
 # Load=1/32=3%, Rehash=0, Collisions=0/4=0%
-#  recipe to execute (from 'makefile', line 36):
+#  recipe to execute (from 'makefile', line 42):
 	@$(MAKE) all
 
-build/main.o: src/main.cpp
+.PHONY: default_target release debug dirs clean all debug_build
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
+
+objectFiles/main.o: src/main.cpp
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'main'
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
 # automatic
-# @ := build/main.o
+# @ := objectFiles/main.o
 # automatic
 # * := main
 # automatic
@@ -416,30 +454,34 @@ build/main.o: src/main.cpp
 # automatic
 # | := 
 # variable set hash-table stats:
- 
-# Load=8/32=25%, Rehash=0, Collisions=1/16=6%
-#  recipe to execute (from 'makefile', line 69):
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+# Load=8/32=25%, Rehash=0, Collisions=1/15=7%
+#  recipe to execute (from 'makefile', line 93):
+	$(CXX) $(CXXFLAGS) -MP -MMD -c $< -o $@
 
-.PHONY: default_target release dirs clean all
+objectFiles/bin/output: objectFiles/main.o objectFiles/message.o objectFiles/test.o
 #  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
+#  File does not exist.
+#  File has been updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/5=0%
+#  recipe to execute (from 'makefile', line 71):
+	$(CXX) $(OBJECTS) -o $@ ${LIBS}
 
 # files hash-table stats:
-# Load=15/1024=1%, Rehash=0, Collisions=0/51=0%
+# Load=20/1024=2%, Rehash=0, Collisions=0/74=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 30 / storage = 291 B / avg = 9 B
-# current buf: size = 8162 B / used = 291 B / count = 30 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 36 / storage = 421 B / avg = 11 B
+# current buf: size = 8162 B / used = 421 B / count = 36 / avg = 11 B
 
-# strcache performance: lookups = 65 / hit rate = 53%
+# strcache performance: lookups = 93 / hit rate = 61%
 # hash-table stats:
-# Load=30/8192=0%, Rehash=0, Collisions=0/65=0%
-# Finished Make data base on Tue Feb  1 19:29:15 2022
+# Load=36/8192=0%, Rehash=0, Collisions=0/93=0%
+# Finished Make data base on Wed Feb  2 13:37:50 2022
 
  

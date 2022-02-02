@@ -1,2 +1,7 @@
-/build
+/objectFiles
 output
+output_debug
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json

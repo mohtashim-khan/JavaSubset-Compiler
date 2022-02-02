@@ -1,7 +1,10 @@
 #include<iostream>
-#include<algorithm>
-#include <vector>
 
 
 int helloWorld();
 void test();
+
+enum class Token
+{
+
+};

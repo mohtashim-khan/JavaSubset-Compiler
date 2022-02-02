@@ -1,3 +1,5 @@
 # CPSC 411 Compiler
 
-Compiler Project - Hello World (check remote) - test passwordless
+Run Instructions:
+1) use makefile to build project using the command "make release"
+3) use shell command "./output args" to run with arguments.
