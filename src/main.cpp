@@ -4,8 +4,7 @@ using namespace std;
 int main()
 {
     helloWorld();
+    test();
     return 0;
-
-    vector<int> myvec;
 
 }

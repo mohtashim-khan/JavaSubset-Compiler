@@ -1,9 +1,13 @@
 make --dry-run --keep-going --print-directory
 make: Entering directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+ 
 mkdir -p build/ build/
 mkdir -p build/bin
 make all
 make[1]: Entering directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+g++  -std=c++11 -Wall -Wextra -g  -MP -MMD -c src/main.cpp -o build/main.o
+g++  -std=c++11 -Wall -Wextra -g  -MP -MMD -c src/message.cpp -o build/message.o
+g++ build/main.o build/message.o -o build/bin/output 
 echo "Making symlink: output -> build/bin/output"
 rm -f output
 ln -s build/bin/output output

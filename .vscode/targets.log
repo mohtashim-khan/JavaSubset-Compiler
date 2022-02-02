@@ -6,7 +6,7 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # This is free software: you are free to change and redistribute it.
 # There is NO WARRANTY, to the extent permitted by law.
 
-# Make data base, printed on Tue Feb  1 18:22:17 2022
+# Make data base, printed on Tue Feb  1 19:29:15 2022
 
 # Variables
 
@@ -19,7 +19,7 @@ COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
 # environment
 GTK_RC_FILES = /etc/gtk/gtkrc:/home/mohtashim/.gtkrc:/home/mohtashim/.config/gtkrc
 # makefile (from 'makefile', line 4)
-SRC_PATH = .
+SRC_PATH = ./src
 # environment
 VSCODE_IPC_HOOK_EXTHOST = /run/user/1000/vscode-ipc-4b5fa563-d90f-4e4e-8864-b811455dfb6f.sock
 # environment
@@ -103,8 +103,8 @@ XCURSOR_THEME = breeze_cursors
 VSCODE_CRASH_REPORTER_START_OPTIONS = {"companyName":"Microsoft","productName":"VSCode","submitURL":"appcenter://code?aid=fba07a4d-84bd-4fc8-a125-9640fc8ce171&uid=169dadbc-8c09-4e36-be9e-89cceb5b3b28&iid=169dadbc-8c09-4e36-be9e-89cceb5b3b28&sid=169dadbc-8c09-4e36-be9e-89cceb5b3b28","uploadToServer":true}
 # environment
 XDG_SESSION_DESKTOP = KDE
-# makefile (from 'build/message.d', line 1)
-MAKEFILE_LIST := makefile build/main.d build/message.d
+# makefile (from 'makefile', line 1)
+MAKEFILE_LIST := makefile
 # automatic
 @F = $(notdir $@)
 # environment
@@ -268,7 +268,7 @@ SOURCES = $(shell find $(SRC_PATH) -name '*.$(SRC_EXT)' | sort -k 1nr | cut -f2-
 # environment
 KDE_FULL_SESSION = true
 # variable set hash-table stats:
-# Load=128/1024=12%, Rehash=0, Collisions=13/207=6%
+# Load=128/1024=12%, Rehash=0, Collisions=13/199=7%
 
 # Pattern-specific Variable Values
 
@@ -276,13 +276,14 @@ KDE_FULL_SESSION = true
 
 # Directories
 
-# . (device 66309, inode 3745567): 11 files, no impossibilities.
+# src (device 66309, inode 3842174): 5 files, no impossibilities so far.
+# . (device 66309, inode 3745567): 8 files, no impossibilities.
 
-# 11 files, no impossibilities in 1 directories.
+# 13 files, no impossibilities in 2 directories.
 
 # Implicit Rules
 
-build/%.o: %.cpp
+build/%.o: src/%.cpp
 #  recipe to execute (from 'makefile', line 69):
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 
@@ -291,9 +292,11 @@ build/%.o: %.cpp
 
 build/bin/output: build/main.o build/message.o
 #  Implicit rule search has not been done.
-#  Last modified 2022-02-01 18:21:58.775797503
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# variable set hash-table stats:
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
 #  recipe to execute (from 'makefile', line 60):
 	$(CXX) $(OBJECTS) -o $@ ${LIBS}
 
@@ -312,6 +315,13 @@ dirs:
 	@mkdir -p $(dir $(OBJECTS))
 	@mkdir -p $(BIN_PATH)
 
+# Not a target:
+src/main.cpp:
+#  Implicit rule search has been done.
+#  Last modified 2022-02-01 19:27:58.735
+#  File has been updated.
+#  Successfully updated.
+
 clean:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
@@ -324,21 +334,11 @@ clean:
 	@$(RM) -r $(BUILD_PATH)
 	@$(RM) -r $(BIN_PATH)
 
-build/message.o: message.cpp message.cpp header.h
-#  Implicit rule search has been done.
-#  Implicit/static pattern stem: 'message'
-#  Last modified 2022-02-01 18:21:58.691793241
-#  File has been updated.
-#  Successfully updated.
-#  recipe to execute (from 'makefile', line 69):
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
-
 # Not a target:
-message.cpp:
-#  Implicit rule search has been done.
-#  Last modified 2022-02-01 18:17:07.655629276
-#  File has been updated.
-#  Successfully updated.
+build/message.o:
+#  Implicit rule search has not been done.
+#  Modification time never checked.
+#  File has not been updated.
 
 # Not a target:
 .DEFAULT:
@@ -350,62 +350,37 @@ all: build/bin/output
 #  Phony target (prerequisite of .PHONY).
 #  Command line target.
 #  Implicit rule search has not been done.
-#  Implicit/static pattern stem: ''
 #  File does not exist.
 #  File has been updated.
 #  Needs to be updated (-q is set).
-# automatic
-# @ := all
-# automatic
-# * := 
-# automatic
-# < := build/bin/output
-# automatic
-# + := build/bin/output
-# automatic
-# % := 
-# automatic
-# ^ := build/bin/output
-# automatic
-# ? := build/bin/output
-# automatic
-# | := 
 # variable set hash-table stats:
-# Load=8/32=25%, Rehash=0, Collisions=1/19=5%
+# Load=0/32=0%, Rehash=0, Collisions=0/6=0%
 #  recipe to execute (from 'makefile', line 54):
 	@echo "Making symlink: $(BIN_NAME) -> $<"
 	@$(RM) $(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
 # Not a target:
-main.cpp:
-#  Implicit rule search has been done.
-#  Last modified 2022-02-01 17:21:38.859595257
-#  File has been updated.
-#  Successfully updated.
-
-# Not a target:
 build/main.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-01 18:21:58.479782484
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Failed to be updated.
 
 # Not a target:
 build/message.d:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-01 18:21:58.683792835
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Failed to be updated.
 
 # Not a target:
 makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-02-01 18:21:53.855547621
+#  Last modified 2022-02-01 19:28:13.730532838
 #  File has been updated.
 #  Successfully updated.
 
- 
 # makefile (from 'makefile', line 34)
 release: CXXFLAGS :=  -std=c++11 -Wall -Wextra -g
 release: dirs
@@ -418,18 +393,31 @@ release: dirs
 #  recipe to execute (from 'makefile', line 36):
 	@$(MAKE) all
 
-# Not a target:
-.SUFFIXES:
-#  Implicit rule search has not been done.
-#  Modification time never checked.
-#  File has not been updated.
-
-build/main.o: main.cpp main.cpp header.h
+build/main.o: src/main.cpp
 #  Implicit rule search has been done.
 #  Implicit/static pattern stem: 'main'
-#  Last modified 2022-02-01 18:21:58.48778289
+#  File does not exist.
 #  File has been updated.
-#  Successfully updated.
+#  Needs to be updated (-q is set).
+# automatic
+# @ := build/main.o
+# automatic
+# * := main
+# automatic
+# < := src/main.cpp
+# automatic
+# + := src/main.cpp
+# automatic
+# % := 
+# automatic
+# ^ := src/main.cpp
+# automatic
+# ? := src/main.cpp
+# automatic
+# | := 
+# variable set hash-table stats:
+ 
+# Load=8/32=25%, Rehash=0, Collisions=1/16=6%
 #  recipe to execute (from 'makefile', line 69):
 	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
 
@@ -438,26 +426,20 @@ build/main.o: main.cpp main.cpp header.h
 #  Modification time never checked.
 #  File has not been updated.
 
-header.h:
-#  Implicit rule search has been done.
-#  Last modified 2022-02-01 17:21:33.319
-#  File has been updated.
-#  Successfully updated.
-
 # files hash-table stats:
-# Load=17/1024=2%, Rehash=0, Collisions=0/63=0%
+# Load=15/1024=1%, Rehash=0, Collisions=0/51=0%
 # VPATH Search Paths
 
 # No 'vpath' search paths.
 
 # No general ('VPATH' variable) search path.
 
-# strcache buffers: 1 (0) / strings = 30 / storage = 280 B / avg = 9 B
-# current buf: size = 8162 B / used = 280 B / count = 30 / avg = 9 B
+# strcache buffers: 1 (0) / strings = 30 / storage = 291 B / avg = 9 B
+# current buf: size = 8162 B / used = 291 B / count = 30 / avg = 9 B
 
-# strcache performance: lookups = 78 / hit rate = 61%
+# strcache performance: lookups = 65 / hit rate = 53%
 # hash-table stats:
-# Load=30/8192=0%, Rehash=0, Collisions=0/78=0%
-# Finished Make data base on Tue Feb  1 18:22:17 2022
+# Load=30/8192=0%, Rehash=0, Collisions=0/65=0%
+# Finished Make data base on Tue Feb  1 19:29:15 2022
 
  

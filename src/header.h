@@ -4,3 +4,4 @@
 
 
 int helloWorld();
+void test();

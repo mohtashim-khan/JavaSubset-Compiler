@@ -1,7 +1,7 @@
 CXX ?= g++
 
 # path #
-SRC_PATH = .
+SRC_PATH = ./src
 BUILD_PATH = build
 BIN_PATH = $(BUILD_PATH)/bin
 
