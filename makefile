@@ -1,12 +1,17 @@
+# This makefile was inspired by a makefile tutorial created by the github user mauriciopoppe.
+# Link to tutorial: https://www.mauriciopoppe.com/notes/computer-science/operating-systems/bin/make/
+# The original can be found in the following repository: https://gist.github.com/mauriciopoppe/de8908f67923091982c8c8136a063ea6
+
 CXX ?= g++
 
 # path #
 SRC_PATH = ./src
-BUILD_PATH = build
+BUILD_PATH = objectFiles
 BIN_PATH = $(BUILD_PATH)/bin
 
 # executable # 
 BIN_NAME = output
+BIN_NAME_DEBUG = output_debug
 
 # extensions #
 SRC_EXT = cpp
@@ -21,19 +26,28 @@ OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 # Set the dependency files that will be used to add header dependencies
 DEPS = $(OBJECTS:.o=.d)
 
-# flags #
-COMPILE_FLAGS = -std=c++11 -Wall -Wextra -g
-## INCLUDES = -I include/ -I /usr/local/include
+# flags for both Debug and Optimized Compilation
+COMPILE_FLAGS = -std=c++11 -Wall -Wextra -O2
+DEBUG_FLAGS = -std=c++11 -Wall -Wextra -g
 # Space-separated pkg-config libraries used by this project
 LIBS =
 
+#Set default make to debug
 .PHONY: default_target
-default_target: release
+default_target: debug
 
+#release settings and flags
 .PHONY: release
-release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS)
+release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) #set Optimization Flags
 release: dirs
 	@$(MAKE) all
+
+#debug settings and flags
+.PHONY: debug
+debug: export CXXFLAGS := $(CXXFLAGS) $(DEBUG_FLAGS) #set Debug Flags
+debug: dirs
+	@$(MAKE) debug_build
+
 
 .PHONY: dirs
 dirs:
@@ -42,16 +56,14 @@ dirs:
 
 .PHONY: clean
 clean:
-	@echo "Deleting $(BIN_NAME) symlink"
 	@$(RM) $(BIN_NAME)
-	@echo "Deleting directories"
+	@$(RM) $(BIN_NAME_DEBUG)
 	@$(RM) -r $(BUILD_PATH)
 	@$(RM) -r $(BIN_PATH)
 
 # checks the executable and symlinks to the output
 .PHONY: all
 all: $(BIN_PATH)/$(BIN_NAME)
-	@echo "Making symlink: $(BIN_NAME) -> $<"
 	@$(RM) $(BIN_NAME)
 	@ln -s $(BIN_PATH)/$(BIN_NAME) $(BIN_NAME)
 
@@ -62,8 +74,21 @@ $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
 # Add dependency files, if they exist
 -include $(DEPS)
 
+# Similar to release but added Debug flags instead of -O2 optimization
+.PHONY: debug_build
+debug_build: $(BIN_PATH)/$(BIN_NAME_DEBUG)
+	@$(RM) $(BIN_NAME_DEBUG)
+	@ln -s $(BIN_PATH)/$(BIN_NAME_DEBUG) $(BIN_NAME_DEBUG)
+
+# Creation of the executable
+$(BIN_PATH)/$(BIN_NAME_DEBUG): $(OBJECTS)
+	$(CXX) $(OBJECTS) -o $@ ${LIBS}
+
+# Add dependency files, if they exist
+-include $(DEPS)
+
 # Source file rules
 # After the first compilation they will be joined with the rules from the
 # dependency files to provide header dependencies
 $(BUILD_PATH)/%.o: $(SRC_PATH)/%.$(SRC_EXT)
-	$(CXX) $(CXXFLAGS) $(INCLUDES) -MP -MMD -c $< -o $@
+	$(CXX) $(CXXFLAGS) -MP -MMD -c $< -o $@
