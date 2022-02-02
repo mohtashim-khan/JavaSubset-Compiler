@@ -1,0 +1,12 @@
+make --dry-run --keep-going --print-directory
+make: Entering directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+mkdir -p build/ build/
+mkdir -p build/bin
+make all
+make[1]: Entering directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+echo "Making symlink: output -> build/bin/output"
+rm -f output
+ln -s build/bin/output output
+make[1]: Leaving directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+make: Leaving directory '/home/mohtashim/CPSC411/cpsc-411-compiler'
+ 
