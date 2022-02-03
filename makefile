@@ -4,33 +4,33 @@
 
 CXX ?= g++
 
-# path #
+# path
 SRC_PATH = ./src
 BUILD_PATH = objectFiles
 BIN_PATH = $(BUILD_PATH)/bin
 
-# executable # 
+# executables, either debug or release
 BIN_NAME = output
 BIN_NAME_DEBUG = output_debug
 
-# extensions #
+# extensions
 SRC_EXT = cpp
 
-# code lists #
 # Find all source files in the source directory, sorted by
 # most recently modified
 SOURCES = $(shell find $(SRC_PATH) -name '*.$(SRC_EXT)' | sort -k 1nr | cut -f2-)
+
 # Set the object file names, with the source directory stripped
 # from the path, and the build path prepended in its place
 OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
+
 # Set the dependency files that will be used to add header dependencies
 DEPS = $(OBJECTS:.o=.d)
 
 # flags for both Debug and Optimized Compilation
 COMPILE_FLAGS = -std=c++11 -Wall -Wextra -O2
 DEBUG_FLAGS = -std=c++11 -Wall -Wextra -g
-# Space-separated pkg-config libraries used by this project
-LIBS =
+
 
 #Set default make to debug
 .PHONY: default_target
@@ -54,6 +54,7 @@ dirs:
 	@mkdir -p $(dir $(OBJECTS))
 	@mkdir -p $(BIN_PATH)
 
+# Remove object directories and output files
 .PHONY: clean
 clean:
 	@$(RM) $(BIN_NAME)
@@ -69,7 +70,7 @@ all: $(BIN_PATH)/$(BIN_NAME)
 
 # Creation of the executable
 $(BIN_PATH)/$(BIN_NAME): $(OBJECTS)
-	$(CXX) $(OBJECTS) -o $@ ${LIBS}
+	$(CXX) $(OBJECTS) -o $@ 
 
 # Add dependency files, if they exist
 -include $(DEPS)

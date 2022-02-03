@@ -1,8 +1,9 @@
-#include<iostream>
+#include <iostream>
+#include <string>
+#include <cerrno>
+#include <fstream>
 
-
-int helloWorld();
-void test();
+int scanner(std::string s);
 
 enum class Token
 {
