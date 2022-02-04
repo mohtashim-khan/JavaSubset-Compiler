@@ -1,3 +1,6 @@
+//This file was inspired and based on the tutorial made by my TA Shankar. 
+//The source code for the tutorial can be found here : https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
+
 #ifndef HEADER_H
 #define HEADER_H
 
