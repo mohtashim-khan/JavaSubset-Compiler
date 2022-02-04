@@ -41,7 +41,7 @@ int main(int argc, char *argv[])
 
         if(lexer->getWarnings() > 10)
         {
-            std::cerr << "TOO MANY WARNINGS, PROGRAM EXITING";
+            std::cerr << "TOO MANY WARNINGS, PROGRAM EXITING \n";
             return EXIT_FAILURE;
         }
     }
