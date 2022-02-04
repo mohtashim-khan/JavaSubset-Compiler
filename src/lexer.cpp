@@ -174,6 +174,7 @@ void Lexer::readString()
         //If any escaped character appear, add them to the string
         if (c == '\\')
         {
+            in->get();
             //get the total number of consecutive escapes.
             int escapeCount = 1;
             while(!in->eof() && in->peek()=='\\')
@@ -184,6 +185,12 @@ void Lexer::readString()
             //if the total number of consecutive escapes is odd, Add the character following the escapes.
             if(escapeCount % 2 != 0)
             {
+                //Add back the backslashes since they are a part of the string
+                for(int i = 0; i<escapeCount; i++)
+                {
+                    lexeme.push_back('\\');
+                }
+                //Add the character following the backslashes
                 lexeme.push_back(in->get());
             }
         }
