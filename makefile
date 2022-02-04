@@ -38,13 +38,13 @@ default_target: debug
 
 #release settings and flags
 .PHONY: release
-release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) #set Optimization Flags
+release: export CXXFLAGS := $(CXXFLAGS) $(COMPILE_FLAGS) #set Optimization Flags to CXXFLAGS
 release: dirs
 	@$(MAKE) all
 
 #debug settings and flags
 .PHONY: debug
-debug: export CXXFLAGS := $(CXXFLAGS) $(DEBUG_FLAGS) #set Debug Flags
+debug: export CXXFLAGS := $(CXXFLAGS) $(DEBUG_FLAGS) #set Debug Flags to CXXFLAGS
 debug: dirs
 	@$(MAKE) debug_build
 

@@ -1,8 +1,8 @@
 #include "header.h"
+#include <fstream>
 
-int scanner(std::string s)
+
+void Lexer::func()
 {
-    std::cout << "Hello More Changes World! \n";
-    std::cout << "Test The NEW DEBUGGER! \n";
-    return 0;
+    std::cout << "inside Lexer Func";
 }
