@@ -87,7 +87,11 @@ Token Lexer::lex()
         {
             // Set Token to appropriate Character Escape.
             checkCharacterEscapes();
-            return curr_token;
+            if(curr_token != Token::T_ERR)
+            {
+                return curr_token;
+            }
+            illegal(c);
         }
 
         // Check For Integer Literals
@@ -237,6 +241,7 @@ bool Lexer::isReserved()
 
 void Lexer::checkCharacterEscapes()
 {
+    in->get();
     char c = in->peek();
     if (c == 'b')
     {
@@ -276,6 +281,10 @@ void Lexer::checkCharacterEscapes()
     else if (c == '\\')
     {
         curr_token = Token::T_CESC_SLASH;
+    }
+    else
+    {
+        curr_token = Token::T_ERR;
     }
 }
 
