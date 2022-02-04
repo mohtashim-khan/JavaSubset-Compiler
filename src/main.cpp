@@ -32,9 +32,8 @@ int main(int argc, char *argv[])
     //Get First Token
     Token token = lexer->lex();
 
-    lexer->func();
 
-    //Print out all tokens until EOF
+    //Print out all tokens until EOF including Line # and the Lexeme content
     while (token != Token::T_EOF)
     {
         std::cout << "Line: " << lexer->getLine() << " Token: " << getName(token) << " Lexeme: " << lexer->getLexeme() << "\n";

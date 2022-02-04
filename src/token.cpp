@@ -6,9 +6,13 @@ inline char const *getName(Token token)
     switch (token)
     {
     case Token::T_ID:
-        return "ID";
+        return "id";
     case Token::T_NUM:
-        return "NUM";
+        return "number";
+
+    
+    case Token::T_STRING:
+        return "string";
     case Token::T_TRUE:
         return "true";
     case Token::T_FALSE:

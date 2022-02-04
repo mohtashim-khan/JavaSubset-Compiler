@@ -3,12 +3,10 @@
 
 #include <string>
 
-
-
-//Lexer Class Del
-class Lexer {
-    public:
-
+// Lexer Class Del
+class Lexer
+{
+public:
     Lexer(std::fstream *input);
 
     // Default Destructor.
@@ -21,24 +19,30 @@ class Lexer {
     void func();
 
     std::string getLexeme() { return lexeme; };
-    
-    private:
+
+private:
     std::fstream *in;
     int lineno = 1;
     Token curr_token;
     std::string lexeme;
+
+    void readWord();
+    bool isReserved();
+    void checkCharacterEscapes();
+    void readString();
+    void readInt();
+
 };
 
-//Token Enum
+// Token Enum
 enum class Token
 {
     T_EOF = 0,
-    
-    //Literals
+
+    // Literals
     T_ID = 1,
     T_NUM,
-
-
+    T_STRING,
 
     T_CESC_B,
     T_CESC_F,
@@ -49,13 +53,7 @@ enum class Token
     T_CESC_QUOT,
     T_CESC_SLASH,
 
-
-
-
-
-
-    
-    //Reserved Words
+    // Reserved Words
     T_TRUE,
     T_FALSE,
     T_BOOLEAN,
@@ -67,7 +65,7 @@ enum class Token
     T_BREAK,
     T_RETURN,
 
-    //Operators
+    // Operators
     T_ADD,
     T_SUB,
     T_MULT,
@@ -84,7 +82,7 @@ enum class Token
     T_AND,
     T_OR,
 
-    //Other Things
+    // Other Things
     T_LPARA,
     T_RPARA,
     T_LBRACE,
@@ -94,7 +92,5 @@ enum class Token
 };
 
 inline char const *getName(Token token);
-
-
 
 #endif
