@@ -3,41 +3,6 @@
 
 #include <string>
 
-// Lexer Class Del
-class Lexer
-{
-public:
-    Lexer(std::fstream *input);
-
-    // Default Destructor.
-    ~Lexer() = default;
-
-    int getLine() { return lineno; }
-
-    Token lex();
-
-    void func();
-
-    std::string getLexeme() { return lexeme; };
-
-private:
-    std::fstream *in;
-    int lineno = 1;
-    Token curr_token;
-    std::string lexeme;
-
-    void readWord();
-    bool isReserved();
-    void checkCharacterEscapes();
-    void readString();
-    void readInt();
-    bool isOperator(char c);
-    void readOperator();
-    bool isOther(char c);
-    void readOther();
-    void illegal(char c);
-
-};
 
 // Token Enum
 enum class Token
@@ -99,6 +64,45 @@ enum class Token
     T_ERR
 };
 
-inline char const *getName(Token token);
+// Lexer Class Del
+class Lexer
+{
+public:
+    //Constructor
+    Lexer(std::fstream *input);
+
+    // Default Destructor.
+    ~Lexer() = default;
+
+    int getLine() { return lineno; }
+
+    Token lex();
+
+    void func();
+
+    std::string getLexeme() { return lexeme; };
+
+private:
+    std::fstream *in;
+    int lineno = 1;
+    Token curr_token;
+    std::string lexeme;
+
+    void readWord();
+    bool isReserved();
+    void checkCharacterEscapes();
+    void readString();
+    void readInt();
+    bool isOperator(char c);
+    void readOperator();
+    bool isOther(char c);
+    void readOther();
+    void illegal(char c);
+
+};
+
+
+
+char const *getName(Token token);
 
 #endif

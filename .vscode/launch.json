@@ -9,7 +9,7 @@
             "type": "cppdbg",
             "request": "launch",
             "program": "${workspaceFolder}/output_debug",
-            "args": ["../testfile3.txt"],
+            "args": ["../testfile.txt"],
             "stopAtEntry": false,
             "cwd": "${fileDirname}",
             "environment": [],

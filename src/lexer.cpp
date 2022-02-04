@@ -39,12 +39,10 @@ Token Lexer::lex()
             // Check for comments and skip over
             if (in->peek() == '/')
             {
-                while (in->peek() != '\n')
+                while (in->peek() != '\n' && !in->eof())
                 {
                     in->get();
                 }
-
-                std::cout << "Comment caught at line " << lineno << "\n";
             }
 
             // Otherwise return Division Operator token
@@ -56,7 +54,7 @@ Token Lexer::lex()
         }
 
         // If AlphaNumeric, Check if ID or Reserved Word
-        else if (isalpha(c) || "_")
+        else if (isalpha(c) || c == '_')
         {
 
             // Read Chars until non Alpha Numeric Found
@@ -76,9 +74,11 @@ Token Lexer::lex()
         // Check For String Literals
         else if (c == '\"')
         {
+            in->get();
+            if (!in->eof())
 
-            // Read Chars until second Quotation Found. Set Current token to String
-            readString();
+                // Read Chars until second Quotation Found. Set Current token to String
+                readString();
             return curr_token;
         }
 
@@ -134,7 +134,7 @@ void Lexer::readWord()
     lexeme.push_back(in->get());
     char c = in->peek();
 
-    while (isalnum(c) || "_")
+    while (isalnum(c) || c == '_' || in->eof())
     {
         lexeme.push_back(in->get());
         c = in->peek();
@@ -153,6 +153,7 @@ void Lexer::readString()
         lexeme.push_back(in->get());
         c = in->peek();
     }
+    in->get();
 }
 
 // Checks for Reserved words, Clear Lexeme if found
@@ -298,14 +299,10 @@ bool Lexer::isOperator(char c)
     case '%':
     case '<':
     case '>':
-    case '<=':
-    case '>=':
     case '=':
-    case '==':
-    case '!=':
     case '!':
-    case '&&':
-    case '||':
+    case '&':
+    case '|':
         return true;
     default:
         return false;
@@ -429,4 +426,9 @@ void Lexer::readOther()
     default:
         break;
     }
+}
+
+void Lexer::illegal(char c)
+{
+    std::cerr << "Illegal character " << c << " at line " << lineno << '\n';
 }

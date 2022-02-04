@@ -1,6 +1,6 @@
 #include "header.h"
 
-inline char const *getName(Token token)
+char const *getName(Token token)
 {
     switch (token)
     {

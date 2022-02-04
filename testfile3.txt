@@ -1,4 +1,3 @@
-First String
-Second String
-Hello THis is third String
-4th String
+// yes, this *is* legal..
+
+"abcd"
