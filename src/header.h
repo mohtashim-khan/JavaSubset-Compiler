@@ -81,10 +81,13 @@ public:
     void func();
 
     std::string getLexeme() { return lexeme; };
+    int getWarnings() { return warnings; };
+
 
 private:
     std::fstream *in;
     int lineno = 1;
+    int warnings = 0;
     Token curr_token;
     std::string lexeme;
 

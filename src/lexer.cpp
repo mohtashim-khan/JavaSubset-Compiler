@@ -274,6 +274,7 @@ bool Lexer::isReserved()
     return false;
 }
 
+//Assign Character Escape tokens
 void Lexer::checkCharacterEscapes()
 {
     in->get();
@@ -323,6 +324,7 @@ void Lexer::checkCharacterEscapes()
     }
 }
 
+//read up till the first non digit
 void Lexer::readInt()
 {
     curr_token = Token::T_NUM;
@@ -356,6 +358,7 @@ bool Lexer::isOperator(char c)
     }
 }
 
+//Assign operator tokens
 void Lexer::readOperator()
 {
     char c = in->get();
@@ -428,6 +431,7 @@ void Lexer::readOperator()
     }
 }
 
+//Other attributes
 bool Lexer::isOther(char c)
 {
     switch (c)
@@ -444,6 +448,7 @@ bool Lexer::isOther(char c)
     }
 }
 
+//Assign Other Attribute Tokens
 void Lexer::readOther()
 {
     char c = in->get();
@@ -475,7 +480,9 @@ void Lexer::readOther()
     }
 }
 
+//Inform User of Errors
 void Lexer::illegal(char c)
 {
     std::cerr << "Illegal character " << c << " at line " << lineno << '\n';
+    warnings++;
 }

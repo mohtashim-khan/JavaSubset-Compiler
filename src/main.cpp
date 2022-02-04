@@ -38,6 +38,12 @@ int main(int argc, char *argv[])
     {
         std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
         token = lexer->lex();
+
+        if(lexer->getWarnings() > 10)
+        {
+            std::cerr << "TOO MANY WARNINGS, PROGRAM EXITING";
+            return EXIT_FAILURE;
+        }
     }
 
     return EXIT_SUCCESS;
