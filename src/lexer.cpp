@@ -106,7 +106,10 @@ Token Lexer::lex()
             {
                 illegal(c);
             }
-            return curr_token;
+            else
+            {
+                return curr_token;
+            }
         }
 
         // Check for Parantheses, braces, Semicolons, commas
