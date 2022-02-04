@@ -4,8 +4,6 @@
 #include <iostream>
 #include <cerrno>
 
-
-
 int main(int argc, char *argv[])
 {
     // Check for correct amount of CLI arguments
@@ -29,17 +27,16 @@ int main(int argc, char *argv[])
     // Initialize Lexer
     auto lexer = new Lexer(&inputfile);
 
-    //Get First Token
+    // Get First Token
     Token token = lexer->lex();
 
-
-    //Print out all tokens until EOF including Line # and the Lexeme content
+    // Print out all tokens until EOF including Line # and the Lexeme content
     while (token != Token::T_EOF)
     {
         std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
         token = lexer->lex();
 
-        if(lexer->getWarnings() > 10)
+        if (lexer->getWarnings() > 10)
         {
             std::cerr << "TOO MANY WARNINGS, PROGRAM EXITING \n";
             return EXIT_FAILURE;

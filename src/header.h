@@ -3,7 +3,6 @@
 
 #include <string>
 
-
 // Token Enum
 enum class Token
 {
@@ -60,7 +59,7 @@ enum class Token
     T_SEMICOLON,
     T_COMMA,
 
-    //ERROR TOKEN
+    // ERROR TOKEN
     T_ERR
 };
 
@@ -68,7 +67,7 @@ enum class Token
 class Lexer
 {
 public:
-    //Constructor
+    // Constructor
     Lexer(std::fstream *input);
 
     // Default Destructor.
@@ -82,7 +81,6 @@ public:
 
     std::string getLexeme() { return lexeme; };
     int getWarnings() { return warnings; };
-
 
 private:
     std::fstream *in;
@@ -101,10 +99,7 @@ private:
     bool isOther(char c);
     void readOther();
     void illegal(char c);
-
 };
-
-
 
 char const *getName(Token token);
 

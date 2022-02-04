@@ -171,26 +171,26 @@ void Lexer::readString()
         {
             curr_token = Token::T_ERR;
         }
-        //If any escaped character appear, add them to the string
+        // If any escaped character appear, add them to the string
         if (c == '\\')
         {
             in->get();
-            //get the total number of consecutive escapes.
+            // get the total number of consecutive escapes.
             int escapeCount = 1;
-            while(!in->eof() && in->peek()=='\\')
+            while (!in->eof() && in->peek() == '\\')
             {
                 escapeCount++;
                 in->get();
             }
-            //if the total number of consecutive escapes is odd, Add the character following the escapes.
-            if(escapeCount % 2 != 0)
+            // if the total number of consecutive escapes is odd, Add the character following the escapes.
+            if (escapeCount % 2 != 0)
             {
-                //Add back the backslashes since they are a part of the string
-                for(int i = 0; i<escapeCount; i++)
+                // Add back the backslashes since they are a part of the string
+                for (int i = 0; i < escapeCount; i++)
                 {
                     lexeme.push_back('\\');
                 }
-                //Add the character following the backslashes
+                // Add the character following the backslashes
                 lexeme.push_back(in->get());
             }
         }
@@ -274,7 +274,7 @@ bool Lexer::isReserved()
     return false;
 }
 
-//Assign Character Escape tokens
+// Assign Character Escape tokens
 void Lexer::checkCharacterEscapes()
 {
     in->get();
@@ -324,7 +324,7 @@ void Lexer::checkCharacterEscapes()
     }
 }
 
-//read up till the first non digit
+// read up till the first non digit
 void Lexer::readInt()
 {
     curr_token = Token::T_NUM;
@@ -358,7 +358,7 @@ bool Lexer::isOperator(char c)
     }
 }
 
-//Assign operator tokens
+// Assign operator tokens
 void Lexer::readOperator()
 {
     char c = in->get();
@@ -431,7 +431,7 @@ void Lexer::readOperator()
     }
 }
 
-//Other attributes
+// Other attributes
 bool Lexer::isOther(char c)
 {
     switch (c)
@@ -448,7 +448,7 @@ bool Lexer::isOther(char c)
     }
 }
 
-//Assign Other Attribute Tokens
+// Assign Other Attribute Tokens
 void Lexer::readOther()
 {
     char c = in->get();
@@ -480,7 +480,7 @@ void Lexer::readOther()
     }
 }
 
-//Inform User of Errors
+// Inform User of Errors
 void Lexer::illegal(char c)
 {
     std::cerr << "Illegal character " << c << " at line " << lineno << '\n';
