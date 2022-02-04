@@ -80,12 +80,13 @@ Token Lexer::lex()
                 // Read Chars until second Quotation Found. Set Current token to String
                 readString();
 
+            // If no error in string, return the token
             if (curr_token != Token::T_ERR)
             {
                 return curr_token;
             }
 
-            std::cerr<<"STRING MISSING END QUOTE AT LINE: "<< lineno;
+            std::cerr << "STRING MISSING END QUOTE AT LINE: " << lineno << "\n";
         }
 
         // Check for Character Escapes
@@ -169,6 +170,22 @@ void Lexer::readString()
         if (in->eof())
         {
             curr_token = Token::T_ERR;
+        }
+        //If any escaped character appear, add them to the string
+        if (c == '\\')
+        {
+            //get the total number of consecutive escapes.
+            int escapeCount = 1;
+            while(!in->eof() && in->peek()=='\\')
+            {
+                escapeCount++;
+                in->get();
+            }
+            //if the total number of consecutive escapes is odd, Add the character following the escapes.
+            if(escapeCount % 2 != 0)
+            {
+                lexeme.push_back(in->get());
+            }
         }
     }
     in->get();
