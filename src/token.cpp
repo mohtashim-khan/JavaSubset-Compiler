@@ -1,6 +1,5 @@
 #include "header.h"
 
-
 inline char const *getName(Token token)
 {
     switch (token)
@@ -10,7 +9,6 @@ inline char const *getName(Token token)
     case Token::T_NUM:
         return "number";
 
-    
     case Token::T_STRING:
         return "string";
     case Token::T_TRUE:
@@ -47,9 +45,9 @@ inline char const *getName(Token token)
     case Token::T_CESC_APOST:
         return "\\'";
     case Token::T_CESC_SLASH:
-        return "";
+        return "\\\\";
     case Token::T_CESC_QUOT:
-        return "return";
+        return "\\\"";
 
     case Token::T_ADD:
         return "+";
@@ -96,6 +94,9 @@ inline char const *getName(Token token)
         return ";";
     case Token::T_COMMA:
         return ",";
+
+    case Token::T_ERR:
+        return "ERROR";
 
     case Token::T_EOF:
         return "EOF";

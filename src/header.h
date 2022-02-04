@@ -31,6 +31,11 @@ private:
     void checkCharacterEscapes();
     void readString();
     void readInt();
+    bool isOperator(char c);
+    void readOperator();
+    bool isOther(char c);
+    void readOther();
+    void illegal(char c);
 
 };
 
@@ -88,7 +93,10 @@ enum class Token
     T_LBRACE,
     T_RBRACE,
     T_SEMICOLON,
-    T_COMMA
+    T_COMMA,
+
+    //ERROR TOKEN
+    T_ERR
 };
 
 inline char const *getName(Token token);

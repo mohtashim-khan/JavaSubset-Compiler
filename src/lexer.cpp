@@ -34,6 +34,8 @@ Token Lexer::lex()
         // Check for division or comment
         else if (c == '/')
         {
+            c = in->get();
+
             // Check for comments and skip over
             if (in->peek() == '/')
             {
@@ -72,7 +74,7 @@ Token Lexer::lex()
         }
 
         // Check For String Literals
-        else if (in->peek() == '\"')
+        else if (c == '\"')
         {
 
             // Read Chars until second Quotation Found. Set Current token to String
@@ -83,38 +85,35 @@ Token Lexer::lex()
         // Check for Character Escapes
         else if (c == '\\')
         {
+            // Set Token to appropriate Character Escape.
             checkCharacterEscapes();
             return curr_token;
         }
 
         // Check For Integer Literals
-        else if (isdigit(c) && c != '0')
+        else if (isdigit(c))
         {
             // Read Int until non digit is found . Set Current token to Number
             readInt();
             return curr_token;
         }
 
-        //Check for "int i = 0" edge case.
-        else if (c == '0')
+        // Check for Operators Except for Division since that is already handled
+        else if (isOperator(c))
         {
-            if (!isdigit(in->peek()))
+            readOperator();
+            if (curr_token == Token::T_ERR) // If there is only a single '&' or '|' Operator, Throw an Error
             {
-                curr_token = Token::T_NUM;
-                lexeme.push_back(in->get());
+                illegal(c);
             }
             return curr_token;
         }
 
-        //Check for Operators
-        else if (is_special(c))
+        // Check for Parantheses, braces, Semicolons, commas
+        else if (isOther(c))
         {
-            special();
+            readOther();
             return curr_token;
-        }
-        else if (c == '#')
-        {
-            comment_state();
         }
         else if (in->eof())
         {
@@ -285,5 +284,149 @@ void Lexer::readInt()
     {
         lexeme.push_back(in->get());
         c = in->peek();
+    }
+}
+
+// Operators except for division
+bool Lexer::isOperator(char c)
+{
+    switch (c)
+    {
+    case '+':
+    case '-':
+    case '*':
+    case '%':
+    case '<':
+    case '>':
+    case '<=':
+    case '>=':
+    case '=':
+    case '==':
+    case '!=':
+    case '!':
+    case '&&':
+    case '||':
+        return true;
+    default:
+        return false;
+    }
+}
+
+void Lexer::readOperator()
+{
+    char c = in->get();
+    switch (c)
+    {
+    case '+':
+        curr_token = Token::T_ADD;
+        break;
+    case '-':
+        curr_token = Token::T_SUB;
+        break;
+    case '*':
+        curr_token = Token::T_MULT;
+        break;
+    case '<':
+        curr_token = Token::T_LT;
+        if (in->peek() == '=')
+        {
+            curr_token = Token::T_LTE;
+            in->get();
+        }
+        break;
+    case '>':
+        curr_token = Token::T_GT;
+        if (in->peek() == '=')
+        {
+            curr_token = Token::T_GTE;
+            in->get();
+        }
+        break;
+
+    case '=':
+        curr_token = Token::T_ASSIGN;
+        if (in->peek() == '=')
+        {
+            curr_token = Token::T_EQUAL;
+            in->get();
+        }
+        break;
+
+    case '!':
+        curr_token = Token::T_NOT;
+        if (in->peek() == '=')
+        {
+            curr_token = Token::T_NEQUAL;
+            in->get();
+        }
+        break;
+
+    case '&':
+        curr_token = Token::T_ERR;
+        if (in->peek() == '&')
+        {
+            curr_token = Token::T_AND;
+            in->get();
+        }
+        break;
+
+    case '|':
+        curr_token = Token::T_ERR;
+        if (in->peek() == '|')
+        {
+            curr_token = Token::T_OR;
+            in->get();
+        }
+        break;
+
+    default:
+        break;
+    }
+}
+
+bool Lexer::isOther(char c)
+{
+    switch (c)
+    {
+    case '(':
+    case ')':
+    case '{':
+    case '}':
+    case ';':
+    case ',':
+        return true;
+    default:
+        return false;
+    }
+}
+
+void Lexer::readOther()
+{
+    char c = in->get();
+    switch (c)
+    {
+    case '(':
+        curr_token = Token::T_LPARA;
+        break;
+    case ')':
+        curr_token = Token::T_RPARA;
+        break;
+    case '{':
+        curr_token = Token::T_LBRACE;
+        break;
+    case '}':
+        curr_token = Token::T_RBRACE;
+        break;
+
+    case ';':
+        curr_token = Token::T_SEMICOLON;
+        break;
+
+    case ',':
+        curr_token = Token::T_COMMA;
+        break;
+
+    default:
+        break;
     }
 }
