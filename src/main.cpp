@@ -2,6 +2,7 @@
 //The source code for the tutorial can be found here : https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 
 #include "header.h"
+#include "parser.hpp"
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
@@ -30,6 +31,9 @@ int main(int argc, char *argv[])
     // Initialize Lexer
     auto lexer = new Lexer(&inputfile);
 
+    // Initialize Token Vector
+    std::vector <Token> tokenVec;
+
     // Get First Token
     Token token = lexer->lex();
 
@@ -38,6 +42,9 @@ int main(int argc, char *argv[])
     {
         std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
         token = lexer->lex();
+
+        tokenVec.push_back(token);
+
 
         if (lexer->getWarnings() > 10)
         {

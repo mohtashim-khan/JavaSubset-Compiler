@@ -104,6 +104,8 @@ private:
     void illegal(char c);
 };
 
+//lexer_token conversion function
 char const *getName(Token token);
+
 
 #endif
