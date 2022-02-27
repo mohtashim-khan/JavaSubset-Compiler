@@ -1,5 +1,5 @@
-//This file was inspired and based on the tutorial made by my TA Shankar. 
-//The source code for the tutorial can be found here : https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
+// This file was inspired and based on the tutorial made by my TA Shankar.
+// The source code for the tutorial can be found here : https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 
 #include "header.h"
 #include "parser.hpp"
@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     // Initialize Lexer
     auto lexer = new Lexer(&inputfile);
 
-    // Initialize Token Vector
-    std::vector <Token> tokenVec;
+    // Initialize ParserToken Vector
+    std::vector<ParserToken> tokenVec;
 
     // Get First Token
     Token token = lexer->lex();
@@ -41,17 +41,29 @@ int main(int argc, char *argv[])
     while (token != Token::T_EOF)
     {
         std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
-        token = lexer->lex();
 
-        tokenVec.push_back(token);
+        // Push back ParserToken
+        tokenVec.push_back(ParserToken(token, lexer->getLexeme(), lexer->getLine()));
 
 
         if (lexer->getWarnings() > 10)
         {
-            std::cerr << "TOO MANY WARNINGS, PROGRAM EXITING \n";
+            std::cerr << "ERROR IN LEXER: TOO MANY WARNINGS, PROGRAM EXITING \n";
             return EXIT_FAILURE;
         }
+
+        token = lexer->lex();
     }
+
+    // Check for warnings before intializing Parser
+    if (lexer->getWarnings() > 0)
+    {
+        std::cerr << "WARNINGS PRESENT IN LEXER, PROGRAM EXITING \n";
+        return EXIT_FAILURE;
+    }
+
+    // Initialize Parser
+    auto parser = new Parser(&tokenVec);
 
     return EXIT_SUCCESS;
 }
