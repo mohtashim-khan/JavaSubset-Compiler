@@ -28,8 +28,8 @@ OBJECTS = $(SOURCES:$(SRC_PATH)/%.$(SRC_EXT)=$(BUILD_PATH)/%.o)
 DEPS = $(OBJECTS:.o=.d)
 
 # flags for both Debug and Optimized Compilation
-COMPILE_FLAGS = -std=c++11 -Wall -Wextra -O2
-DEBUG_FLAGS = -std=c++11 -Wall -Wextra -g
+COMPILE_FLAGS = -std=c++17 -Wall -Wextra -O2
+DEBUG_FLAGS = -std=c++17 -Wall -Wextra -g
 
 
 #Set default make to debug
