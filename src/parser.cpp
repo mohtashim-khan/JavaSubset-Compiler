@@ -1,9 +1,18 @@
 #include "parser.hpp"
-#include <fstream>
-#include <iostream>
-#include <cerrno>
+
 
 Parser::Parser(std::vector<ParserToken> *tokens)
 {
     tokenList = *tokens;
+}
+
+void Parser::parse()
+{
+    currToken = tokenList.begin();
+    nextToken = tokenList.begin()++;
+
+    std::cout<<"debug";
+
+    
+
 }

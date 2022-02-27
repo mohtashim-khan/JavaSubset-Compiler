@@ -1,4 +1,5 @@
 #include "header.h"
+#include <iostream>
 #include <string>
 #include <functional>
 #include <optional>
@@ -16,25 +17,35 @@ public:
     // Default Destructor
     ~ParserToken() = default;
 
+   int getLine(){return lineNo;};
+   std::string getLexeme(){return lexeme;};
+
+
 private:
     Token token;
     std::string lexeme;
     int lineNo;
+
 };
 
-// Used to Create AST(as a binary tree)
+// Used to Create AST(as a binary tree), if Node only has one branch, then only left node gets populated
 class Node
 {
 public:
-    Node(std::string typ, std::optional<ParserToken> tok = std::nullopt, std::optional<Node *> lef = std::nullopt, std::optional<Node *> righ = std::nullopt);
-
+    Node(std::string typ, std::optional<ParserToken> tok = std::nullopt, Node * leftNode = NULL, Node *rightNode = NULL);
+    
+    //Default Constructor
+    Node() = default;
+    //Default Destructor
     ~Node() = default;
 
     void printAST();
 
+    int getLineNum();
+
 private:
     std::string type;
     std::optional<ParserToken> token;
-    std::optional<Node *> left;
-    std::optional<Node *> right;
+    Node *left;
+    Node *right;
 };

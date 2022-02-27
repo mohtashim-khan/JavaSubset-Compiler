@@ -62,8 +62,10 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
 
-    // Initialize Parser
+    // Initialize Parser and run Parser
     auto parser = new Parser(&tokenVec);
+
+    parser->parse();
 
     return EXIT_SUCCESS;
 }
