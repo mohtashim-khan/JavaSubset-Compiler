@@ -24,6 +24,7 @@ public:
     ~Parser() = default;
 
 private:
+    bool errorFlag = false;
     //Token List from program
     std::vector<ParserToken> tokenList;
 
@@ -102,6 +103,9 @@ private:
     void errorHandler();
     void increment();
     void decrement();
+    void decrementLoop(unsigned long storedIterValue);
+
+
 
 
     

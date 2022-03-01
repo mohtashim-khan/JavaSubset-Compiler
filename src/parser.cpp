@@ -22,6 +22,16 @@ void Parser::decrement()
     nextToken--;
 }
 
+void Parser::decrementLoop(unsigned long storedIterVal)
+{
+    unsigned long currIterVal = currToken - tokenList.begin();
+
+    for (size_t i = 0; i < currIterVal - storedIterVal; i++)
+    {
+        decrement();
+    }
+}
+
 void Parser::parse()
 {
     if (tokenList.size() >= 2)
@@ -34,9 +44,9 @@ void Parser::parse()
     resultTree = start();
 
     // TODO: UNCOMMENT
-    if (nextToken->getToken() != Token::T_EOF || currToken->getToken() != Token::T_EOF)
+    if (currToken->getToken() != Token::T_EOF)
     {
-        errorHandler();
+        std::cerr << "ERROR: EOF Not Reached! last line reached without errors: " << currToken->getLine() << "\n";
     }
 
     resultTree.at(0)->printAST();
@@ -55,8 +65,11 @@ std::vector<Node *> Parser::start()
     else
     {
         std::vector<Node *> childNodes;
-        childNodes = formalParameter(); // TODO: CHANGE LINE
-        returnNodes.push_back(new Node("start", std::nullopt, childNodes));
+        childNodes = functionHeader(); // TODO: CHANGE LINE
+        if (!childNodes.empty())
+            returnNodes.push_back(new Node("start", std::nullopt, childNodes));
+        else
+            returnNodes.push_back(new Node("start"));
     }
 
     return returnNodes;
@@ -111,6 +124,10 @@ std::vector<Node *> Parser::literal()
         errorHandler();
         return {};
     }
+
+    std::cerr << "ERROR PARSING LITERAL";
+    errorHandler();
+    return {};
 }
 
 std::vector<Node *> Parser::type()
@@ -142,6 +159,10 @@ std::vector<Node *> Parser::type()
         errorHandler();
         return {};
     }
+
+    std::cerr << "ERROR PARSING TYPE \n";
+    errorHandler();
+    return {};
 }
 
 std::vector<Node *> Parser::identifier()
@@ -163,14 +184,18 @@ std::vector<Node *> Parser::identifier()
         errorHandler();
         return {};
     }
+
+    std::cerr << "ERROR PARSING IDENTIFIER \n";
+    errorHandler();
+    return {};
 }
 
 std::vector<Node *> Parser::variableDeclaration()
 {
     std::vector<Node *> returnNodes;
     std::vector<Node *> returnTypeNodes;
-    unsigned long currentIterVal = currToken - tokenList.begin();
-    returnTypeNodes = type();   
+    unsigned long storedIterVal = currToken - tokenList.begin();
+    returnTypeNodes = type();
     if (!returnTypeNodes.empty())
     {
         std::vector<Node *> returnIdentifierNodes = identifier();
@@ -178,7 +203,6 @@ std::vector<Node *> Parser::variableDeclaration()
         {
             returnNodes.insert(returnNodes.end(), returnTypeNodes.begin(), returnTypeNodes.end());
             returnNodes.insert(returnNodes.end(), returnIdentifierNodes.begin(), returnIdentifierNodes.end());
-
 
             if (currToken->getToken() == Token::T_SEMICOLON)
             {
@@ -191,21 +215,14 @@ std::vector<Node *> Parser::variableDeclaration()
 
             else
             {
-                for (size_t i = 0; i < returnIdentifierNodes.size()+returnTypeNodes.size(); i++)
-                {
-                    decrement();
-                }
-                
+                decrementLoop(storedIterVal);
                 return {};
             }
         }
 
         else
         {
-            for (size_t i = 0; i < returnTypeNodes.size(); i++)
-                {
-                    decrement();
-                }
+            decrementLoop(storedIterVal);
             return {};
         }
     }
@@ -214,13 +231,15 @@ std::vector<Node *> Parser::variableDeclaration()
     {
         return {};
     }
+
+    return {};
 }
 
 std::vector<Node *> Parser::formalParameter()
 {
     std::vector<Node *> returnNodes;
     std::vector<Node *> returnTypeNodes;
-
+    unsigned long storedIterVal = currToken - tokenList.begin();
 
     // Expect Type
     returnTypeNodes = type();
@@ -232,15 +251,14 @@ std::vector<Node *> Parser::formalParameter()
         {
             returnNodes.insert(returnNodes.end(), returnTypeNodes.begin(), returnTypeNodes.end());
             returnNodes.insert(returnNodes.end(), returnIdentifierNodes.begin(), returnIdentifierNodes.end());
-            return returnNodes;
+            std::vector<Node *> returnVec;
+            returnVec.push_back(new Node("formalParameter", std::nullopt, returnNodes));
+            return returnVec;
         }
 
         else
         {
-            for (size_t i = 0; i < returnTypeNodes.size(); i++)
-                {
-                    decrement();
-                }
+            decrementLoop(storedIterVal);
             return {};
         }
     }
@@ -249,36 +267,35 @@ std::vector<Node *> Parser::formalParameter()
     {
         return {};
     }
+    return {};
 }
 
 std::vector<Node *> Parser::formalParameterList()
 {
     std::vector<Node *> returnNodes;
     std::vector<Node *> returnFormalParameterNodes;
-
+    unsigned long storedIterVal = currToken - tokenList.begin();
 
     returnFormalParameterNodes = formalParameter();
 
-    if(!returnFormalParameterNodes.empty())
+    if (!returnFormalParameterNodes.empty())
     {
         std::vector<Node *> returnFormalParameterListPrimeNodes = formalParameterListPrime();
-        if(!returnFormalParameterListPrimeNodes.empty())
+        if (!returnFormalParameterListPrimeNodes.empty())
         {
             returnNodes.insert(returnNodes.end(), returnFormalParameterNodes.begin(), returnFormalParameterNodes.end());
             returnNodes.insert(returnNodes.end(), returnFormalParameterListPrimeNodes.begin(), returnFormalParameterListPrimeNodes.end());
-            return returnNodes;
+
+            std::vector<Node *> returnVec;
+            returnVec.push_back(new Node("formalParameterList", std::nullopt, returnNodes));
+            return returnVec;
         }
 
         else
         {
-            for (size_t i = 0; i < returnFormalParameterNodes.size(); i++)
-                {
-                    decrement();
-                }
+            decrementLoop(storedIterVal);
             return {};
-
         }
-
     }
 
     return {};
@@ -287,13 +304,156 @@ std::vector<Node *> Parser::formalParameterList()
 std::vector<Node *> Parser::formalParameterListPrime()
 {
     std::vector<Node *> returnNodes;
+    unsigned long storedIterVal = currToken - tokenList.begin();
 
-    if(currToken->getToken() == Token::T_COMMA)
+    if (currToken->getToken() == Token::T_COMMA)
     {
-        std::vector<Node *> returnFormalParameter = formalParameter();
+        returnNodes.push_back(new Node(",", *currToken, {}));
+        increment();
+        std::vector<Node *> returnFormalParameterNodes = formalParameter();
+        if (!returnFormalParameterNodes.empty())
+        {
+            std::vector<Node *> returnFormalParameterListPrimeNodes = formalParameterListPrime();
 
+            returnNodes.insert(returnNodes.end(), returnFormalParameterNodes.begin(), returnFormalParameterNodes.end());
+            returnNodes.insert(returnNodes.end(), returnFormalParameterListPrimeNodes.begin(), returnFormalParameterListPrimeNodes.end());
+            return returnNodes;
+        }
 
+        else
+        {
+            decrementLoop(storedIterVal);
+            return {};
+        }
     }
 
+    return {};
+}
+
+std::vector<Node *> Parser::functionDeclarator()
+{
+    std::vector<Node *> returnNodes;
+    unsigned long storedIterVal = currToken - tokenList.begin(); // Store currToken Value
+
+    std::vector<Node *> returnIdentifierNodes = identifier();
+    if (!returnIdentifierNodes.empty())
+    {
+        if (currToken->getToken() == Token::T_LPARA)
+        {
+            returnNodes.push_back(new Node("(", *currToken, {}));
+            increment();
+
+            if (currToken->getToken() != Token::T_RPARA)
+            {
+                std::vector<Node *> returnFormalParameterList = formalParameterList();
+                if (!returnFormalParameterList.empty())
+                {
+                    if (currToken->getToken() == Token::T_RPARA)
+                    {
+                        returnNodes.insert(returnNodes.end(), returnFormalParameterList.begin(), returnFormalParameterList.end());
+
+                        returnNodes.push_back(new Node(")", *currToken, {}));
+                        increment();
+
+                        std::vector<Node *> returnVec;
+                        returnVec.push_back(new Node("functionDeclarator", std::nullopt, returnNodes));
+                        return returnVec;
+                    }
+
+                    else
+                    {
+                        decrementLoop(storedIterVal);
+                        return {};
+                    }
+                }
+
+                else
+                {
+                    decrementLoop(storedIterVal);
+                    return {};
+                }
+            }
+
+            else if (currToken->getToken() == Token::T_RPARA)
+            {
+                returnNodes.push_back(new Node(")", *currToken, {}));
+                increment();
+
+                std::vector<Node *> returnVec;
+                returnVec.push_back(new Node("functionDeclarator", std::nullopt, returnNodes));
+                return returnVec;
+            }
+
+            else
+            {
+                decrementLoop(storedIterVal);
+                return {};
+            }
+        }
+
+        else
+        {
+            decrementLoop(storedIterVal);
+            return {};
+        }
+    }
+
+    return {};
+}
+
+std::vector<Node *> Parser::functionHeader()
+{
+    std::vector<Node *> returnNodes;
+    unsigned long storedIterVal = currToken - tokenList.begin(); // Store currToken Value
+
+    if (currToken->getToken() == Token::T_VOID)
+    {
+        returnNodes.push_back(new Node("VOID", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnFunctionDeclaratorNodes = functionDeclarator();
+        if (!returnFunctionDeclaratorNodes.empty())
+        {
+            returnNodes.insert(returnNodes.end(), returnFunctionDeclaratorNodes.begin(), returnFunctionDeclaratorNodes.end());
+
+            std::vector<Node *> returnVec;
+            returnVec.push_back(new Node("functionHeader", std::nullopt, returnNodes));
+            return returnVec;
+        }
+        else
+        {
+            decrementLoop(storedIterVal);
+            return {};
+        }
+    }
+    else
+    {
+        std::vector<Node *> returnTypeNodes = type();
+        if (!returnTypeNodes.empty())
+        {
+            std::vector<Node *> returnFunctionDeclaratorNodes = functionDeclarator();
+            if (!returnFunctionDeclaratorNodes.empty())
+            {
+                returnNodes.insert(returnNodes.end(), returnTypeNodes.begin(), returnTypeNodes.end());
+                returnNodes.insert(returnNodes.end(), returnFunctionDeclaratorNodes.begin(), returnFunctionDeclaratorNodes.end());
+
+                std::vector<Node *> returnVec;
+                returnVec.push_back(new Node("functionHeader", std::nullopt, returnNodes));
+                return returnVec;
+            }
+
+            else
+            {
+                decrementLoop(storedIterVal);
+                return {};
+            }
+        }
+
+        else
+        {
+            decrementLoop(storedIterVal);
+            return {};
+        }
+    }
     return {};
 }

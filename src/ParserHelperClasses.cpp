@@ -34,12 +34,13 @@ int Node::getLineNum()
 }
 
 //Recursively Print AST
-void Node::printAST()
+void Node::printAST(int level)
 {
-    if (type != "start")
+    for (int i = 0; i < level; i++)
     {
-        std::cout << "\t";
+        std::cout<<"\t";
     }
+    
 
     std::cout <<" {'type': '" << type << "', 'lineno': " << getLineNum();
 
@@ -48,11 +49,13 @@ void Node::printAST()
         std::cout << ", 'attr': '" << token->getLexeme() <<"'";
     }
 
-    std::cout << "} \n \t";
+    std::cout << "} \n";
+
+    int currLevel = level+1;
 
     for(auto &node : NodeList)
     {
-        node->printAST();
+        node->printAST(currLevel);
     }
 
 }

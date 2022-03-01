@@ -40,7 +40,7 @@ public:
     //Default Destructor
     ~Node() = default;
 
-    void printAST();
+    void printAST(int level = 0);
 
     int getLineNum();
 

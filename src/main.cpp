@@ -37,6 +37,8 @@ int main(int argc, char *argv[])
     // Get First Token
     Token token = lexer->lex();
 
+    std::cout << "Lexer Output: \n";
+
     // Print out all tokens until EOF including Line # and the Lexeme content
     while (token != Token::T_EOF)
     {
@@ -44,7 +46,6 @@ int main(int argc, char *argv[])
 
         // Push back ParserToken
         tokenVec.push_back(ParserToken(token, lexer->getLexeme(), lexer->getLine()));
-
 
         if (lexer->getWarnings() > 10)
         {
@@ -64,6 +65,8 @@ int main(int argc, char *argv[])
 
     // Initialize Parser and run Parser
     auto parser = new Parser(&tokenVec);
+
+    std::cout << "Parser Output: \n";
 
     parser->parse();
 
