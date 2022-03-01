@@ -25,6 +25,7 @@ public:
 
 private:
     bool errorFlag = false;
+    std::string errorString;
     //Token List from program
     std::vector<ParserToken> tokenList;
 
@@ -34,38 +35,37 @@ private:
 
     std::vector<Node *> resultTree;
 
-    std::vector<Node*> start();
-    std::vector<Node*> literal();
-    std::vector<Node*> type();
+    std::vector<Node*> start(); //DONE
+    std::vector<Node*> literal(); //DONE
+    std::vector<Node*> type(); //DONE
     
-    std::vector<Node*> globalDeclarations(); //Immediate Left Recursion
-    std::vector<Node*> globalDecPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> globalDeclarations(); 
+    std::vector<Node*> globalDecPrime(); 
 
     std::vector<Node*> globalDeclaration();
-    std::vector<Node*> variableDeclaration();
-    std::vector<Node*> identifier();
-    std::vector<Node*> functionDeclaration();
-    std::vector<Node*> functionHeader();
+    std::vector<Node*> variableDeclaration(); //DONE
+    std::vector<Node*> identifier(); //DONE
+    std::vector<Node*> functionDeclaration(); //DONE
+    std::vector<Node*> functionHeader(); //DONE
    
-    std::vector<Node*> functionDeclarator(); //Left Factoring Required
-    std::vector<Node*> functionDeclaratorPrime(); //Left Factoring Solved
+    std::vector<Node*> functionDeclarator(); //DONE 
 
     
-    std::vector<Node*> formalParameterList(); //Immediate Left Recursion
-    std::vector<Node*> formalParameterListPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> formalParameterList(); //DONE
+    std::vector<Node*> formalParameterListPrime(); //DONE
 
-    std::vector<Node*> formalParameter();
-    std::vector<Node*> mainFunctionDeclaration();
-    std::vector<Node*> mainFunctionDeclarator();
-    std::vector<Node*> block();
+    std::vector<Node*> formalParameter();   //DONE
+    std::vector<Node*> mainFunctionDeclaration();   
+    std::vector<Node*> mainFunctionDeclarator(); //DONE
+    std::vector<Node*> block(); //DONE -- testing required
     
-    std::vector<Node*> blockStatements(); //Immediate Left Recursion
-    std::vector<Node*> blockStatementsPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> blockStatements(); //DONE -- testing required
+    std::vector<Node*> blockStatementsPrime(); //DONE -- testing required
 
-    std::vector<Node*> blockStatment();
+    std::vector<Node*> blockStatement(); //DONE -- testing required
     std::vector<Node*> statement();
     std::vector<Node*> statementExpression();
-    std::vector<Node*> primary();
+    std::vector<Node*> primary();   //DONE -- testing required
     
     std::vector<Node*> argumentList(); //Immediate Left Recursion
     std::vector<Node*> argumentListPrime(); //Immediate Left Recursion Solution
@@ -100,7 +100,7 @@ private:
 
 
 
-    void errorHandler();
+    void errorHandler(std::string type);
     void increment();
     void decrement();
     void decrementLoop(unsigned long storedIterValue);
