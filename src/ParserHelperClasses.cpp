@@ -12,12 +12,11 @@ ParserToken::ParserToken(Token tok, std::string lex, int lnNo)
 
 //** Node Functions **//
 // Node Constructor
-Node::Node(std::string typ, std::optional<ParserToken> tok, Node *leftNode, Node *rightNode)
+Node::Node(std::string typ, std::optional<ParserToken> tok,std::vector<Node*> Nodes)
 {
     type = typ;
     token = tok;
-    left = leftNode;
-    right = rightNode;
+    NodeList = Nodes;
 }
 
 //Get Line Number for current Node
@@ -27,8 +26,11 @@ int Node::getLineNum()
     if (token.has_value())
         return token->getLine();
 
+    else if(!NodeList.empty())
+        return NodeList.at(0)->getLineNum();
+
     else
-        return left->getLineNum();
+        return -1;
 }
 
 //Recursively Print AST
@@ -39,7 +41,7 @@ void Node::printAST()
         std::cout << "\t";
     }
 
-    std::cout << type << " { 'type': '" << type << "', 'lineno': " << getLineNum();
+    std::cout <<" {'type': '" << type << "', 'lineno': " << getLineNum();
 
     if(token.has_value() && token->getLexeme() != "")
     {
@@ -48,14 +50,9 @@ void Node::printAST()
 
     std::cout << "} \n \t";
 
-    if(left!=NULL)
+    for(auto &node : NodeList)
     {
-        left->printAST();
-    }
-
-    if(right!=NULL)
-    {
-        right->printAST();
+        node->printAST();
     }
 
 }

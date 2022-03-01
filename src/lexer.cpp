@@ -90,6 +90,7 @@ Token Lexer::lex()
             }
 
             std::cerr << "STRING MISSING END QUOTE AT LINE: " << lineno << "\n";
+            warnings++;
         }
 
         // Check for Character Escapes
@@ -151,7 +152,7 @@ void Lexer::readWord()
     lexeme.push_back(in->get());
     char c = in->peek();
 
-    while (isalnum(c) || c == '_' || in->eof())
+    while (isalnum(c) || c == '_')
     {
         lexeme.push_back(in->get());
         c = in->peek();

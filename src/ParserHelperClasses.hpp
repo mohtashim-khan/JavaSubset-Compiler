@@ -19,6 +19,7 @@ public:
 
    int getLine(){return lineNo;};
    std::string getLexeme(){return lexeme;};
+   Token getToken(){return token;};
 
 
 private:
@@ -32,7 +33,7 @@ private:
 class Node
 {
 public:
-    Node(std::string typ, std::optional<ParserToken> tok = std::nullopt, Node * leftNode = NULL, Node *rightNode = NULL);
+    Node(std::string typ, std::optional<ParserToken> tok = std::nullopt, std::vector<Node*> Nodes = {});
     
     //Default Constructor
     Node() = default;
@@ -46,6 +47,5 @@ public:
 private:
     std::string type;
     std::optional<ParserToken> token;
-    Node *left;
-    Node *right;
+    std::vector<Node*> NodeList;
 };
