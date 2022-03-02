@@ -56,6 +56,8 @@ int main(int argc, char *argv[])
         token = lexer->lex();
     }
 
+    tokenVec.push_back(ParserToken(token, lexer->getLexeme(), lexer->getLine()));
+
     // Check for warnings before intializing Parser
     if (lexer->getWarnings() > 0)
     {

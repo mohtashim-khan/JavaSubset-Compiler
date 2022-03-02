@@ -9,7 +9,7 @@ Parser::Parser(std::vector<ParserToken> *tokens)
 void Parser::errorHandler(std::string type)
 {
     std::string lineNo = std::to_string(currToken->getLine());
-    errorString.append("Error While Parsing " + type + " , At Line : " + lineNo + "\n");
+    errorString.append("Error While Parsing " + type + " , At Line : " + lineNo + " , At Token: ["+ getName(currToken->getToken()) + "], With Lexeme: ["+ currToken->getLexeme() +"]\n");
 }
 
 void Parser::increment()
