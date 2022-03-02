@@ -8,7 +8,7 @@ void Parser::parse()
     // Expect start
     resultTree = start();
 
-    // TODO: UNCOMMENT
+    // ERROR HANDLING
     if (currToken->getToken() != Token::T_EOF)
     {
         std::cerr << "ERROR WHILE PARSING, OUTPUTTING ERROR STACK:"
@@ -250,6 +250,7 @@ std::vector<Node *> Parser::formalParameterList()
 
     returnFormalParameterNodes = formalParameter();
 
+    //Expect Formal Parameters
     if (!returnFormalParameterNodes.empty())
     {
         std::vector<Node *> returnFormalParameterListPrimeNodes = formalParameterListPrime();
@@ -277,6 +278,8 @@ std::vector<Node *> Parser::formalParameterListPrime()
         returnNodes.push_back(new Node(",", *currToken, {}));
         increment();
         std::vector<Node *> returnFormalParameterNodes = formalParameter();
+        
+        //Expect Formal Parameters
         if (!returnFormalParameterNodes.empty())
         {
             std::vector<Node *> returnFormalParameterListPrimeNodes = formalParameterListPrime();
@@ -303,6 +306,8 @@ std::vector<Node *> Parser::functionDeclarator()
     unsigned long storedIterVal = currToken - tokenList.begin(); // Store currToken Value
 
     std::vector<Node *> returnIdentifierNodes = identifier();
+
+    //Expect Identifiers
     if (!returnIdentifierNodes.empty())
     {
         if (currToken->getToken() == Token::T_LPARA)
@@ -313,6 +318,8 @@ std::vector<Node *> Parser::functionDeclarator()
             if (currToken->getToken() != Token::T_RPARA)
             {
                 std::vector<Node *> returnFormalParameterList = formalParameterList();
+
+                //Expect Formal Parameter List
                 if (!returnFormalParameterList.empty())
                 {
                     if (currToken->getToken() == Token::T_RPARA)
@@ -387,6 +394,7 @@ std::vector<Node *> Parser::functionHeader()
         increment();
 
         std::vector<Node *> returnFunctionDeclaratorNodes = functionDeclarator();
+        //Expect Function Declarator
         if (!returnFunctionDeclaratorNodes.empty())
         {
             returnNodes.insert(returnNodes.end(), returnFunctionDeclaratorNodes.begin(), returnFunctionDeclaratorNodes.end());
@@ -406,9 +414,13 @@ std::vector<Node *> Parser::functionHeader()
     else
     {
         std::vector<Node *> returnTypeNodes = type();
+        
+        //Expect Type
         if (!returnTypeNodes.empty())
         {
             std::vector<Node *> returnFunctionDeclaratorNodes = functionDeclarator();
+            
+            //Expect Function Declarator
             if (!returnFunctionDeclaratorNodes.empty())
             {
                 returnNodes.insert(returnNodes.end(), returnTypeNodes.begin(), returnTypeNodes.end());
