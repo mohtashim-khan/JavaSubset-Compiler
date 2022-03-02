@@ -39,10 +39,10 @@ private:
     std::vector<Node*> literal(); //DONE
     std::vector<Node*> type(); //DONE
     
-    std::vector<Node*> globalDeclarations(); 
-    std::vector<Node*> globalDecPrime(); 
+    std::vector<Node*> globalDeclarations(); //DONE -- testing required
+    std::vector<Node*> globalDeclarationsPrime(); //DONE -- testing required
 
-    std::vector<Node*> globalDeclaration();
+    std::vector<Node*> globalDeclaration(); //DONE -- testing required
     std::vector<Node*> variableDeclaration(); //DONE
     std::vector<Node*> identifier(); //DONE
     std::vector<Node*> functionDeclaration(); //DONE
@@ -63,40 +63,40 @@ private:
     std::vector<Node*> blockStatementsPrime(); //DONE -- testing required
 
     std::vector<Node*> blockStatement(); //DONE -- testing required
-    std::vector<Node*> statement();
-    std::vector<Node*> statementExpression();
+    std::vector<Node*> statement(); //DONE -- testing required
+    std::vector<Node*> statementExpression(); //DONE -- testing required
     std::vector<Node*> primary();   //DONE -- testing required
     
-    std::vector<Node*> argumentList(); //Immediate Left Recursion
-    std::vector<Node*> argumentListPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> argumentList(); //DONE -- testing required
+    std::vector<Node*> argumentListPrime(); //DONE -- testing required
 
 
-    std::vector<Node*> functionInvocation(); 
-    std::vector<Node*> postFixExpression();
-    std::vector<Node*> unaryExpression();
+    std::vector<Node*> functionInvocation(); //DONE --testing required
+    std::vector<Node*> postFixExpression(); //DONE --testing required
+    std::vector<Node*> unaryExpression(); //DONE --testing required
     
-    std::vector<Node*> multiplicativeExpression(); //Immediate Left Recursion
-    std::vector<Node*> multiplicativeExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> multiplicativeExpression(); //DONE --testing required
+    std::vector<Node*> multiplicativeExpressionPrime(); //DONE --testing required
 
     
-    std::vector<Node*> additiveExpression(); //Immediate Left Recursion
-    std::vector<Node*> additiveExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> additiveExpression(); //DONE --testing required
+    std::vector<Node*> additiveExpressionPrime(); //DONE --testing required
 
-    std::vector<Node*> relationalExpression(); //Immediate Left Recursion
-    std::vector<Node*> relationalExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> relationalExpression(); //DONE --testing required
+    std::vector<Node*> relationalExpressionPrime(); //DONE --testing required
 
-    std::vector<Node*> equalityExpression(); //Immediate Left Recursion
-    std::vector<Node*> equalityExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> equalityExpression(); //DONE --testing required
+    std::vector<Node*> equalityExpressionPrime(); //DONE --testing required
 
-    std::vector<Node*> conditionalAndExpression(); //Immediate Left Recursion
-    std::vector<Node*> conditionalAndExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> conditionalAndExpression(); //DONE --testing required
+    std::vector<Node*> conditionalAndExpressionPrime(); //DONE --testing required
 
-    std::vector<Node*> conditionalOrExpression(); //Immediate Left Recursion
-    std::vector<Node*> conditionalOrExpressionPrime(); //Immediate Left Recursion Solution
+    std::vector<Node*> conditionalOrExpression(); //DONE --testing required
+    std::vector<Node*> conditionalOrExpressionPrime(); //DONE --testing required
 
-    std::vector<Node*> assignmentExpression();
-    std::vector<Node*> assignment();
-    std::vector<Node*> expression();
+    std::vector<Node*> assignmentExpression(); //DONE --testing required
+    std::vector<Node*> assignment(); //DONE --testing required
+    std::vector<Node*> expression(); //DONE --testing required
 
 
 

@@ -2,7 +2,7 @@
 // The source code for the tutorial can be found here : https://pages.cpsc.ucalgary.ca/~sankarasubramanian.g/411/
 
 #include "header.h"
-#include "parser.hpp"
+#include "Parser.hpp"
 #include <fstream>
 #include <cstdlib>
 #include <iostream>
