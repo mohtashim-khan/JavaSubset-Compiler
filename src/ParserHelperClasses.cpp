@@ -38,7 +38,7 @@ void Node::printAST(int level)
 {
     for (int i = 0; i < level; i++)
     {
-        std::cout<<"\t";
+        std::cout<<"  ";
     }
     
 

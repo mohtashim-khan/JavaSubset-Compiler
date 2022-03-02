@@ -1607,7 +1607,7 @@ std::vector<Node *> Parser::assignment()
 
         if (currToken->getToken() == Token::T_ASSIGN)
         {
-            returnNodes.push_back(new Node("==", *currToken, {}));
+            returnNodes.push_back(new Node("=", *currToken, {}));
             increment();
 
             std::vector<Node *> returnAssignmentExpressionNodes = assignmentExpression();
