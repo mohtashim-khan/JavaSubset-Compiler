@@ -1,4 +1,4 @@
-#include "parser.hpp"
+#include "Parser.hpp"
 
 void Parser::parse()
 {
@@ -696,10 +696,9 @@ std::vector<Node *> Parser::blockStatement()
     {
         returnNodes.insert(returnNodes.end(), returnVariableDeclarationNodes.begin(), returnVariableDeclarationNodes.end());
 
-            std::vector<Node *> returnVec;
-            returnVec.push_back(new Node("blockStatement", std::nullopt, returnNodes));
-            return returnVec;
-
+        std::vector<Node *> returnVec;
+        returnVec.push_back(new Node("blockStatement", std::nullopt, returnNodes));
+        return returnVec;
     }
 
     else
@@ -725,4 +724,202 @@ std::vector<Node *> Parser::blockStatement()
     decrementLoop(storedIterVal);
     errorHandler("blockStatement");
     return {};
+}
+
+std::vector<Node *> Parser::statement()
+{
+    std::vector<Node *> returnNodes;
+    unsigned long storedIterVal = currToken - tokenList.begin();
+
+    if (currToken->getToken() == Token::T_SEMICOLON)
+    {
+        returnNodes.push_back(new Node(";", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnVec;
+        returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+        return returnVec;
+    }
+
+    else if (currToken->getToken() == Token::T_BREAK && nextToken->getToken() == Token::T_SEMICOLON)
+    {
+        returnNodes.push_back(new Node("BREAK", *currToken, {}));
+        increment();
+
+        returnNodes.push_back(new Node(";", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnVec;
+        returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+        return returnVec;
+    }
+    else if (currToken->getToken() == Token::T_RETURN && nextToken->getToken() == Token::T_SEMICOLON)
+    {
+        returnNodes.push_back(new Node("RETURN", *currToken, {}));
+        increment();
+
+        returnNodes.push_back(new Node(";", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnVec;
+        returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+        return returnVec;
+    }
+
+    else if (currToken->getToken() == Token::T_IF && nextToken->getToken() == Token::T_LPARA)
+    {
+        returnNodes.push_back(new Node("IF", *currToken, {}));
+        increment();
+
+        returnNodes.push_back(new Node("(", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnExpressionNodes = expression();
+        if (!returnExpressionNodes.empty())
+        {
+            returnNodes.insert(returnNodes.end(), returnExpressionNodes.begin(), returnExpressionNodes.end());
+
+            if (currToken->getToken() == Token::T_RPARA)
+            {
+                returnNodes.push_back(new Node(")", *currToken, {}));
+                increment();
+
+                std::vector<Node *> returnStatementNodes = statement();
+                if (!returnStatementNodes.empty())
+                {
+                    returnNodes.insert(returnNodes.end(), returnStatementNodes.begin(), returnStatementNodes.end());
+
+                    // Dangling Else Check
+                    if (currToken->getToken() == Token::T_ELSE)
+                    {
+                        returnNodes.push_back(new Node("ELSE", *currToken, {}));
+                        increment();
+
+                        std::vector<Node *> returnSecondStatementNodes = statement();
+                        if (!returnSecondStatementNodes.empty())
+                        {
+                            returnNodes.insert(returnNodes.end(), returnSecondStatementNodes.begin(), returnSecondStatementNodes.end());
+
+                            std::vector<Node *> returnVec;
+                            returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+                            return returnVec;
+                        }
+
+                        else
+                        {
+                            decrementLoop(storedIterVal);
+                            errorHandler("statement");
+                            return {};
+                        }
+                    }
+
+                    else
+                    {
+                        std::vector<Node *> returnVec;
+                        returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+                        return returnVec;
+                    }
+                }
+
+                else
+                {
+                    decrementLoop(storedIterVal);
+                    errorHandler("statement");
+                    return {};
+                }
+            }
+
+            else
+            {
+                decrementLoop(storedIterVal);
+                errorHandler("statement");
+                return {};
+            }
+        }
+
+        else
+        {
+            decrementLoop(storedIterVal);
+            errorHandler("statement");
+            return {};
+        }
+    }
+
+    else if (currToken->getToken() == Token::T_WHILE && nextToken->getToken() == Token::T_LPARA)
+    {
+        returnNodes.push_back(new Node("WHILE", *currToken, {}));
+        increment();
+
+        returnNodes.push_back(new Node("(", *currToken, {}));
+        increment();
+
+        std::vector<Node *> returnExpressionNodes = expression();
+        if (!returnExpressionNodes.empty())
+        {
+            returnNodes.insert(returnNodes.end(), returnExpressionNodes.begin(), returnExpressionNodes.end());
+
+            if (currToken->getToken() == Token::T_RPARA)
+            {
+                returnNodes.push_back(new Node(")", *currToken, {}));
+                increment();
+
+                std::vector<Node *> returnStatementNodes = statement();
+                if (!returnStatementNodes.empty())
+                {
+                    returnNodes.insert(returnNodes.end(), returnStatementNodes.begin(), returnStatementNodes.end());
+
+                    std::vector<Node *> returnVec;
+                    returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+                    return returnVec;
+                }
+                else
+                {
+                    decrementLoop(storedIterVal);
+                    errorHandler("statement");
+                    return {};
+                }
+            }
+            else
+            {
+                decrementLoop(storedIterVal);
+                errorHandler("statement");
+                return {};
+            }
+        }
+        else
+        {
+            decrementLoop(storedIterVal);
+            errorHandler("statement");
+            return {};
+        }
+    }
+
+    else
+    {
+        std::vector<Node *> returnBlockNodes = block();
+        if (!returnBlockNodes.empty())
+        {
+            returnNodes.insert(returnNodes.end(), returnBlockNodes.begin(), returnBlockNodes.end());
+
+            std::vector<Node *> returnVec;
+            returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+            return returnVec;
+        }
+
+        std::vector<Node *> returnStatementExpressionNodes = statementExpression();
+        if (!returnStatementExpressionNodes.empty())
+        {
+            returnNodes.insert(returnNodes.end(), returnStatementExpressionNodes.begin(), returnStatementExpressionNodes.end());
+
+            if (currToken->getToken() == Token::T_SEMICOLON)
+            {
+                returnNodes.push_back(new Node(";", *currToken, {}));
+                increment();
+
+                std::vector<Node *> returnVec;
+                returnVec.push_back(new Node("statement", std::nullopt, returnNodes));
+                return returnVec;
+            }
+        }
+    }
 }
