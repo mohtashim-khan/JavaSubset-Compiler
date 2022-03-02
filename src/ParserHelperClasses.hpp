@@ -41,6 +41,8 @@ public:
     ~Node() = default;
 
     void printAST(int level = 0);
+    void printCST(int level = 0);
+
 
     int getLineNum();
 

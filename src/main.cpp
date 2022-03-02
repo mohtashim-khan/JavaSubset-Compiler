@@ -42,7 +42,7 @@ int main(int argc, char *argv[])
     // Print out all tokens until EOF including Line # and the Lexeme content
     while (token != Token::T_EOF)
     {
-        //std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
+        std::cout << "Line: " << lexer->getLine() << ", Token: [" << getName(token) << "], Lexeme: [" << lexer->getLexeme() << "]\n";
 
         // Push back ParserToken
         tokenVec.push_back(ParserToken(token, lexer->getLexeme(), lexer->getLine()));
