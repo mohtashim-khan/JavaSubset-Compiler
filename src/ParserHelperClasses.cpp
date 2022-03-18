@@ -37,6 +37,7 @@ int Node::getLineNum()
 void Node::printAST(int level)
 {
 
+    // Print Root
     if (token.has_value() && token->getToken() != Token::T_LBRACE && token->getToken() != Token::T_RBRACE && token->getToken() != Token::T_SEMICOLON && token->getToken() != Token::T_LPARA && token->getToken() != Token::T_RPARA)
     {
         for (int i = 0; i < level; i++)
@@ -49,6 +50,14 @@ void Node::printAST(int level)
         std::cout << "} \n";
     }
 
+    else if (type == "NaN")
+    {
+        for (int i = 0; i < level; i++)
+        {
+            std::cout << "\t";
+        }
+        std::cout << " {'type': '" << type << "', 'lineno': " << getLineNum() << "} \n";
+    }
 
     if (NodeList.size() == 3 && (NodeList[1]->token->getToken() == Token::T_ADD ||
                                  NodeList[1]->token->getToken() == Token::T_SUB ||
@@ -66,7 +75,7 @@ void Node::printAST(int level)
                                  NodeList[1]->token->getToken() == Token::T_AND ||
                                  NodeList[1]->token->getToken() == Token::T_OR))
     {
-        NodeList[1]->printAST(level);
+        NodeList[1]->printAST(level); // print operator 1 level Above left and right arguments
         level++;
         NodeList[0]->printAST(level);
         NodeList[2]->printAST(level);
@@ -76,7 +85,13 @@ void Node::printAST(int level)
     {
         for (auto &node : NodeList)
         {
-            if (node->token.has_value() && node->token->getToken() != Token::T_LBRACE && node->token->getToken() != Token::T_RBRACE && node->token->getToken() != Token::T_SEMICOLON && node->token->getToken() != Token::T_LPARA && node->token->getToken() != Token::T_RPARA)
+            if ((node->token.has_value() &&
+                 node->token->getToken() != Token::T_LBRACE &&
+                 node->token->getToken() != Token::T_RBRACE &&
+                 node->token->getToken() != Token::T_SEMICOLON &&
+                 node->token->getToken() != Token::T_LPARA &&
+                 node->token->getToken() != Token::T_RPARA) ||
+                type == "NaN")
             {
                 node->printAST(level++);
             }
@@ -85,7 +100,6 @@ void Node::printAST(int level)
             {
                 node->printAST(level);
             }
-            
         }
     }
 }
