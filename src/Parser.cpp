@@ -396,7 +396,7 @@ std::vector<Node *> Parser::functionHeader()
         std::vector<Node *> returnFunctionDeclaratorNodes = functionDeclarator();
         //Expect Function Declarator
         if (!returnFunctionDeclaratorNodes.empty())
-        {
+        { 
             returnNodes.insert(returnNodes.end(), returnFunctionDeclaratorNodes.begin(), returnFunctionDeclaratorNodes.end());
 
             std::vector<Node *> returnVec;

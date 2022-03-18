@@ -37,7 +37,7 @@ int Node::getLineNum()
 void Node::printAST(int level)
 {
 
-    if (token.has_value() && token->getToken()!=Token::T_LBRACE && token->getToken()!=Token::T_RBRACE && token->getToken()!=Token::T_SEMICOLON && token->getToken()!=Token::T_LPARA && token->getToken()!=Token::T_RPARA)
+    if (token.has_value() && token->getToken() != Token::T_LBRACE && token->getToken() != Token::T_RBRACE && token->getToken() != Token::T_SEMICOLON && token->getToken() != Token::T_LPARA && token->getToken() != Token::T_RPARA)
     {
         for (int i = 0; i < level; i++)
         {
@@ -51,9 +51,33 @@ void Node::printAST(int level)
 
     int currLevel = level + 1;
 
-    for (auto &node : NodeList)
+    if (NodeList.size() == 3 && (NodeList[1]->token->getToken() == Token::T_ADD ||
+                                 NodeList[1]->token->getToken() == Token::T_SUB ||
+                                 NodeList[1]->token->getToken() == Token::T_DIV ||
+                                 NodeList[1]->token->getToken() == Token::T_MULT ||
+                                 NodeList[1]->token->getToken() == Token::T_MOD ||
+                                 NodeList[1]->token->getToken() == Token::T_LT ||
+                                 NodeList[1]->token->getToken() == Token::T_GT ||
+                                 NodeList[1]->token->getToken() == Token::T_LTE ||
+                                 NodeList[1]->token->getToken() == Token::T_GTE ||
+                                 NodeList[1]->token->getToken() == Token::T_ASSIGN ||
+                                 NodeList[1]->token->getToken() == Token::T_EQUAL ||
+                                 NodeList[1]->token->getToken() == Token::T_NEQUAL ||
+                                 NodeList[1]->token->getToken() == Token::T_NOT ||
+                                 NodeList[1]->token->getToken() == Token::T_AND ||
+                                 NodeList[1]->token->getToken() == Token::T_OR))
     {
-        node->printAST(currLevel);
+        NodeList[1]->printAST(currLevel);
+        NodeList[0]->printAST(currLevel);
+        NodeList[2]->printAST(currLevel);
+    }
+
+    else
+    {
+        for (auto &node : NodeList)
+        {
+            node->printAST(currLevel);
+        }
     }
 }
 
@@ -62,22 +86,21 @@ void Node::printCST(int level)
 {
     for (int i = 0; i < level; i++)
     {
-        std::cout<<"  ";
+        std::cout << "  ";
     }
-    
 
-    std::cout <<" {'type': '" << type << "', 'lineno': " << getLineNum();
+    std::cout << " {'type': '" << type << "', 'lineno': " << getLineNum();
 
-    if(token.has_value() && token->getLexeme() != "")
+    if (token.has_value() && token->getLexeme() != "")
     {
-        std::cout << ", 'attr': '" << token->getLexeme() <<"'";
+        std::cout << ", 'attr': '" << token->getLexeme() << "'";
     }
 
     std::cout << "} \n";
 
-    int currLevel = level+1;
+    int currLevel = level + 1;
 
-    for(auto &node : NodeList)
+    for (auto &node : NodeList)
     {
         node->printCST(currLevel);
     }
