@@ -1709,6 +1709,8 @@ std::vector<Node *> Parser::globalDeclaration()
     std::vector<Node *> returnNodes;
     unsigned long storedIterVal = currToken - tokenList.begin();
 
+    
+    //Expect Variable Declaration
     std::vector<Node *> returnVariableDeclarationNodes = variableDeclaration();
     if (!returnVariableDeclarationNodes.empty())
     {
@@ -1719,6 +1721,7 @@ std::vector<Node *> Parser::globalDeclaration()
         return returnVec;
     }
 
+    //Expect function Declaration
     std::vector<Node *> returnFunctionDeclarationNodes = functionDeclaration();
     if (!returnFunctionDeclarationNodes.empty())
     {
@@ -1729,6 +1732,7 @@ std::vector<Node *> Parser::globalDeclaration()
         return returnVec;
     }
 
+    //Expect Main Function Declaration
     std::vector<Node *> returnMainFunctionDeclarationNodes = mainFunctionDeclaration();
     if (!returnMainFunctionDeclarationNodes.empty())
     {

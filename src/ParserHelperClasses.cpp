@@ -60,7 +60,7 @@ void Node::printAST(int level)
                                  NodeList[1]->token->getToken() == Token::T_GT ||
                                  NodeList[1]->token->getToken() == Token::T_LTE ||
                                  NodeList[1]->token->getToken() == Token::T_GTE ||
-                                 NodeList[1]->token->getToken() == Token::T_ASSIGN ||
+                                 //NodeList[1]->token->getToken() == Token::T_ASSIGN ||
                                  NodeList[1]->token->getToken() == Token::T_EQUAL ||
                                  NodeList[1]->token->getToken() == Token::T_NEQUAL ||
                                  NodeList[1]->token->getToken() == Token::T_NOT ||
