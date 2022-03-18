@@ -41,7 +41,7 @@ void Node::printAST(int level)
     {
         for (int i = 0; i < level; i++)
         {
-            std::cout << "  ";
+            std::cout << "\t";
         }
         std::cout << " {'type': '" << type << "', 'lineno': " << getLineNum();
 
@@ -49,7 +49,6 @@ void Node::printAST(int level)
         std::cout << "} \n";
     }
 
-    int currLevel = level + 1;
 
     if (NodeList.size() == 3 && (NodeList[1]->token->getToken() == Token::T_ADD ||
                                  NodeList[1]->token->getToken() == Token::T_SUB ||
@@ -60,23 +59,33 @@ void Node::printAST(int level)
                                  NodeList[1]->token->getToken() == Token::T_GT ||
                                  NodeList[1]->token->getToken() == Token::T_LTE ||
                                  NodeList[1]->token->getToken() == Token::T_GTE ||
-                                 //NodeList[1]->token->getToken() == Token::T_ASSIGN ||
+                                 // NodeList[1]->token->getToken() == Token::T_ASSIGN ||
                                  NodeList[1]->token->getToken() == Token::T_EQUAL ||
                                  NodeList[1]->token->getToken() == Token::T_NEQUAL ||
                                  NodeList[1]->token->getToken() == Token::T_NOT ||
                                  NodeList[1]->token->getToken() == Token::T_AND ||
                                  NodeList[1]->token->getToken() == Token::T_OR))
     {
-        NodeList[1]->printAST(currLevel);
-        NodeList[0]->printAST(currLevel);
-        NodeList[2]->printAST(currLevel);
+        NodeList[1]->printAST(level);
+        level++;
+        NodeList[0]->printAST(level);
+        NodeList[2]->printAST(level);
     }
 
     else
     {
         for (auto &node : NodeList)
         {
-            node->printAST(currLevel);
+            if (node->token.has_value() && node->token->getToken() != Token::T_LBRACE && node->token->getToken() != Token::T_RBRACE && node->token->getToken() != Token::T_SEMICOLON && node->token->getToken() != Token::T_LPARA && node->token->getToken() != Token::T_RPARA)
+            {
+                node->printAST(level++);
+            }
+
+            else
+            {
+                node->printAST(level);
+            }
+            
         }
     }
 }
