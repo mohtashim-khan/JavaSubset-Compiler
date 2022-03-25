@@ -3,105 +3,105 @@
 
 #include "header.h"
 
-char const *getName(Token token)
+char const *getName(JCC::Parser::token::token_kind_type token)
 {
     switch (token)
     {
-    case Token::T_ID:
+    case JCC::Parser::token::T_ID:
         return "id";
-    case Token::T_NUM:
+    case JCC::Parser::token::T_NUM:
         return "number";
 
-    case Token::T_STRING:
+    case JCC::Parser::token::T_STRING:
         return "string";
-    case Token::T_TRUE:
+    case JCC::Parser::token::T_TRUE:
         return "true";
-    case Token::T_FALSE:
+    case JCC::Parser::token::T_FALSE:
         return "false";
-    case Token::T_BOOLEAN:
+    case JCC::Parser::token::T_BOOLEAN:
         return "boolean";
-    case Token::T_INT:
+    case JCC::Parser::token::T_INT:
         return "int";
-    case Token::T_VOID:
+    case JCC::Parser::token::T_VOID:
         return "void";
-    case Token::T_IF:
+    case JCC::Parser::token::T_IF:
         return "if";
-    case Token::T_ELSE:
+    case JCC::Parser::token::T_ELSE:
         return "else";
-    case Token::T_WHILE:
+    case JCC::Parser::token::T_WHILE:
         return "while";
-    case Token::T_BREAK:
+    case JCC::Parser::token::T_BREAK:
         return "break";
-    case Token::T_RETURN:
+    case JCC::Parser::token::T_RETURN:
         return "return";
 
-    case Token::T_CESC_B:
+    case JCC::Parser::token::T_CESC_B:
         return "\\b";
-    case Token::T_CESC_F:
+    case JCC::Parser::token::T_CESC_F:
         return "\\f";
-    case Token::T_CESC_T:
+    case JCC::Parser::token::T_CESC_T:
         return "\\t";
-    case Token::T_CESC_R:
+    case JCC::Parser::token::T_CESC_R:
         return "\\r";
-    case Token::T_CESC_N:
+    case JCC::Parser::token::T_CESC_N:
         return "\\n";
-    case Token::T_CESC_APOST:
+    case JCC::Parser::token::T_CESC_APOST:
         return "\\'";
-    case Token::T_CESC_SLASH:
+    case JCC::Parser::token::T_CESC_SLASH:
         return "\\\\";
-    case Token::T_CESC_QUOT:
+    case JCC::Parser::token::T_CESC_QUOT:
         return "\\\"";
 
-    case Token::T_ADD:
+    case JCC::Parser::token::T_ADD:
         return "+";
-    case Token::T_SUB:
+    case JCC::Parser::token::T_SUB:
         return "-";
-    case Token::T_DIV:
+    case JCC::Parser::token::T_DIV:
         return "/";
-    case Token::T_MULT:
+    case JCC::Parser::token::T_MULT:
         return "*";
-    case Token::T_MOD:
+    case JCC::Parser::token::T_MOD:
         return "%";
-    case Token::T_LT:
+    case JCC::Parser::token::T_LT:
         return "<";
-    case Token::T_GT:
+    case JCC::Parser::token::T_GT:
         return ">";
-    case Token::T_LTE:
+    case JCC::Parser::token::T_LTE:
         return "<=";
-    case Token::T_GTE:
+    case JCC::Parser::token::T_GTE:
         return ">=";
-    case Token::T_ASSIGN:
+    case JCC::Parser::token::T_ASSIGN:
         return "=";
-    case Token::T_EQUAL:
+    case JCC::Parser::token::T_EQUAL:
         return "==";
-    case Token::T_NEQUAL:
+    case JCC::Parser::token::T_NEQUAL:
         return "!=";
-    case Token::T_NOT:
+    case JCC::Parser::token::T_NOT:
         return "!";
-    case Token::T_AND:
+    case JCC::Parser::token::T_AND:
         return "&&";
-    case Token::T_OR:
+    case JCC::Parser::token::T_OR:
         return "||";
 
-    case Token::T_LPARA:
+    case JCC::Parser::token::T_LPARA:
         return "(";
-    case Token::T_RPARA:
+    case JCC::Parser::token::T_RPARA:
         return ")";
 
-    case Token::T_LBRACE:
+    case JCC::Parser::token::T_LBRACE:
         return "{";
-    case Token::T_RBRACE:
+    case JCC::Parser::token::T_RBRACE:
         return "}";
 
-    case Token::T_SEMICOLON:
+    case JCC::Parser::token::T_SEMICOLON:
         return ";";
-    case Token::T_COMMA:
+    case JCC::Parser::token::T_COMMA:
         return ",";
 
-    case Token::T_ERR:
+    case JCC::Parser::token::T_ERR:
         return "ERROR";
 
-    case Token::T_EOF:
+    case JCC::Parser::token::T_EOF:
         return "EOF";
     default:
         return "";

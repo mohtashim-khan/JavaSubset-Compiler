@@ -12,7 +12,7 @@ Lexer::Lexer(std::fstream *inputFile)
     in = inputFile;
 }
 
-Token Lexer::lex()
+JCC::Parser::token::token_kind_type Lexer::lex(JCC::Parser::semantic_type *yylval, JCC::Parser::location_type *location)
 {
 
     while (!in->eof())
@@ -24,6 +24,8 @@ Token Lexer::lex()
         // If new line, Increment Line # and get next char
         if (c == '\n')
         {
+            location->lines(); 
+            location->step();
             lineno++;
             in->get();
         }
@@ -51,7 +53,7 @@ Token Lexer::lex()
             // Otherwise return Division Operator token
             else
             {
-                curr_token = Token::T_DIV;
+                curr_token = JCC::Parser::token::T_DIV;
                 return curr_token;
             }
         }
@@ -70,7 +72,8 @@ Token Lexer::lex()
             }
 
             // Else Return ID token
-            curr_token = Token::T_ID;
+            curr_token = JCC::Parser::token::T_ID;
+            yylval->strVal = new std::string(lexeme);
             return curr_token;
         }
 
@@ -84,7 +87,7 @@ Token Lexer::lex()
                 readString();
 
             // If no error in string, return the token
-            if (curr_token != Token::T_ERR)
+            if (curr_token != JCC::Parser::token::T_ERR)
             {
                 return curr_token;
             }
@@ -98,7 +101,7 @@ Token Lexer::lex()
         {
             // Set Token to appropriate Character Escape.
             checkCharacterEscapes();
-            if (curr_token != Token::T_ERR)
+            if (curr_token != JCC::Parser::token::T_ERR)
             {
                 return curr_token;
             }
@@ -110,6 +113,7 @@ Token Lexer::lex()
         {
             // Read Int until non digit is found . Set Current token to Number
             readInt();
+            yylval->ival = std::stoi(lexeme);
             return curr_token;
         }
 
@@ -117,7 +121,7 @@ Token Lexer::lex()
         else if (isOperator(c))
         {
             readOperator();
-            if (curr_token == Token::T_ERR) // If there is only a single '&' or '|' Operator, Throw an Error
+            if (curr_token == JCC::Parser::token::T_ERR) // If there is only a single '&' or '|' Operator, Throw an Error
             {
                 illegal(c);
             }
@@ -135,7 +139,7 @@ Token Lexer::lex()
         }
         else if (in->eof())
         {
-            return Token::T_EOF;
+            return JCC::Parser::token::T_EOF;
         }
         else
         {
@@ -143,7 +147,7 @@ Token Lexer::lex()
             in->get();
         }
     }
-    return Token::T_EOF;
+    return JCC::Parser::token::T_EOF;
 }
 
 // Read and Append to Lexeme until no alpha num or _ is found
@@ -162,7 +166,7 @@ void Lexer::readWord()
 // Read Chars into lexeme until second Quotation Found. Sets Current token to String
 void Lexer::readString()
 {
-    curr_token = Token::T_STRING;
+    curr_token = JCC::Parser::token::T_STRING;
     lexeme.push_back(in->get());
     char c = in->peek();
 
@@ -173,7 +177,7 @@ void Lexer::readString()
 
         if (in->eof())
         {
-            curr_token = Token::T_ERR;
+            curr_token = JCC::Parser::token::T_ERR;
         }
         // If any escaped character appear, add them to the string
         if (c == '\\')
@@ -200,6 +204,7 @@ void Lexer::readString()
         }
     }
     in->get();
+    
 }
 
 // Checks for Reserved words, Clear Lexeme if found
@@ -207,70 +212,69 @@ bool Lexer::isReserved()
 {
     if (lexeme == "true")
     {
-        curr_token = Token::T_TRUE;
+        curr_token = JCC::Parser::token::T_TRUE;
         lexeme.clear();
         return true;
     }
-
     else if (lexeme == "false")
     {
-        curr_token = Token::T_FALSE;
+        curr_token = JCC::Parser::token::T_FALSE;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "boolean")
     {
-        curr_token = Token::T_BOOLEAN;
+        curr_token = JCC::Parser::token::T_BOOLEAN;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "int")
     {
-        curr_token = Token::T_INT;
+        curr_token = JCC::Parser::token::T_INT;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "void")
     {
-        curr_token = Token::T_VOID;
+        curr_token = JCC::Parser::token::T_VOID;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "if")
     {
-        curr_token = Token::T_IF;
+        curr_token = JCC::Parser::token::T_IF;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "else")
     {
-        curr_token = Token::T_ELSE;
+        curr_token = JCC::Parser::token::T_ELSE;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "while")
     {
-        curr_token = Token::T_WHILE;
+        curr_token = JCC::Parser::token::T_WHILE;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "break")
     {
-        curr_token = Token::T_BREAK;
+        curr_token = JCC::Parser::token::T_BREAK;
         lexeme.clear();
         return true;
     }
 
     else if (lexeme == "return")
     {
-        curr_token = Token::T_RETURN;
+        curr_token = JCC::Parser::token::T_RETURN;
         lexeme.clear();
         return true;
     }
@@ -285,53 +289,53 @@ void Lexer::checkCharacterEscapes()
     char c = in->peek();
     if (c == 'b')
     {
-        curr_token = Token::T_CESC_B;
+        curr_token = JCC::Parser::token::T_CESC_B;
     }
 
     else if (c == 'f')
     {
-        curr_token = Token::T_CESC_F;
+        curr_token = JCC::Parser::token::T_CESC_F;
     }
 
     else if (c == 't')
     {
-        curr_token = Token::T_CESC_T;
+        curr_token = JCC::Parser::token::T_CESC_T;
     }
 
     else if (c == 'r')
     {
-        curr_token = Token::T_CESC_R;
+        curr_token = JCC::Parser::token::T_CESC_R;
     }
 
     else if (c == 'n')
     {
-        curr_token = Token::T_CESC_N;
+        curr_token = JCC::Parser::token::T_CESC_N;
     }
 
     else if (c == '\'')
     {
-        curr_token = Token::T_CESC_APOST;
+        curr_token = JCC::Parser::token::T_CESC_APOST;
     }
 
     else if (c == '\"')
     {
-        curr_token = Token::T_CESC_QUOT;
+        curr_token = JCC::Parser::token::T_CESC_QUOT;
     }
 
     else if (c == '\\')
     {
-        curr_token = Token::T_CESC_SLASH;
+        curr_token = JCC::Parser::token::T_CESC_SLASH;
     }
     else
     {
-        curr_token = Token::T_ERR;
+        curr_token = JCC::Parser::token::T_ERR;
     }
 }
 
 // read up till the first non digit
 void Lexer::readInt()
 {
-    curr_token = Token::T_NUM;
+    curr_token = JCC::Parser::token::T_NUM;
     lexeme.push_back(in->get());
     char c = in->peek();
     while (isdigit(c))
@@ -369,63 +373,63 @@ void Lexer::readOperator()
     switch (c)
     {
     case '+':
-        curr_token = Token::T_ADD;
+        curr_token = JCC::Parser::token::T_ADD;
         break;
     case '-':
-        curr_token = Token::T_SUB;
+        curr_token = JCC::Parser::token::T_SUB;
         break;
     case '*':
-        curr_token = Token::T_MULT;
+        curr_token = JCC::Parser::token::T_MULT;
         break;
     case '<':
-        curr_token = Token::T_LT;
+        curr_token = JCC::Parser::token::T_LT;
         if (in->peek() == '=')
         {
-            curr_token = Token::T_LTE;
+            curr_token = JCC::Parser::token::T_LTE;
             in->get();
         }
         break;
     case '>':
-        curr_token = Token::T_GT;
+        curr_token = JCC::Parser::token::T_GT;
         if (in->peek() == '=')
         {
-            curr_token = Token::T_GTE;
+            curr_token = JCC::Parser::token::T_GTE;
             in->get();
         }
         break;
 
     case '=':
-        curr_token = Token::T_ASSIGN;
+        curr_token = JCC::Parser::token::T_ASSIGN;
         if (in->peek() == '=')
         {
-            curr_token = Token::T_EQUAL;
+            curr_token = JCC::Parser::token::T_EQUAL;
             in->get();
         }
         break;
 
     case '!':
-        curr_token = Token::T_NOT;
+        curr_token = JCC::Parser::token::T_NOT;
         if (in->peek() == '=')
         {
-            curr_token = Token::T_NEQUAL;
+            curr_token = JCC::Parser::token::T_NEQUAL;
             in->get();
         }
         break;
 
     case '&':
-        curr_token = Token::T_ERR;
+        curr_token = JCC::Parser::token::T_ERR;
         if (in->peek() == '&')
         {
-            curr_token = Token::T_AND;
+            curr_token = JCC::Parser::token::T_AND;
             in->get();
         }
         break;
 
     case '|':
-        curr_token = Token::T_ERR;
+        curr_token = JCC::Parser::token::T_ERR;
         if (in->peek() == '|')
         {
-            curr_token = Token::T_OR;
+            curr_token = JCC::Parser::token::T_OR;
             in->get();
         }
         break;
@@ -459,24 +463,24 @@ void Lexer::readOther()
     switch (c)
     {
     case '(':
-        curr_token = Token::T_LPARA;
+        curr_token = JCC::Parser::token::T_LPARA;
         break;
     case ')':
-        curr_token = Token::T_RPARA;
+        curr_token = JCC::Parser::token::T_RPARA;
         break;
     case '{':
-        curr_token = Token::T_LBRACE;
+        curr_token = JCC::Parser::token::T_LBRACE;
         break;
     case '}':
-        curr_token = Token::T_RBRACE;
+        curr_token = JCC::Parser::token::T_RBRACE;
         break;
 
     case ';':
-        curr_token = Token::T_SEMICOLON;
+        curr_token = JCC::Parser::token::T_SEMICOLON;
         break;
 
     case ',':
-        curr_token = Token::T_COMMA;
+        curr_token = JCC::Parser::token::T_COMMA;
         break;
 
     default:

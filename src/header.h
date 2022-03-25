@@ -5,6 +5,8 @@
 #define HEADER_H
 
 #include <string>
+#include "../parser.tab.hh"
+
 
 // Token Enum
 enum class Token
@@ -78,7 +80,7 @@ public:
 
     int getLine() { return lineno; }
 
-    Token lex();
+    JCC::Parser::token::token_kind_type lex(JCC::Parser::semantic_type *yylval, JCC::Parser::location_type *location);
 
     void func();
 
@@ -89,7 +91,7 @@ private:
     std::fstream *in;
     int lineno = 1;
     int warnings = 0;
-    Token curr_token;
+    JCC::Parser::token::token_kind_type curr_token;
     std::string lexeme;
 
     void readWord();
@@ -105,7 +107,7 @@ private:
 };
 
 //lexer_token conversion function
-char const *getName(Token token);
+char const *getName(JCC::Parser::token::token_kind_type token);
 
 
 #endif
