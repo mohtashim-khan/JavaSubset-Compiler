@@ -1,4 +1,4 @@
-# This makefile was inspired by a makefile tutorial created by the github user mauriciopoppe.
+# This makefile was inspired by a makefile tutorial created by the github user mauriciopoppe. 
 # Link to tutorial: https://www.mauriciopoppe.com/notes/computer-science/operating-systems/bin/make/
 # The original can be found in the following repository: https://gist.github.com/mauriciopoppe/de8908f67923091982c8c8136a063ea6
 
