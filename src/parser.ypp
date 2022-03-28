@@ -231,25 +231,27 @@ identifier              : T_ID {
 functiondeclaration     : functionheader block {
                              $$ = new Node("functionDeclaration");
                              $$->setLine(@$.begin.line);
-
                              $$->addChildNode($1);
+                             if($1->checkSibling())
+                             {
+                                 Node* temp = $1;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     $$->addChildNode(temp);
+                                 }
+                             }
                              $$->addChildNode($2);
                             }
                         ;
 
 functionheader          : type functiondeclarator {
-                             $$ = new Node("functionHeader");
-                             $$->setLine(@$.begin.line);
-
-                             $$->addChildNode($1);
-                             $$->addChildNode($2);
+                             $$ = $1;
+                             $$->setSibling($2);
                             }
                         | T_VOID functiondeclarator{
-                             $$ = new Node("functionHeader");
-                             $$->setLine(@$.begin.line);
-
-                             $$->addChildNode(new Node("void"));
-                             $$->addChildNode($2);
+                             $$ = new Node("void");
+                             $$->setSibling($2);
                             }
                         ;
 
