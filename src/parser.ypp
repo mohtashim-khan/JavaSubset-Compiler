@@ -142,9 +142,12 @@
 
 
 %%
-start           : /* empty */ {driver.tree = new Node ("start");}
+start           : /* empty */ { driver.tree = new Node ("start");
+                                driver.tree->setLine(@$.begin.line);}
                 | globaldeclarations{   
                                         driver.tree = new Node("start");
+                                        driver.tree->setLine(@$.begin.line);
+
                                         driver.tree->addChildNode($1);
                                         if($1->checkSibling())
                                         {
@@ -211,6 +214,8 @@ globaldeclaration       : variabledeclaration {
 
 variabledeclaration     : type identifier T_SEMICOLON {
                              $$ = new Node("variableDeclaration");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode($1);
                              $$->addChildNode($2);
                             }
@@ -218,11 +223,15 @@ variabledeclaration     : type identifier T_SEMICOLON {
 
 identifier              : T_ID {
                              $$ = new Node("id", *$1);
+                             $$->setLine(@$.begin.line);
+
                             }
                         ;
 
 functiondeclaration     : functionheader block {
                              $$ = new Node("functionDeclaration");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode($1);
                              $$->addChildNode($2);
                             }
@@ -230,11 +239,15 @@ functiondeclaration     : functionheader block {
 
 functionheader          : type functiondeclarator {
                              $$ = new Node("functionHeader");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode($1);
                              $$->addChildNode($2);
                             }
                         | T_VOID functiondeclarator{
                              $$ = new Node("functionHeader");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode(new Node("void"));
                              $$->addChildNode($2);
                             }
@@ -242,6 +255,8 @@ functionheader          : type functiondeclarator {
 
 functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
                              $$ = new Node("functionDeclarator");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode($1);
                              $$->addChildNode($3);
 
@@ -257,6 +272,8 @@ functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
                             }
                         | identifier T_LPARA T_RPARA {
                              $$ = new Node("functionDeclarator");
+                             $$->setLine(@$.begin.line);
+
                              $$->addChildNode($1);
 
                             }
@@ -279,6 +296,7 @@ formalparameterlist     : formalparameter{
 
 formalparameter         : type identifier{
                              $$ = new Node ("formalParameter");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($2);
                             }
@@ -286,6 +304,7 @@ formalparameter         : type identifier{
 
 mainfunctiondeclaration : mainfunctiondeclarator block{
                              $$ = new Node ("mainFunctionDeclaration");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($2);
                             }
@@ -293,12 +312,14 @@ mainfunctiondeclaration : mainfunctiondeclarator block{
 
 mainfunctiondeclarator  : identifier T_LPARA T_RPARA{
                              $$ = new Node ("mainFunctionDeclarator");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                             }
                         ;
 
 block                   : T_LBRACE blockstatements T_RBRACE{
                              $$ = new Node("block");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($2);
 
                              if($2->checkSibling())
@@ -313,6 +334,7 @@ block                   : T_LBRACE blockstatements T_RBRACE{
                             }
                         | T_LBRACE T_RBRACE{
                              $$ = new Node("block");
+                             $$->setLine(@$.begin.line);
                             }
                         ;
 
@@ -344,33 +366,40 @@ statement               : block{
                             }
                         | T_SEMICOLON{
                              $$ = new Node("emptyStatement");
+                             $$->setLine(@$.begin.line);
                             }
                         | statementexpression T_SEMICOLON{
                              $$ = $1;
                             }
                         | T_BREAK T_SEMICOLON{
                              $$ = new Node("breakStatement");
+                             $$->setLine(@$.begin.line);
                             }
                         | T_RETURN expression T_SEMICOLON{
                              $$ = new Node("returnStatement");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($2);
                             }
                         | T_RETURN T_SEMICOLON{
                              $$ = new Node("emptyReturnStatement");
+                             $$->setLine(@$.begin.line);
                             }
                         | T_IF T_LPARA expression T_RPARA statement{
                              $$ = new Node("ifStatement");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($3);
                              $$->addChildNode($5);
                             }
                         | T_IF T_LPARA expression T_RPARA statement T_ELSE statement{
                              $$ = new Node("ifElseStatement");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($3);
                              $$->addChildNode($5);
                              $$->addChildNode($7);
                             }
                         | T_WHILE T_LPARA expression T_RPARA statement{
                              $$ = new Node("whileStatement");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($3);
                              $$->addChildNode($5);
                             }
@@ -412,6 +441,7 @@ argumentlist            : expression {
 
 functioninvocation      : identifier T_LPARA argumentlist T_RPARA {
                              $$ = new Node("functionInvocation");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
 
@@ -428,6 +458,7 @@ functioninvocation      : identifier T_LPARA argumentlist T_RPARA {
     
                         | identifier T_LPARA T_RPARA {
                              $$ = new Node("functionInvocation");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                             }
                         ;
@@ -442,10 +473,12 @@ postfixexpression       : primary{
 
 unaryexpression         : T_SUB unaryexpression{
                              $$ = new Node("unaryExpression", "-");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($2);
                             }
                         | T_NOT unaryexpression{
                              $$ = new Node("unaryExpression", "!");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($2);
                             }
                         | postfixexpression{
@@ -457,17 +490,20 @@ multiplicativeexpression: unaryexpression {
                              $$ = $1;
                             }
                         | multiplicativeexpression T_MULT unaryexpression{
-                             $$ = new Node ("*", "*");
+                             $$ = new Node ("*");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | multiplicativeexpression T_DIV unaryexpression{
-                             $$ = new Node ("/", "/");
+                             $$ = new Node ("/");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | multiplicativeexpression T_MOD unaryexpression{
-                             $$ = new Node ("%", "%");
+                             $$ = new Node ("%");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -477,12 +513,14 @@ additiveexpression      : multiplicativeexpression{
                              $$ = $1;
                             }
                         | additiveexpression T_ADD multiplicativeexpression{
-                             $$ = new Node ("+", "+");
+                             $$ = new Node ("+");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | additiveexpression T_SUB multiplicativeexpression{
-                             $$ = new Node ("-", "-");
+                             $$ = new Node ("-");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -492,22 +530,26 @@ relationalexpression    : additiveexpression{
                              $$ = $1;
                             }
                         | relationalexpression T_LT additiveexpression{
-                             $$ = new Node ("<", "<");
+                             $$ = new Node ("<");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | relationalexpression T_GT additiveexpression{
-                             $$ = new Node (">", ">");
+                             $$ = new Node (">");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | relationalexpression T_LTE additiveexpression{
-                             $$ = new Node ("<=", "<=");
+                             $$ = new Node ("<=");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | relationalexpression T_GTE additiveexpression{
-                             $$ = new Node (">=", ">=");
+                             $$ = new Node (">=");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -517,12 +559,14 @@ equalityexpression      : relationalexpression{
                              $$ = $1;
                             }
                         | equalityexpression T_EQUAL relationalexpression{
-                             $$ = new Node ("==", "==");
+                             $$ = new Node ("==");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
                         | equalityexpression T_NEQUAL relationalexpression{
-                             $$ = new Node ("!=", "!=");
+                             $$ = new Node ("!=");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -532,7 +576,8 @@ conditionalandexpression: equalityexpression{
                              $$ = $1;
                             }
                         | conditionalandexpression T_AND equalityexpression{
-                             $$ = new Node ("&&", "&&");
+                             $$ = new Node ("&&");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -542,7 +587,8 @@ conditionalorexpression : conditionalandexpression{
                              $$ = $1;
                             }
                         | conditionalorexpression T_OR conditionalandexpression{
-                             $$ = new Node ("||", "||");
+                             $$ = new Node ("||");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }
@@ -558,6 +604,7 @@ assignmentexpression    : conditionalorexpression{
 
 assignment              : identifier T_ASSIGN assignmentexpression{
                              $$ = new Node("assignment");
+                             $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($3);
                             }

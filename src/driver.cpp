@@ -27,7 +27,7 @@ bool Driver::start(std::fstream &in)
 int Driver::getToken(JCC::Parser::semantic_type *yylval, JCC::Parser::location_type *location)
 {
     int tok = lexer->lex(yylval, location);
-    std::cout << "Token: " << (JCC::Parser::token::token_kind_type)tok << "\n";
+    std::cout << "Token: " << getName((JCC::Parser::token::token_kind_type)tok) << "\n";
     return tok;
 }
 
