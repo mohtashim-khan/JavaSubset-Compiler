@@ -17,6 +17,7 @@ JCC::Parser::token::token_kind_type Lexer::lex(JCC::Parser::semantic_type *yylva
 
     while (!in->eof())
     {
+        location->columns();
         // Clear previous token lexeme
         lexeme.clear();
         char c = in->peek();
@@ -200,6 +201,7 @@ void Lexer::readString()
                 }
                 // Add the character following the backslashes
                 lexeme.push_back(in->get());
+                c = in->peek();
             }
         }
     }

@@ -6,7 +6,7 @@
         {
             "label": "build debug",
             "type": "shell",
-            "command": "bison parser.ypp && make"
+            "command": "cd src/ && bison parser.ypp && cd .. && make"
         }
     ]
 }

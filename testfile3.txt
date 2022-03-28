@@ -1,6 +1,9 @@
-// strings
 
-"abc"
-"ab\t\ndef"
-"ab\"cd"
-"ab\\\"cd"
+int callBack()
+{
+
+ print("hello World");
+ print("hello World \n");
+
+}
+
