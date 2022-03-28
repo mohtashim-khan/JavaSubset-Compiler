@@ -1387,7 +1387,7 @@ namespace JCC {
   case 77: // assignment: identifier T_ASSIGN assignmentexpression
 #line 607 "parser.ypp"
                                                                   {
-                             (yylhs.value.node) = new Node("assignment");
+                             (yylhs.value.node) = new Node("=");
                              (yylhs.value.node)->setLine(yylhs.location.begin.line);
                              (yylhs.value.node)->addChildNode((yystack_[2].value.node));
                              (yylhs.value.node)->addChildNode((yystack_[0].value.node));

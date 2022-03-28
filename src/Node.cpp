@@ -16,7 +16,17 @@ void Node::print(int level)
         std::cout << "\t";
     }
 
-    std::cout << " {'type': '" << type << "', 'lineno': " << getLineNum();
+    if(value!="")
+    {
+        std::cout << value;
+    }
+    else
+    {
+        std::cout << type;
+    }
+
+
+    std::cout <<" {'type': '" << type << "', 'lineno': " << getLineNum();
 
     if (value != "")
     {
