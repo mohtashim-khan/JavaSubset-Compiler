@@ -4,7 +4,7 @@
 #include <string> 
 #include "header.h"
 #include "Node.hpp"
-#include "../parser.tab.hh"
+#include "parser.tab.hpp"
 #include <fstream>
 #include <memory>
 

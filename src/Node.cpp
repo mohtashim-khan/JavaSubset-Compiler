@@ -1,10 +1,10 @@
 #include "Node.hpp"
 
 
-Node::Node(std::string typ, std::string valu, std::vector<Node*> nodes)
+Node::Node(std::string typ, std::string val, std::vector<Node*> nodes)
 {
     type = typ;
-    value = valu;
+    value = val;
     childNodes = nodes;
 }
 

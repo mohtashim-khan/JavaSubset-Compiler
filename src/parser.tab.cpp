@@ -38,22 +38,22 @@
 
 
 
-#include "parser.tab.hh"
+#include "parser.tab.hpp"
 
 
 // Unqualified %code blocks.
-#line 27 "./src/parser.yy"
+#line 27 "parser.ypp"
 
     #include <iostream>
     #include <fstream>
-    #include "./src/header.h"
-    #include "./src/driver.hpp"
+    #include "header.h"
+    #include "driver.hpp"
     
     // Define yylex
     #undef yylex
-    #define yylex Driver.getToken
+    #define yylex driver.getToken
 
-#line 57 "parser.tab.cc"
+#line 57 "parser.tab.cpp"
 
 
 #ifndef YY_
@@ -144,9 +144,9 @@
 #define YYERROR         goto yyerrorlab
 #define YYRECOVERING()  (!!yyerrstatus_)
 
-#line 8 "./src/parser.yy"
+#line 8 "parser.ypp"
 namespace JCC {
-#line 150 "parser.tab.cc"
+#line 150 "parser.tab.cpp"
 
   /// Build a parser object.
   Parser::Parser (Driver &driver_yyarg)
@@ -610,368 +610,752 @@ namespace JCC {
         {
           switch (yyn)
             {
-  case 4: // literal: "number"
-#line 150 "./src/parser.yy"
-                        {(yylhs.value.node) = new Node("Number", (yystack_[0].value.ival));}
-#line 617 "parser.tab.cc"
+  case 2: // start: %empty
+#line 145 "parser.ypp"
+                              {driver.tree = new Node ("start");}
+#line 617 "parser.tab.cpp"
     break;
 
-  case 5: // literal: "string"
-#line 151 "./src/parser.yy"
-                           {(yylhs.value.node) = new Node("String");}
-#line 623 "parser.tab.cc"
+  case 3: // start: globaldeclarations
+#line 146 "parser.ypp"
+                                    {   
+                                        driver.tree = new Node("start");
+                                        driver.tree->addChildNode((yystack_[0].value.node));
+                                        if((yystack_[0].value.node)->checkSibling())
+                                        {
+                                            Node* temp = (yystack_[0].value.node);
+                                                while(temp->checkSibling()){
+                                                    temp = temp->getSibling();
+                                                    driver.tree->addChildNode(temp);
+                                                }
+                                        }
+                                    }
+#line 634 "parser.tab.cpp"
     break;
 
-  case 6: // literal: "true"
-#line 152 "./src/parser.yy"
-                         {(yylhs.value.node) = new Node("True");}
-#line 629 "parser.tab.cc"
+  case 4: // literal: T_NUM
+#line 160 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("number", std::to_string((yystack_[0].value.ival)));
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 643 "parser.tab.cpp"
     break;
 
-  case 7: // literal: "false"
-#line 153 "./src/parser.yy"
-                          {(yylhs.value.node) = new Node("False");}
-#line 635 "parser.tab.cc"
+  case 5: // literal: T_STRING
+#line 164 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("string", *(yystack_[0].value.strVal));
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 652 "parser.tab.cpp"
+    break;
+
+  case 6: // literal: T_TRUE
+#line 168 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("true");
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 661 "parser.tab.cpp"
+    break;
+
+  case 7: // literal: T_FALSE
+#line 172 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("false");
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 670 "parser.tab.cpp"
+    break;
+
+  case 8: // type: T_BOOLEAN
+#line 178 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("boolean");
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 679 "parser.tab.cpp"
+    break;
+
+  case 9: // type: T_INT
+#line 182 "parser.ypp"
+                            {
+                             (yylhs.value.node) = new Node("int");
+                             (yylhs.value.node)->setLine(yylhs.location.begin.line);
+                            }
+#line 688 "parser.tab.cpp"
     break;
 
   case 10: // globaldeclarations: globaldeclaration
-#line 160 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 641 "parser.tab.cc"
+#line 188 "parser.ypp"
+                                            {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 696 "parser.tab.cpp"
     break;
 
   case 11: // globaldeclarations: globaldeclarations globaldeclaration
-#line 161 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 647 "parser.tab.cc"
+#line 191 "parser.ypp"
+                                                               {
+                             (yylhs.value.node) = (yystack_[1].value.node);
+                             Node *temp = (yystack_[1].value.node);
+                             while(temp->checkSibling()){
+                                temp = temp->getSibling();
+                             }
+                            temp->setSibling((yystack_[0].value.node));
+                            }
+#line 709 "parser.tab.cpp"
     break;
 
   case 12: // globaldeclaration: variabledeclaration
-#line 164 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 653 "parser.tab.cc"
+#line 201 "parser.ypp"
+                                              {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 717 "parser.tab.cpp"
     break;
 
   case 13: // globaldeclaration: functiondeclaration
-#line 165 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 659 "parser.tab.cc"
+#line 204 "parser.ypp"
+                                             {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 725 "parser.tab.cpp"
     break;
 
   case 14: // globaldeclaration: mainfunctiondeclaration
-#line 166 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 665 "parser.tab.cc"
+#line 207 "parser.ypp"
+                                                 {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 733 "parser.tab.cpp"
     break;
 
-  case 15: // variabledeclaration: type identifier ";"
-#line 169 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 671 "parser.tab.cc"
+  case 15: // variabledeclaration: type identifier T_SEMICOLON
+#line 212 "parser.ypp"
+                                                      {
+                             (yylhs.value.node) = new Node("variableDeclaration");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                            }
+#line 743 "parser.tab.cpp"
     break;
 
-  case 16: // identifier: "id"
-#line 172 "./src/parser.yy"
-                               {(yylhs.value.node) = new Node("ID");}
-#line 677 "parser.tab.cc"
+  case 16: // identifier: T_ID
+#line 219 "parser.ypp"
+                               {
+                             (yylhs.value.node) = new Node("id", *(yystack_[0].value.strVal));
+                            }
+#line 751 "parser.tab.cpp"
     break;
 
   case 17: // functiondeclaration: functionheader block
-#line 175 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 683 "parser.tab.cc"
+#line 224 "parser.ypp"
+                                               {
+                             (yylhs.value.node) = new Node("functionDeclaration");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 761 "parser.tab.cpp"
     break;
 
   case 18: // functionheader: type functiondeclarator
-#line 178 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 689 "parser.tab.cc"
+#line 231 "parser.ypp"
+                                                  {
+                             (yylhs.value.node) = new Node("functionHeader");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 771 "parser.tab.cpp"
     break;
 
-  case 20: // functiondeclarator: identifier "(" formalparameterlist ")"
-#line 182 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[3].value.node); }
-#line 695 "parser.tab.cc"
+  case 19: // functionheader: T_VOID functiondeclarator
+#line 236 "parser.ypp"
+                                                   {
+                             (yylhs.value.node) = new Node("functionHeader");
+                             (yylhs.value.node)->addChildNode(new Node("void"));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 781 "parser.tab.cpp"
     break;
 
-  case 21: // functiondeclarator: identifier "(" ")"
-#line 183 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 701 "parser.tab.cc"
+  case 20: // functiondeclarator: identifier T_LPARA formalparameterlist T_RPARA
+#line 243 "parser.ypp"
+                                                                         {
+                             (yylhs.value.node) = new Node("functionDeclarator");
+                             (yylhs.value.node)->addChildNode((yystack_[3].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+
+                             if((yystack_[1].value.node)->checkSibling())
+                             {
+                                 Node* temp = (yystack_[1].value.node);
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     (yylhs.value.node)->addChildNode(temp);
+                                 }
+                             }
+                            }
+#line 801 "parser.tab.cpp"
+    break;
+
+  case 21: // functiondeclarator: identifier T_LPARA T_RPARA
+#line 258 "parser.ypp"
+                                                     {
+                             (yylhs.value.node) = new Node("functionDeclarator");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+
+                            }
+#line 811 "parser.tab.cpp"
     break;
 
   case 22: // formalparameterlist: formalparameter
-#line 186 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 707 "parser.tab.cc"
+#line 265 "parser.ypp"
+                                         {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 819 "parser.tab.cpp"
     break;
 
-  case 23: // formalparameterlist: formalparameterlist "," formalparameter
-#line 187 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 713 "parser.tab.cc"
+  case 23: // formalparameterlist: formalparameterlist T_COMMA formalparameter
+#line 268 "parser.ypp"
+                                                                     {
+                             (yylhs.value.node) = (yystack_[2].value.node);
+                             Node* temp = (yystack_[2].value.node);
+                             //Go to end of sibing chain and and add extra formal parameter at the end
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling((yystack_[0].value.node));
+                            }
+#line 834 "parser.tab.cpp"
     break;
 
   case 24: // formalparameter: type identifier
-#line 190 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 719 "parser.tab.cc"
+#line 280 "parser.ypp"
+                                         {
+                             (yylhs.value.node) = new Node ("formalParameter");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 844 "parser.tab.cpp"
     break;
 
   case 25: // mainfunctiondeclaration: mainfunctiondeclarator block
-#line 193 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 725 "parser.tab.cc"
+#line 287 "parser.ypp"
+                                                      {
+                             (yylhs.value.node) = new Node ("mainFunctionDeclaration");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 854 "parser.tab.cpp"
     break;
 
-  case 26: // mainfunctiondeclarator: identifier "(" ")"
-#line 196 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 731 "parser.tab.cc"
+  case 26: // mainfunctiondeclarator: identifier T_LPARA T_RPARA
+#line 294 "parser.ypp"
+                                                    {
+                             (yylhs.value.node) = new Node ("mainFunctionDeclarator");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                            }
+#line 863 "parser.tab.cpp"
+    break;
+
+  case 27: // block: T_LBRACE blockstatements T_RBRACE
+#line 300 "parser.ypp"
+                                                           {
+                             (yylhs.value.node) = new Node("block");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+
+                             if((yystack_[1].value.node)->checkSibling())
+                             {
+                                 Node* temp = (yystack_[1].value.node);
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     (yylhs.value.node)->addChildNode(temp);
+                                 }
+                             }
+                            }
+#line 882 "parser.tab.cpp"
+    break;
+
+  case 28: // block: T_LBRACE T_RBRACE
+#line 314 "parser.ypp"
+                                           {
+                             (yylhs.value.node) = new Node("block");
+                            }
+#line 890 "parser.tab.cpp"
     break;
 
   case 29: // blockstatements: blockstatement
-#line 203 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 737 "parser.tab.cc"
+#line 319 "parser.ypp"
+                                        {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 898 "parser.tab.cpp"
     break;
 
   case 30: // blockstatements: blockstatements blockstatement
-#line 204 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 743 "parser.tab.cc"
+#line 322 "parser.ypp"
+                                                        {
+                             (yylhs.value.node) = (yystack_[1].value.node);
+                             Node* temp = (yystack_[1].value.node);
+                             //Go to end of sibing chain and add extra block statement to the end
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling((yystack_[0].value.node));
+                            }
+#line 913 "parser.tab.cpp"
     break;
 
   case 31: // blockstatement: variabledeclaration
-#line 207 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 749 "parser.tab.cc"
+#line 334 "parser.ypp"
+                                             {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 921 "parser.tab.cpp"
     break;
 
   case 32: // blockstatement: statement
-#line 208 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 755 "parser.tab.cc"
+#line 337 "parser.ypp"
+                                   {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 929 "parser.tab.cpp"
     break;
 
   case 33: // statement: block
-#line 211 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 761 "parser.tab.cc"
+#line 342 "parser.ypp"
+                               {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 937 "parser.tab.cpp"
     break;
 
-  case 35: // statement: statementexpression ";"
-#line 213 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[1].value.node); }
-#line 767 "parser.tab.cc"
+  case 34: // statement: T_SEMICOLON
+#line 345 "parser.ypp"
+                                     {
+                             (yylhs.value.node) = new Node("emptyStatement");
+                            }
+#line 945 "parser.tab.cpp"
+    break;
+
+  case 35: // statement: statementexpression T_SEMICOLON
+#line 348 "parser.ypp"
+                                                         {
+                             (yylhs.value.node) = (yystack_[1].value.node);
+                            }
+#line 953 "parser.tab.cpp"
+    break;
+
+  case 36: // statement: T_BREAK T_SEMICOLON
+#line 351 "parser.ypp"
+                                             {
+                             (yylhs.value.node) = new Node("breakStatement");
+                            }
+#line 961 "parser.tab.cpp"
+    break;
+
+  case 37: // statement: T_RETURN expression T_SEMICOLON
+#line 354 "parser.ypp"
+                                                         {
+                             (yylhs.value.node) = new Node("returnStatement");
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+                            }
+#line 970 "parser.tab.cpp"
+    break;
+
+  case 38: // statement: T_RETURN T_SEMICOLON
+#line 358 "parser.ypp"
+                                              {
+                             (yylhs.value.node) = new Node("emptyReturnStatement");
+                            }
+#line 978 "parser.tab.cpp"
+    break;
+
+  case 39: // statement: T_IF T_LPARA expression T_RPARA statement
+#line 361 "parser.ypp"
+                                                                   {
+                             (yylhs.value.node) = new Node("ifStatement");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 988 "parser.tab.cpp"
+    break;
+
+  case 40: // statement: T_IF T_LPARA expression T_RPARA statement T_ELSE statement
+#line 366 "parser.ypp"
+                                                                                    {
+                             (yylhs.value.node) = new Node("ifElseStatement");
+                             (yylhs.value.node)->addChildNode((yystack_[4].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 999 "parser.tab.cpp"
+    break;
+
+  case 41: // statement: T_WHILE T_LPARA expression T_RPARA statement
+#line 372 "parser.ypp"
+                                                                      {
+                             (yylhs.value.node) = new Node("whileStatement");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1009 "parser.tab.cpp"
     break;
 
   case 42: // statementexpression: assignment
-#line 222 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 773 "parser.tab.cc"
+#line 379 "parser.ypp"
+                                    {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1017 "parser.tab.cpp"
     break;
 
   case 43: // statementexpression: functioninvocation
-#line 223 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 779 "parser.tab.cc"
+#line 382 "parser.ypp"
+                                            {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1025 "parser.tab.cpp"
     break;
 
   case 44: // primary: literal
-#line 226 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 785 "parser.tab.cc"
+#line 387 "parser.ypp"
+                                  {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1033 "parser.tab.cpp"
+    break;
+
+  case 45: // primary: T_LPARA expression T_RPARA
+#line 390 "parser.ypp"
+                                                    {
+                             (yylhs.value.node) = (yystack_[1].value.node);
+                            }
+#line 1041 "parser.tab.cpp"
     break;
 
   case 46: // primary: functioninvocation
-#line 228 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 791 "parser.tab.cc"
+#line 393 "parser.ypp"
+                                            {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1049 "parser.tab.cpp"
     break;
 
   case 47: // argumentlist: expression
-#line 231 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 797 "parser.tab.cc"
+#line 398 "parser.ypp"
+                                     {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1057 "parser.tab.cpp"
     break;
 
-  case 48: // argumentlist: argumentlist "," expression
-#line 232 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 803 "parser.tab.cc"
+  case 48: // argumentlist: argumentlist T_COMMA expression
+#line 401 "parser.ypp"
+                                                          {
+                             (yylhs.value.node) = (yystack_[2].value.node);
+                             //Go to end of sibing chain and add extra expression to the end
+                             Node* temp = (yystack_[2].value.node);
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling((yystack_[0].value.node));
+                            }
+#line 1072 "parser.tab.cpp"
     break;
 
-  case 49: // functioninvocation: identifier "(" argumentlist ")"
-#line 235 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[3].value.node); }
-#line 809 "parser.tab.cc"
+  case 49: // functioninvocation: identifier T_LPARA argumentlist T_RPARA
+#line 413 "parser.ypp"
+                                                                  {
+                             (yylhs.value.node) = new Node("functionInvocation");
+                             (yylhs.value.node)->addChildNode((yystack_[3].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[1].value.node));
+
+                             if((yystack_[1].value.node)->checkSibling())
+                             {
+                                 Node* temp = (yystack_[1].value.node);
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     (yylhs.value.node)->addChildNode(temp);
+                                 }
+                             }
+                            }
+#line 1092 "parser.tab.cpp"
     break;
 
-  case 50: // functioninvocation: identifier "(" ")"
-#line 236 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 815 "parser.tab.cc"
+  case 50: // functioninvocation: identifier T_LPARA T_RPARA
+#line 429 "parser.ypp"
+                                                     {
+                             (yylhs.value.node) = new Node("functionInvocation");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                            }
+#line 1101 "parser.tab.cpp"
     break;
 
   case 51: // postfixexpression: primary
-#line 239 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 821 "parser.tab.cc"
+#line 435 "parser.ypp"
+                                 {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1109 "parser.tab.cpp"
     break;
 
   case 52: // postfixexpression: identifier
-#line 240 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 827 "parser.tab.cc"
+#line 438 "parser.ypp"
+                                    {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1117 "parser.tab.cpp"
+    break;
+
+  case 53: // unaryexpression: T_SUB unaryexpression
+#line 443 "parser.ypp"
+                                               {
+                             (yylhs.value.node) = new Node("unaryExpression", "-");
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1126 "parser.tab.cpp"
+    break;
+
+  case 54: // unaryexpression: T_NOT unaryexpression
+#line 447 "parser.ypp"
+                                               {
+                             (yylhs.value.node) = new Node("unaryExpression", "!");
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1135 "parser.tab.cpp"
     break;
 
   case 55: // unaryexpression: postfixexpression
-#line 245 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 833 "parser.tab.cc"
+#line 451 "parser.ypp"
+                                           {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1143 "parser.tab.cpp"
     break;
 
   case 56: // multiplicativeexpression: unaryexpression
-#line 248 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 839 "parser.tab.cc"
+#line 456 "parser.ypp"
+                                          {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1151 "parser.tab.cpp"
     break;
 
-  case 57: // multiplicativeexpression: multiplicativeexpression "*" unaryexpression
-#line 249 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 845 "parser.tab.cc"
+  case 57: // multiplicativeexpression: multiplicativeexpression T_MULT unaryexpression
+#line 459 "parser.ypp"
+                                                                         {
+                             (yylhs.value.node) = new Node ("*", "*");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1161 "parser.tab.cpp"
     break;
 
-  case 58: // multiplicativeexpression: multiplicativeexpression "/" unaryexpression
-#line 250 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 851 "parser.tab.cc"
+  case 58: // multiplicativeexpression: multiplicativeexpression T_DIV unaryexpression
+#line 464 "parser.ypp"
+                                                                        {
+                             (yylhs.value.node) = new Node ("/", "/");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1171 "parser.tab.cpp"
     break;
 
-  case 59: // multiplicativeexpression: multiplicativeexpression "%" unaryexpression
-#line 251 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 857 "parser.tab.cc"
+  case 59: // multiplicativeexpression: multiplicativeexpression T_MOD unaryexpression
+#line 469 "parser.ypp"
+                                                                        {
+                             (yylhs.value.node) = new Node ("%", "%");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1181 "parser.tab.cpp"
     break;
 
   case 60: // additiveexpression: multiplicativeexpression
-#line 254 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 863 "parser.tab.cc"
+#line 476 "parser.ypp"
+                                                  {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1189 "parser.tab.cpp"
     break;
 
-  case 61: // additiveexpression: additiveexpression "+" multiplicativeexpression
-#line 255 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 869 "parser.tab.cc"
+  case 61: // additiveexpression: additiveexpression T_ADD multiplicativeexpression
+#line 479 "parser.ypp"
+                                                                           {
+                             (yylhs.value.node) = new Node ("+", "+");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1199 "parser.tab.cpp"
     break;
 
-  case 62: // additiveexpression: additiveexpression "-" multiplicativeexpression
-#line 256 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 875 "parser.tab.cc"
+  case 62: // additiveexpression: additiveexpression T_SUB multiplicativeexpression
+#line 484 "parser.ypp"
+                                                                           {
+                             (yylhs.value.node) = new Node ("-", "-");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1209 "parser.tab.cpp"
     break;
 
   case 63: // relationalexpression: additiveexpression
-#line 259 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 881 "parser.tab.cc"
+#line 491 "parser.ypp"
+                                            {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1217 "parser.tab.cpp"
     break;
 
-  case 64: // relationalexpression: relationalexpression "<" additiveexpression
-#line 260 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 887 "parser.tab.cc"
+  case 64: // relationalexpression: relationalexpression T_LT additiveexpression
+#line 494 "parser.ypp"
+                                                                      {
+                             (yylhs.value.node) = new Node ("<", "<");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1227 "parser.tab.cpp"
     break;
 
-  case 65: // relationalexpression: relationalexpression ">" additiveexpression
-#line 261 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 893 "parser.tab.cc"
+  case 65: // relationalexpression: relationalexpression T_GT additiveexpression
+#line 499 "parser.ypp"
+                                                                      {
+                             (yylhs.value.node) = new Node (">", ">");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1237 "parser.tab.cpp"
     break;
 
-  case 66: // relationalexpression: relationalexpression "<=" additiveexpression
-#line 262 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 899 "parser.tab.cc"
+  case 66: // relationalexpression: relationalexpression T_LTE additiveexpression
+#line 504 "parser.ypp"
+                                                                       {
+                             (yylhs.value.node) = new Node ("<=", "<=");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1247 "parser.tab.cpp"
     break;
 
-  case 67: // relationalexpression: relationalexpression ">=" additiveexpression
-#line 263 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 905 "parser.tab.cc"
+  case 67: // relationalexpression: relationalexpression T_GTE additiveexpression
+#line 509 "parser.ypp"
+                                                                       {
+                             (yylhs.value.node) = new Node (">=", ">=");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1257 "parser.tab.cpp"
     break;
 
   case 68: // equalityexpression: relationalexpression
-#line 266 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 911 "parser.tab.cc"
+#line 516 "parser.ypp"
+                                              {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1265 "parser.tab.cpp"
     break;
 
-  case 69: // equalityexpression: equalityexpression "==" relationalexpression
-#line 267 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 917 "parser.tab.cc"
+  case 69: // equalityexpression: equalityexpression T_EQUAL relationalexpression
+#line 519 "parser.ypp"
+                                                                         {
+                             (yylhs.value.node) = new Node ("==", "==");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1275 "parser.tab.cpp"
     break;
 
-  case 70: // equalityexpression: equalityexpression "!=" relationalexpression
-#line 268 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 923 "parser.tab.cc"
+  case 70: // equalityexpression: equalityexpression T_NEQUAL relationalexpression
+#line 524 "parser.ypp"
+                                                                          {
+                             (yylhs.value.node) = new Node ("!=", "!=");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1285 "parser.tab.cpp"
     break;
 
   case 71: // conditionalandexpression: equalityexpression
-#line 271 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 929 "parser.tab.cc"
+#line 531 "parser.ypp"
+                                            {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1293 "parser.tab.cpp"
     break;
 
-  case 72: // conditionalandexpression: conditionalandexpression "&&" equalityexpression
-#line 272 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 935 "parser.tab.cc"
+  case 72: // conditionalandexpression: conditionalandexpression T_AND equalityexpression
+#line 534 "parser.ypp"
+                                                                           {
+                             (yylhs.value.node) = new Node ("&&", "&&");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1303 "parser.tab.cpp"
     break;
 
   case 73: // conditionalorexpression: conditionalandexpression
-#line 275 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 941 "parser.tab.cc"
+#line 541 "parser.ypp"
+                                                  {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1311 "parser.tab.cpp"
     break;
 
-  case 74: // conditionalorexpression: conditionalorexpression "||" conditionalandexpression
-#line 276 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 947 "parser.tab.cc"
+  case 74: // conditionalorexpression: conditionalorexpression T_OR conditionalandexpression
+#line 544 "parser.ypp"
+                                                                               {
+                             (yylhs.value.node) = new Node ("||", "||");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1321 "parser.tab.cpp"
     break;
 
   case 75: // assignmentexpression: conditionalorexpression
-#line 279 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 953 "parser.tab.cc"
+#line 551 "parser.ypp"
+                                                 {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1329 "parser.tab.cpp"
     break;
 
   case 76: // assignmentexpression: assignment
-#line 280 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 959 "parser.tab.cc"
+#line 554 "parser.ypp"
+                                    {
+                             (yylhs.value.node) = (yystack_[0].value.node);   //Does this need a new node?
+                            }
+#line 1337 "parser.tab.cpp"
     break;
 
-  case 77: // assignment: identifier "=" assignmentexpression
-#line 283 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[2].value.node); }
-#line 965 "parser.tab.cc"
+  case 77: // assignment: identifier T_ASSIGN assignmentexpression
+#line 559 "parser.ypp"
+                                                                  {
+                             (yylhs.value.node) = new Node("assignment");
+                             (yylhs.value.node)->addChildNode((yystack_[2].value.node));
+                             (yylhs.value.node)->addChildNode((yystack_[0].value.node));
+                            }
+#line 1347 "parser.tab.cpp"
     break;
 
   case 78: // expression: assignmentexpression
-#line 286 "./src/parser.yy"
-                          { (yylhs.value.node) = (yystack_[0].value.node); }
-#line 971 "parser.tab.cc"
+#line 566 "parser.ypp"
+                                              {
+                             (yylhs.value.node) = (yystack_[0].value.node);
+                            }
+#line 1355 "parser.tab.cpp"
     break;
 
 
-#line 975 "parser.tab.cc"
+#line 1359 "parser.tab.cpp"
 
             default:
               break;
@@ -1318,14 +1702,14 @@ namespace JCC {
   const char*
   const Parser::yytname_[] =
   {
-  "T_EOF", "error", "\"invalid token\"", "\"id\"", "\"number\"",
-  "\"string\"", "T_CESC_B", "T_CESC_F", "T_CESC_T", "T_CESC_R", "T_CESC_N",
-  "T_CESC_APOST", "T_CESC_QUOT", "T_CESC_SLASH", "\"true\"", "\"false\"",
-  "\"boolean\"", "\"int\"", "\"void\"", "\"if\"", "\"else\"", "\"while\"",
-  "\"break\"", "\"return\"", "\"+\"", "\"-\"", "\"*\"", "\"/\"", "\"%\"",
-  "\"<\"", "\">\"", "\"<=\"", "\">=\"", "\"=\"", "\"==\"", "\"!=\"",
-  "\"!\"", "\"&&\"", "\"||\"", "\"(\"", "\")\"", "\"{\"", "\"}\"", "\";\"",
-  "\",\"", "T_ERR", "$accept", "start", "literal", "type",
+  "T_EOF", "error", "\"invalid token\"", "T_ID", "T_NUM", "T_STRING",
+  "T_CESC_B", "T_CESC_F", "T_CESC_T", "T_CESC_R", "T_CESC_N",
+  "T_CESC_APOST", "T_CESC_QUOT", "T_CESC_SLASH", "T_TRUE", "T_FALSE",
+  "T_BOOLEAN", "T_INT", "T_VOID", "T_IF", "T_ELSE", "T_WHILE", "T_BREAK",
+  "T_RETURN", "T_ADD", "T_SUB", "T_MULT", "T_DIV", "T_MOD", "T_LT", "T_GT",
+  "T_LTE", "T_GTE", "T_ASSIGN", "T_EQUAL", "T_NEQUAL", "T_NOT", "T_AND",
+  "T_OR", "T_LPARA", "T_RPARA", "T_LBRACE", "T_RBRACE", "T_SEMICOLON",
+  "T_COMMA", "T_ERR", "$accept", "start", "literal", "type",
   "globaldeclarations", "globaldeclaration", "variabledeclaration",
   "identifier", "functiondeclaration", "functionheader",
   "functiondeclarator", "formalparameterlist", "formalparameter",
@@ -1344,14 +1728,14 @@ namespace JCC {
   const short
   Parser::yyrline_[] =
   {
-       0,   146,   146,   147,   150,   151,   152,   153,   156,   157,
-     160,   161,   164,   165,   166,   169,   172,   175,   178,   179,
-     182,   183,   186,   187,   190,   193,   196,   199,   200,   203,
-     204,   207,   208,   211,   212,   213,   214,   215,   216,   217,
-     218,   219,   222,   223,   226,   227,   228,   231,   232,   235,
-     236,   239,   240,   243,   244,   245,   248,   249,   250,   251,
-     254,   255,   256,   259,   260,   261,   262,   263,   266,   267,
-     268,   271,   272,   275,   276,   279,   280,   283,   286
+       0,   145,   145,   146,   160,   164,   168,   172,   178,   182,
+     188,   191,   201,   204,   207,   212,   219,   224,   231,   236,
+     243,   258,   265,   268,   280,   287,   294,   300,   314,   319,
+     322,   334,   337,   342,   345,   348,   351,   354,   358,   361,
+     366,   372,   379,   382,   387,   390,   393,   398,   401,   413,
+     429,   435,   438,   443,   447,   451,   456,   459,   464,   469,
+     476,   479,   484,   491,   494,   499,   504,   509,   516,   519,
+     524,   531,   534,   541,   544,   551,   554,   559,   566
   };
 
   void
@@ -1433,11 +1817,11 @@ namespace JCC {
       return symbol_kind::S_YYUNDEF;
   }
 
-#line 8 "./src/parser.yy"
+#line 8 "parser.ypp"
 } // JCC
-#line 1439 "parser.tab.cc"
+#line 1823 "parser.tab.cpp"
 
-#line 290 "./src/parser.yy"
+#line 572 "parser.ypp"
 
 
 void JCC::Parser::error(const location_type &loc, const std::string &errmsg)

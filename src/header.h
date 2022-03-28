@@ -5,7 +5,7 @@
 #define HEADER_H
 
 #include <string>
-#include "../parser.tab.hh"
+#include "parser.tab.hpp"
 
 
 // Token Enum

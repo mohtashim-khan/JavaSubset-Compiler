@@ -32,5 +32,8 @@ int main(int argc, char *argv[])
 
     bool res = driver -> start(inputfile);
 
+    if (inputfile.is_open()) inputfile.close();
+
+
     return EXIT_SUCCESS;
 }

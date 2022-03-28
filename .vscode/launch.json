@@ -10,7 +10,7 @@
         "testfile.txt"
       ],
       "stopAtEntry": false,
-      "cwd": "${workspaceFolder}",
+      "cwd": "${workspaceFolder}/src",
       "environment": [],
       "externalConsole": false,
       "MIMode": "gdb",

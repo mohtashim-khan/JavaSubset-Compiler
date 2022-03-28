@@ -1,0 +1,577 @@
+/* Create C++ parser */
+%skeleton "lalr1.cc"
+%require "3.7"
+
+/* Generate headers */
+%defines
+
+%define api.namespace {JCC}
+%define api.parser.class {Parser}
+
+%locations
+
+
+%code requires{
+    #include <vector>
+    #include <iostream>
+    #include <string>
+    #include "Node.hpp"
+
+    // Forward Declaration.
+    // Compiler outputs error otherwise
+    class Driver;
+}
+
+%parse-param {Driver &driver}
+
+%code {
+    #include <iostream>
+    #include <fstream>
+    #include "header.h"
+    #include "driver.hpp"
+    
+    // Define yylex
+    #undef yylex
+    #define yylex driver.getToken
+}
+
+
+
+/* Semantic type / YYSTYPE */
+%union{
+    std::string *strVal;
+    int ival;
+
+    Node* node;
+};
+
+
+//EOF
+%token T_EOF  0
+
+// Literals
+%token <strVal> T_ID 
+%token <ival> T_NUM 
+%token <strVal> T_STRING 
+
+%token T_CESC_B
+%token T_CESC_F
+%token T_CESC_T
+%token T_CESC_R
+%token T_CESC_N
+%token T_CESC_APOST
+%token T_CESC_QUOT
+%token T_CESC_SLASH
+
+    // Reserved Words
+%token T_TRUE 
+%token T_FALSE 
+%token T_BOOLEAN 
+%token T_INT 
+%token T_VOID 
+%token T_IF 
+%token T_ELSE 
+%token T_WHILE 
+%token T_BREAK  
+%token T_RETURN 
+
+    // Operators
+%token T_ADD 
+%token T_SUB 
+%token T_MULT 
+%token T_DIV 
+%token T_MOD 
+%token T_LT 
+%token T_GT 
+%token T_LTE 
+%token T_GTE 
+%token T_ASSIGN 
+%token T_EQUAL 
+%token T_NEQUAL
+%token T_NOT 
+%token T_AND 
+%token T_OR 
+
+    // Other Things
+%token T_LPARA 
+%token T_RPARA 
+%token T_LBRACE 
+%token T_RBRACE 
+%token T_SEMICOLON 
+%token T_COMMA 
+
+    // ERROR TOKEN
+%token T_ERR 
+
+
+
+%type <node> literal 
+%type <node> type
+%type <node> globaldeclarations
+%type <node> globaldeclaration
+%type <node> variabledeclaration
+%type <node> identifier
+%type <node> functiondeclaration
+%type <node> functionheader
+%type <node> functiondeclarator
+%type <node> formalparameterlist
+%type <node> formalparameter
+%type <node> mainfunctiondeclaration
+%type <node> mainfunctiondeclarator
+%type <node> block
+%type <node> blockstatements
+%type <node> blockstatement
+%type <node> statement
+%type <node> statementexpression
+%type <node> primary
+%type <node> argumentlist
+%type <node> functioninvocation
+%type <node> postfixexpression
+%type <node> unaryexpression
+%type <node> multiplicativeexpression
+%type <node> additiveexpression
+%type <node> relationalexpression
+%type <node> equalityexpression
+%type <node> conditionalandexpression
+%type <node> conditionalorexpression
+%type <node> assignmentexpression
+%type <node> assignment
+%type <node> expression
+
+%start start
+
+
+%%
+start           : /* empty */ {driver.tree = new Node ("start");}
+                | globaldeclarations{   
+                                        driver.tree = new Node("start");
+                                        driver.tree->addChildNode($1);
+                                        if($1->checkSibling())
+                                        {
+                                            Node* temp = $1;
+                                                while(temp->checkSibling()){
+                                                    temp = temp->getSibling();
+                                                    driver.tree->addChildNode(temp);
+                                                }
+                                        }
+                                    }
+                ;
+
+literal         : T_NUM     {
+                             $$ = new Node("number", std::to_string($1));
+                             $$->setLine(@$.begin.line);
+                            }
+                | T_STRING  {
+                             $$ = new Node("string", *$1);
+                             $$->setLine(@$.begin.line);
+                            }
+                | T_TRUE    {
+                             $$ = new Node("true");
+                             $$->setLine(@$.begin.line);
+                            }
+                | T_FALSE   {
+                             $$ = new Node("false");
+                             $$->setLine(@$.begin.line);
+                            }
+                ;
+
+type            : T_BOOLEAN {
+                             $$ = new Node("boolean");
+                             $$->setLine(@$.begin.line);
+                            }
+                | T_INT     {
+                             $$ = new Node("int");
+                             $$->setLine(@$.begin.line);
+                            }
+                ;
+
+globaldeclarations      : globaldeclaration {
+                             $$ = $1;
+                            }
+                        | globaldeclarations globaldeclaration {
+                             $$ = $1;
+                             Node *temp = $1;
+                             while(temp->checkSibling()){
+                                temp = temp->getSibling();
+                             }
+                            temp->setSibling($2);
+                            }
+                        ;
+
+globaldeclaration       : variabledeclaration {
+                             $$ = $1;
+                            }
+                        | functiondeclaration{
+                             $$ = $1;
+                            }
+                        | mainfunctiondeclaration{
+                             $$ = $1;
+                            }
+                        ;
+
+variabledeclaration     : type identifier T_SEMICOLON {
+                             $$ = new Node("variableDeclaration");
+                             $$->addChildNode($1);
+                             $$->addChildNode($2);
+                            }
+                        ;
+
+identifier              : T_ID {
+                             $$ = new Node("id", *$1);
+                            }
+                        ;
+
+functiondeclaration     : functionheader block {
+                             $$ = new Node("functionDeclaration");
+                             $$->addChildNode($1);
+                             $$->addChildNode($2);
+                            }
+                        ;
+
+functionheader          : type functiondeclarator {
+                             $$ = new Node("functionHeader");
+                             $$->addChildNode($1);
+                             $$->addChildNode($2);
+                            }
+                        | T_VOID functiondeclarator{
+                             $$ = new Node("functionHeader");
+                             $$->addChildNode(new Node("void"));
+                             $$->addChildNode($2);
+                            }
+                        ;
+
+functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
+                             $$ = new Node("functionDeclarator");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+
+                             if($3->checkSibling())
+                             {
+                                 Node* temp = $3;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     $$->addChildNode(temp);
+                                 }
+                             }
+                            }
+                        | identifier T_LPARA T_RPARA {
+                             $$ = new Node("functionDeclarator");
+                             $$->addChildNode($1);
+
+                            }
+                        ;
+
+formalparameterlist     : formalparameter{
+                             $$ = $1;
+                            }
+                        | formalparameterlist T_COMMA formalparameter{
+                             $$ = $1;
+                             Node* temp = $1;
+                             //Go to end of sibing chain and and add extra formal parameter at the end
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling($3);
+                            }
+                        ;
+
+formalparameter         : type identifier{
+                             $$ = new Node ("formalParameter");
+                             $$->addChildNode($1);
+                             $$->addChildNode($2);
+                            }
+                        ;
+
+mainfunctiondeclaration : mainfunctiondeclarator block{
+                             $$ = new Node ("mainFunctionDeclaration");
+                             $$->addChildNode($1);
+                             $$->addChildNode($2);
+                            }
+                        ;
+
+mainfunctiondeclarator  : identifier T_LPARA T_RPARA{
+                             $$ = new Node ("mainFunctionDeclarator");
+                             $$->addChildNode($1);
+                            }
+                        ;
+
+block                   : T_LBRACE blockstatements T_RBRACE{
+                             $$ = new Node("block");
+                             $$->addChildNode($2);
+
+                             if($2->checkSibling())
+                             {
+                                 Node* temp = $2;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     $$->addChildNode(temp);
+                                 }
+                             }
+                            }
+                        | T_LBRACE T_RBRACE{
+                             $$ = new Node("block");
+                            }
+                        ;
+
+blockstatements         : blockstatement{
+                             $$ = $1;
+                            }
+                        | blockstatements blockstatement{
+                             $$ = $1;
+                             Node* temp = $1;
+                             //Go to end of sibing chain and add extra block statement to the end
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling($2);
+                            }
+                        ;
+
+blockstatement          : variabledeclaration{
+                             $$ = $1;
+                            }
+                        | statement{
+                             $$ = $1;
+                            }
+                        ;
+
+statement               : block{
+                             $$ = $1;
+                            }
+                        | T_SEMICOLON{
+                             $$ = new Node("emptyStatement");
+                            }
+                        | statementexpression T_SEMICOLON{
+                             $$ = $1;
+                            }
+                        | T_BREAK T_SEMICOLON{
+                             $$ = new Node("breakStatement");
+                            }
+                        | T_RETURN expression T_SEMICOLON{
+                             $$ = new Node("returnStatement");
+                             $$->addChildNode($2);
+                            }
+                        | T_RETURN T_SEMICOLON{
+                             $$ = new Node("emptyReturnStatement");
+                            }
+                        | T_IF T_LPARA expression T_RPARA statement{
+                             $$ = new Node("ifStatement");
+                             $$->addChildNode($3);
+                             $$->addChildNode($5);
+                            }
+                        | T_IF T_LPARA expression T_RPARA statement T_ELSE statement{
+                             $$ = new Node("ifElseStatement");
+                             $$->addChildNode($3);
+                             $$->addChildNode($5);
+                             $$->addChildNode($7);
+                            }
+                        | T_WHILE T_LPARA expression T_RPARA statement{
+                             $$ = new Node("whileStatement");
+                             $$->addChildNode($3);
+                             $$->addChildNode($5);
+                            }
+                        ;
+
+statementexpression     : assignment{
+                             $$ = $1;
+                            }
+                        | functioninvocation{
+                             $$ = $1;
+                            }
+                        ;
+
+primary                 : literal {
+                             $$ = $1;
+                            }
+                        | T_LPARA expression T_RPARA{
+                             $$ = $2;
+                            }
+                        | functioninvocation{
+                             $$ = $1;
+                            }
+                        ;
+
+argumentlist            : expression {
+                             $$ = $1;
+                            }
+                        | argumentlist T_COMMA expression {
+                             $$ = $1;
+                             //Go to end of sibing chain and add extra expression to the end
+                             Node* temp = $1;
+                             while(temp->checkSibling())
+                             {
+                                 temp = temp->getSibling();
+                             }
+                             temp->setSibling($3);
+                            }
+                        ;
+
+functioninvocation      : identifier T_LPARA argumentlist T_RPARA {
+                             $$ = new Node("functionInvocation");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+
+                             if($3->checkSibling())
+                             {
+                                 Node* temp = $3;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     $$->addChildNode(temp);
+                                 }
+                             }
+                            }
+    
+                        | identifier T_LPARA T_RPARA {
+                             $$ = new Node("functionInvocation");
+                             $$->addChildNode($1);
+                            }
+                        ;
+
+postfixexpression       : primary{
+                             $$ = $1;
+                            }
+                        | identifier{
+                             $$ = $1;
+                            }
+                        ;
+
+unaryexpression         : T_SUB unaryexpression{
+                             $$ = new Node("unaryExpression", "-");
+                             $$->addChildNode($2);
+                            }
+                        | T_NOT unaryexpression{
+                             $$ = new Node("unaryExpression", "!");
+                             $$->addChildNode($2);
+                            }
+                        | postfixexpression{
+                             $$ = $1;
+                            }
+                        ;
+
+multiplicativeexpression: unaryexpression {
+                             $$ = $1;
+                            }
+                        | multiplicativeexpression T_MULT unaryexpression{
+                             $$ = new Node ("*", "*");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | multiplicativeexpression T_DIV unaryexpression{
+                             $$ = new Node ("/", "/");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | multiplicativeexpression T_MOD unaryexpression{
+                             $$ = new Node ("%", "%");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+additiveexpression      : multiplicativeexpression{
+                             $$ = $1;
+                            }
+                        | additiveexpression T_ADD multiplicativeexpression{
+                             $$ = new Node ("+", "+");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | additiveexpression T_SUB multiplicativeexpression{
+                             $$ = new Node ("-", "-");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+relationalexpression    : additiveexpression{
+                             $$ = $1;
+                            }
+                        | relationalexpression T_LT additiveexpression{
+                             $$ = new Node ("<", "<");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | relationalexpression T_GT additiveexpression{
+                             $$ = new Node (">", ">");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | relationalexpression T_LTE additiveexpression{
+                             $$ = new Node ("<=", "<=");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | relationalexpression T_GTE additiveexpression{
+                             $$ = new Node (">=", ">=");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+equalityexpression      : relationalexpression{
+                             $$ = $1;
+                            }
+                        | equalityexpression T_EQUAL relationalexpression{
+                             $$ = new Node ("==", "==");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        | equalityexpression T_NEQUAL relationalexpression{
+                             $$ = new Node ("!=", "!=");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+conditionalandexpression: equalityexpression{
+                             $$ = $1;
+                            }
+                        | conditionalandexpression T_AND equalityexpression{
+                             $$ = new Node ("&&", "&&");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+conditionalorexpression : conditionalandexpression{
+                             $$ = $1;
+                            }
+                        | conditionalorexpression T_OR conditionalandexpression{
+                             $$ = new Node ("||", "||");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+assignmentexpression    : conditionalorexpression{
+                             $$ = $1;
+                            }
+                        | assignment{
+                             $$ = $1;   //Does this need a new node?
+                            }
+                        ;
+
+assignment              : identifier T_ASSIGN assignmentexpression{
+                             $$ = new Node("assignment");
+                             $$->addChildNode($1);
+                             $$->addChildNode($3);
+                            }
+                        ;
+
+expression              : assignmentexpression{
+                             $$ = $1;
+                            }
+                        ;
+
+
+%%
+
+void JCC::Parser::error(const location_type &loc, const std::string &errmsg)
+{
+   std::cerr << "Error: " << errmsg << " at " << loc << "\n";
+}
