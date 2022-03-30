@@ -29,12 +29,15 @@ public:
 
     int getLineNum() {return line;};
 
-private:
+    std::vector<Node*> childNodes;
     std::string type;
     std::string value;
-    std::vector<Node*> childNodes;
-    Node* sibilingNode = nullptr;
     int line;
+
+
+
+private:
+    Node* sibilingNode = nullptr;
  };
 
 

@@ -5,6 +5,7 @@
 #include "header.h"
 #include "Node.hpp"
 #include "parser.tab.hpp"
+#include "SemanticAnalyzer.hpp"
 #include <fstream>
 #include <memory>
 
@@ -35,6 +36,7 @@ class Driver {
     bool parse(std::fstream &in);
     std::unique_ptr<JCC::Parser> parser{nullptr};
     std::unique_ptr<Lexer> lexer{nullptr};
+    std::unique_ptr<SemanticAnalyzer> analyzer{nullptr};
 
 };
 
