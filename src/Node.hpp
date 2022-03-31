@@ -33,8 +33,8 @@ public:
     std::vector<Node*> childNodes;
     std::string type;
     std::string value;
-    std::string semanticType; //Used by semantic Analyzer to send information regarding types up the tree
-    std::string semanticID; //Used by semantic Analyzer to send information regarding Identifiers up the tree
+    std::string semanticType; //Used by semantic Analyzer to send information regarding types up the tree -- Only used on Pass 1
+    std::string semanticID; //Used by semantic Analyzer to send information regarding Identifiers up the tree -- Only used on Pass 1
     SymbolTableEntry* semanticInformation = nullptr;
     
     int line;

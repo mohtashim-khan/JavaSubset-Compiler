@@ -596,7 +596,7 @@ assignmentexpression    : conditionalorexpression{
                              $$ = $1;
                             }
                         | assignment{
-                             $$ = $1;   //Does this need a new node?
+                             $$ = $1;
                             }
                         ;
 

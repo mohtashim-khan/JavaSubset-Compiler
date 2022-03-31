@@ -1375,7 +1375,7 @@ namespace JCC {
   case 76: // assignmentexpression: assignment
 #line 598 "parser.ypp"
                                     {
-                             (yylhs.value.node) = (yystack_[0].value.node);   //Does this need a new node?
+                             (yylhs.value.node) = (yystack_[0].value.node);
                             }
 #line 1381 "parser.tab.cpp"
     break;
