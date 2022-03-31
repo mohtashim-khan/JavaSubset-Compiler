@@ -1,57 +1,75 @@
 #include "SemanticAnalyzer.hpp"
 
-SemanticAnalyzer::SemanticAnalyzer(Node* tree)
+SemanticAnalyzer::SemanticAnalyzer(Node *tree)
 {
     ast = tree;
-    
-    //Add preDefinedFunctions to the scope stack
-    SymbolTable* preDefinedFunctions = new SymbolTable("preDefinedFunctions");
-    scopeStack.push(preDefinedFunctions);
+
+    // Add preDefinedFunctions to the scope stack -- this will stay open for the rest of the program
+    openScope("preDefined");
+
+    /** Fill out predefined Functions **/
+
+    // getChar()
+    defineEntry("getChar", "int", "function()");
+
+    // halt()
+    defineEntry("halt", "void", "function()");
+
+    // printb()
+    defineEntry("printb", "int", "function(boolean)");
+
+    // printc()
+    defineEntry("printc", "void", "function(int)");
+
+    // printi()
+    defineEntry("printi", "void", "function(int)");
+
+    // prints()
+    defineEntry("prints", "void", "function(string)");
 
 
+
+    // Add globalDeclarations to the scope stack. This scope will stay open for the rest of the program.
+    openScope("globalDeclarations");
 }
 
-//Code to traverse the AST in prePostOrder
+/**Traversal Code**/
+
+// Code to traverse the AST in prePostOrder
 void SemanticAnalyzer::prePostTraversal(Node *node, void (SemanticAnalyzer::*passCB)(Node *, bool childrenProcessed))
 {
-    //Do something to node before you see the children -- Preorder
+    // Do something to node before you see the children -- Preorder
     (this->*passCB)(node, false);
 
-    //Process Children
-    for (Node * &child : node->childNodes)
+    // Process Children
+    for (Node *&child : node->childNodes)
     {
         prePostTraversal(child, passCB);
     }
 
-    //Do something to node after processing Children -- PostOrder
+    // Do something to node after processing Children -- PostOrder
 
-   (this->*passCB)(node, true);
-
-
-    
+    (this->*passCB)(node, true);
 }
 
-//Code to Traverse AST in postOrder
+// Code to Traverse AST in postOrder
 void SemanticAnalyzer::postTraversal(Node *node, void (SemanticAnalyzer::*passCB)(Node *))
 {
-    //Process Children
-    for (Node * &child : node->childNodes)
+    // Process Children
+    for (Node *&child : node->childNodes)
     {
         postTraversal(child, passCB);
     }
 
-    //Do something after processing Children -- PostOrder
-   (this->*passCB)(node);
-
+    // Do something after processing Children -- PostOrder
+    (this->*passCB)(node);
 }
 
-/** Passes **/
+/** Pass Functions **/
 void SemanticAnalyzer::globalDeclarationsPass(Node *node)
 {
-    mainDeclarationCounter++;
 
     return;
-    
 }
 
 void SemanticAnalyzer::identifierPass(Node *node, bool postOrder)
@@ -69,18 +87,49 @@ void SemanticAnalyzer::miscPass(Node *node, bool postOrder)
     return;
 }
 
+/** Semantic Analyzer Driver Code **/
 void SemanticAnalyzer::execute()
 {
-    //Perform Pass 1
+    // Perform Pass 1
     postTraversal(ast, &SemanticAnalyzer::globalDeclarationsPass);
 
-    //Perform Pass 2
+    // Perform Pass 2
     prePostTraversal(ast, &SemanticAnalyzer::identifierPass);
 
-    //Perform Pass 3
+    // Perform Pass 3
     postTraversal(ast, &SemanticAnalyzer::typeCheckingPass);
 
-    //Perform Pass 4
+    // Perform Pass 4
     prePostTraversal(ast, &SemanticAnalyzer::identifierPass);
+}
 
+/** Symbol Table functions **/
+SymbolTableEntry *SemanticAnalyzer::lookup(std::string id)
+{
+    SymbolTableEntry *retVal;
+    for (std::vector<SymbolTable *>::reverse_iterator i = scopeStack.rbegin(); i != scopeStack.rend(); ++i)
+    {
+        retVal = (*i)->lookup(id);
+        if (retVal != nullptr)
+            return retVal;
+    }
+    std::cerr<<"SEMANTIC ERROR: An undeclared identifier: \""<< id <<"\" is used. \n";
+    exit(EXIT_FAILURE);
+}
+
+bool SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::string type)
+{
+    SymbolTableEntry *newEntry;
+    if (type != "")
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, type);
+    else
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, retType);
+
+    if(scopeStack.back()->defineEntry(id, newEntry))
+        return true;
+    else
+    {
+        std::cerr<<"SEMANTIC ERROR: The identifier: \"" << id <<"\" is redefined within the same scope.\n";
+        exit(EXIT_FAILURE);
+    }
 }

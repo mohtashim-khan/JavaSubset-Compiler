@@ -13,13 +13,19 @@ class SymbolTableEntry
 {
 public:
 
-    SymbolTableEntry(SymbolTable* sp, std::string retType, std::string typ) {scope = sp; returnType = retType; type = typ;};
-    SymbolTableEntry(std::string retType, std::string typ) {returnType = retType; type = typ;};
-    SymbolTableEntry();
+    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retType, std::string typ) {identifier = id; scope = sp; returnType = retType; type = typ;}; //used for Functions within a certain scope
+    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retTyp) {identifier = id; scope = sp; returnType = retTyp; type = retTyp;}; //used for Terminal nodes such as integers
+    
+    SymbolTableEntry(std::string id,std::string retType, std::string typ) {identifier = id; returnType = retType; type = typ;}; // used for Functions, this is defined more for felxibility
+    SymbolTableEntry(std::string id,std::string retTyp) {identifier = id; returnType = retTyp; type = retTyp;}; //used for Terminal nodes such as integers, this is defined more for felxibility
+    
+
+    SymbolTableEntry(); //default constructor
 
     SymbolTable* scope = nullptr;
     std::string returnType;
     std::string type;
+    std::string identifier; //not used but good to have.
 
 
 
@@ -31,13 +37,15 @@ public:
 
     SymbolTable(std::string name) {scopeName = name;};
 
-    std::unordered_map <std::string, SymbolTableEntry> table;
+    std::unordered_map <std::string, SymbolTableEntry*> table;
 
-    SymbolTableEntry lookup(std::string id);
+    //Returns nullptr if entry not found.
+    SymbolTableEntry* lookup(std::string id);
 
-    void defineEntry(std::string id, SymbolTableEntry info);
+    //returns true on success, else returns false
+    bool defineEntry(std::string id, SymbolTableEntry* info);
 
-    // will be either "preDefinedFunctions" or "globalDeclarations" or will correspond to the function ID attr of the parent function
+    // will be either "preDefinedFunctions" or "globalDeclarations" or will correspond to the function ID attr
     std::string scopeName; 
 
 };

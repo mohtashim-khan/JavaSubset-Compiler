@@ -42,7 +42,7 @@ bool Driver::parse(std::fstream &in)
     if( parser->parse() != 0 )
     {
         std::cerr << "Parse failed!!\n";
-        return 1;
+        exit(EXIT_FAILURE);
     }
 
     return 0;
