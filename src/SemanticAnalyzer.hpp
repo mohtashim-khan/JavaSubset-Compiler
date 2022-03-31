@@ -21,13 +21,13 @@ public:
     void globalDeclarationsPass(Node *node);
 
     // Pass 2 -- PrePostOrder
-    void identifierPass(Node *node, bool postOrder); //can only be identified as formal variable decs, global var decs, or functionDeclarations
+    void identifierPass(Node *node, bool processedChildren); //can only be identified as formal variable decs, global var decs, or functionDeclarations
 
     // Pass 3 -- PostOrder
     void typeCheckingPass(Node *node);
 
     // Pass 4 -- PrePostOrder
-    void miscPass(Node *node, bool postOrder);
+    void miscPass(Node *node, bool processedChildren);
 
     // Driver Function
     void execute();

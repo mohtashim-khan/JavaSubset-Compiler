@@ -68,33 +68,28 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
 {
     std::string nodeType = node->type;
 
-    //Define Entry Here
+    // Define Entry Here
     if (nodeType == "mainFunctionDeclaration")
     {
         defineEntry(node->childNodes[1]->value, node->childNodes[1]->type);
         mainDeclarationCounter++;
-        if(mainDeclarationCounter > 1)
+        if (mainDeclarationCounter > 1)
         {
-            std::cerr <<"Multiple main declarations found. \n";
-            exit(EXIT_FAILURE);
-        }
-        else if(mainDeclarationCounter < 1)
-        {
-            std::cerr <<"No main declaration found. \n";
+            std::cerr << "SEMANTIC ERROR: Multiple main declarations found. \n";
             exit(EXIT_FAILURE);
         }
     }
 
-    //Define Entry Here
+    // Define Entry Here
     else if (nodeType == "globalVardeclaration")
     {
         defineEntry(node->childNodes[0]->semanticID, node->childNodes[0]->semanticType);
     }
 
-    //Define Entry Here
+    // Define Entry Here
     else if (nodeType == "functionDeclaration")
     {
-        defineEntry(node->childNodes[1]->value, node->childNodes[0]->type,"function"+node->childNodes[2]->semanticType);
+        defineEntry(node->childNodes[1]->value, node->childNodes[0]->type, "function" + node->childNodes[2]->semanticType);
     }
 
     else if (nodeType == "variableDeclaration")
@@ -108,15 +103,13 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
         std::string returnString = "(";
         for (auto formalParameter : node->childNodes)
         {
-            returnString += node->childNodes[0]->semanticType +",";
+            returnString += node->childNodes[0]->semanticType + ",";
         }
 
         returnString.pop_back();
         returnString += ")";
 
         node->semanticType = returnString;
-
-        
     }
 
     else if (nodeType == "formalParameter")
@@ -124,11 +117,14 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
         node->semanticType = node->childNodes[0]->type;
     }
 
-
-    
+    if (mainDeclarationCounter < 1)
+    {
+        std::cerr << "SEMANTIC ERROR: No main declaration found. \n";
+        exit(EXIT_FAILURE);
+    }
 }
 
-void SemanticAnalyzer::identifierPass(Node *node, bool postOrder)
+void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
 {
     return;
 }
@@ -138,7 +134,7 @@ void SemanticAnalyzer::typeCheckingPass(Node *node)
     return;
 }
 
-void SemanticAnalyzer::miscPass(Node *node, bool postOrder)
+void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
 {
     return;
 }
