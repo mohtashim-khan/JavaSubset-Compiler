@@ -41,7 +41,7 @@ public:
     SymbolTableEntry* lookup(std::string id);
 
     //returns true on success, else returns false
-    bool defineEntry(std::string id, SymbolTableEntry* info);
+    SymbolTableEntry* defineEntry(std::string id, SymbolTableEntry* info);
 
     // will be either "preDefinedFunctions" or "globalDeclarations" or will correspond to the function ID attr
     std::string scopeName; 

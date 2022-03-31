@@ -10,7 +10,7 @@ SymbolTableEntry* SymbolTable::lookup(std::string id)
 
 }
 
-bool SymbolTable::defineEntry(std::string id, SymbolTableEntry* info)
+SymbolTableEntry* SymbolTable::defineEntry(std::string id, SymbolTableEntry* info)
 {
     std::unordered_map<std::string, SymbolTableEntry*>::iterator ret = table.find(id);
 
@@ -18,10 +18,10 @@ bool SymbolTable::defineEntry(std::string id, SymbolTableEntry* info)
     if(ret == table.end())
     {
         table[id] = info;
-        return true;
+        return table[id];
 
     }
     else
-        return false;  //Return false for failiure
+        return nullptr;  //Return nullptr for failiure
 
 }

@@ -33,7 +33,7 @@ public:
     void execute();
 
     // returns true on success, else returns false
-    bool defineEntry(std::string id, std::string retType, std::string functionArgs = "");
+    SymbolTableEntry * defineEntry(std::string id, std::string retType, std::string functionArgs = "");
 
     void openScope(std::string scopeName) { scopeStack.push_back(new SymbolTable(scopeName)); };
     void closeScope() { scopeStack.pop_back(); };

@@ -18,15 +18,19 @@ public:
 
     void print(int level = 0);
 
-    void addChildNode(Node* node) {childNodes.push_back(node);};
+    void addChildNode(Node* node) {childNodes.push_back(node); childNodes.back()->setParent(this);};
 
     void setSibling (Node* node) {sibilingNode = node;};
+
+    void setParent(Node* node) {parentNode = node;}
 
     void setLine(int ln) {line = ln;};
 
     bool checkSibling() {if(sibilingNode != nullptr) return true; else return false;};
 
     Node* getSibling () {return sibilingNode;};
+
+    Node* getParentNode() {return parentNode;};
 
     int getLineNum() {return line;};
 
@@ -43,6 +47,7 @@ public:
 
 private:
     Node* sibilingNode = nullptr;
+    Node* parentNode = nullptr;
  };
 
 

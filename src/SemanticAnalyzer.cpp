@@ -71,30 +71,25 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     // Define Entry Here
     if (nodeType == "mainFunctionDeclaration")
     {
-        defineEntry(node->childNodes[1]->value, node->childNodes[1]->type, "function");
+        node->semanticInformation = defineEntry(node->childNodes[1]->value, node->childNodes[1]->type, "function");
         mainDeclarationCounter++;
         if (mainDeclarationCounter > 1)
         {
             std::cerr << "SEMANTIC ERROR: Multiple main declarations found. \n";
             exit(EXIT_FAILURE);
         }
-        node->semanticInformation = lookup(node->childNodes[1]->value);
-
     }
 
     // Define Entry Here
     else if (nodeType == "globalVardeclaration")
     {
-        defineEntry(node->childNodes[0]->semanticID, node->childNodes[0]->semanticType);
-        node->semanticInformation = lookup(node->childNodes[0]->semanticID);
+        node->semanticInformation = defineEntry(node->childNodes[0]->semanticID, node->childNodes[0]->semanticType);
     }
 
     // Define Entry Here
     else if (nodeType == "functionDeclaration")
     {
-        defineEntry(node->childNodes[1]->value, node->childNodes[0]->type, "function" + node->childNodes[2]->semanticType);
-        node->semanticInformation = lookup(node->childNodes[1]->value);
-
+        node->semanticInformation = defineEntry(node->childNodes[1]->value, node->childNodes[0]->type, "function" + node->childNodes[2]->semanticType);
     }
 
     else if (nodeType == "variableDeclaration")
@@ -121,32 +116,57 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     {
         node->semanticType = node->childNodes[0]->type;
     }
-
-    
 }
 
 void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
 {
     std::string nodeType = node->type;
-    //PreOrder
-    if(!processedChildren)
+    // PreOrder
+    if (!processedChildren)
     {
-        if(nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
+        if (nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
         {
             openScope(node->semanticInformation->identifier);
         }
-
-
     }
 
-    //PostOrder
+    // PostOrder
     else
     {
-        if(nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
+        if (nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
         {
             closeScope();
         }
 
+        if (nodeType == "id")
+        {
+            Node *parentNode = node->getParentNode();
+            
+            //if id belongs to a variableDeclaration
+            if (parentNode->type == "variableDeclaration")
+            {
+                if (parentNode->getParentNode()->type == "globalVardeclaration")
+                {
+                    node->semanticInformation = lookup(node->value);
+                }
+                else
+                {
+                    node->semanticInformation = defineEntry(node->value, parentNode->childNodes[0]->type);
+                }
+            }
+
+            //If id belongs to a function declaration
+            else if (parentNode->type == "functionDeclaration" || parentNode->type == "mainFunctionDeclaration")
+            {
+                node->semanticInformation = lookup(node->value);
+            }
+            
+            //Otherwise lookup information about the id
+            else
+            {
+                node->semanticInformation = lookup(node->value);
+            }
+        }
     }
     return;
 }
@@ -158,17 +178,14 @@ void SemanticAnalyzer::typeCheckingPass(Node *node)
 
 void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
 {
-     //PreOrder
-    if(!processedChildren)
+    // PreOrder
+    if (!processedChildren)
     {
-        
-
     }
 
-    //PostOrder
+    // PostOrder
     else
     {
-
     }
     return;
 }
@@ -178,7 +195,7 @@ void SemanticAnalyzer::execute()
 {
     // Perform Pass 1
     postTraversal(ast, &SemanticAnalyzer::globalDeclarationsPass);
-    //main declaration check
+    // main declaration check
     if (mainDeclarationCounter < 1)
     {
         std::cerr << "SEMANTIC ERROR: No main declaration found. \n";
@@ -208,7 +225,7 @@ SymbolTableEntry *SemanticAnalyzer::lookup(std::string id)
     exit(EXIT_FAILURE);
 }
 
-bool SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::string functionArgs)
+SymbolTableEntry *SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::string functionArgs)
 {
     SymbolTableEntry *newEntry;
     if (functionArgs != "")
@@ -216,8 +233,9 @@ bool SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::str
     else
         newEntry = new SymbolTableEntry(id, scopeStack.back()->scopeName, retType);
 
-    if (scopeStack.back()->defineEntry(id, newEntry))
-        return true;
+    SymbolTableEntry *retValue = scopeStack.back()->defineEntry(id, newEntry);
+    if (retValue != nullptr)
+        return retValue;
     else
     {
         std::cerr << "SEMANTIC ERROR: The identifier: \"" << id << "\" is redefined within the same scope.\n";
