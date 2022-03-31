@@ -18,8 +18,11 @@ class Driver {
 
     ~Driver();
 
-    // Will start the compilation of the file
-    bool start(std::fstream &in);
+    // Will create AST using lexer and Parser
+    bool createAST(std::fstream &in);
+
+    // Will execute the semanticAnalyzer
+    void analyze();
 
     // Stores AST. Parser will fill this.
     Node* tree = nullptr;

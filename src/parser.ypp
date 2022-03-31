@@ -256,27 +256,14 @@ functionheader          : type functiondeclarator {
                         ;
 
 functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
-                             $$ = new Node("functionDeclarator");
-                             $$->setLine(@$.begin.line);
-
-                             $$->addChildNode($1);
-                             $$->addChildNode($3);
-
-                             if($3->checkSibling())
-                             {
-                                 Node* temp = $3;
-                                 while(temp->checkSibling())
-                                 {
-                                     temp = temp->getSibling();
-                                     $$->addChildNode(temp);
-                                 }
-                             }
+                             
+                             $$ = $1;
+                             Node * temp = new Node("formalParameters");
+                             temp->addChildNode($3);
+                             $$->setSibling(temp);
                             }
                         | identifier T_LPARA T_RPARA {
-                             $$ = new Node("functionDeclarator");
-                             $$->setLine(@$.begin.line);
-
-                             $$->addChildNode($1);
+                             $$ = $1;
 
                             }
                         ;
@@ -308,14 +295,22 @@ mainfunctiondeclaration : mainfunctiondeclarator block{
                              $$ = new Node ("mainFunctionDeclaration");
                              $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
+                             if($1->checkSibling())
+                             {
+                                 Node* temp = $1;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     $$->addChildNode(temp);
+                                 }
+                             }
                              $$->addChildNode($2);
                             }
                         ;
 
 mainfunctiondeclarator  : identifier T_LPARA T_RPARA{
-                             $$ = new Node ("mainFunctionDeclarator");
-                             $$->setLine(@$.begin.line);
-                             $$->addChildNode($1);
+                             $$ = new Node("void");
+                             $$->setSibling($1);
                             }
                         ;
 

@@ -30,7 +30,17 @@ int main(int argc, char *argv[])
 
     Driver *driver = new Driver(&inputfile);
 
-    bool res = driver -> start(inputfile);
+    //Parse and Lex to make AST
+    bool astFail = driver -> createAST(inputfile);
+
+    if(astFail == true)
+    {
+        return EXIT_FAILURE;
+    }
+    //Semantic Analysis
+    driver -> analyze();
+    
+
 
     if (inputfile.is_open()) inputfile.close();
 

@@ -8,7 +8,7 @@ Driver::Driver(std::fstream* inputFil)
 
 
 
-bool Driver::start(std::fstream &in) 
+bool Driver::createAST(std::fstream &in) 
 {
     // If the stream is bad or if the stream is at EOF
     // Return 1
@@ -46,4 +46,11 @@ bool Driver::parse(std::fstream &in)
     }
 
     return 0;
+}
+
+void Driver::analyze()
+{
+    analyzer = std::make_unique<SemanticAnalyzer>(tree);
+    analyzer->execute();
+
 }

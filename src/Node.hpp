@@ -1,6 +1,7 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include "SymbolTable.hpp"
 
 #ifndef NODE_HH
 #define NODE_HH
@@ -32,6 +33,9 @@ public:
     std::vector<Node*> childNodes;
     std::string type;
     std::string value;
+    
+    SymbolTableEntry* semanticInformation = nullptr;
+    
     int line;
 
 
