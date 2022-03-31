@@ -169,11 +169,11 @@ literal         : T_NUM     {
                              $$->setLine(@$.begin.line);
                             }
                 | T_TRUE    {
-                             $$ = new Node("true");
+                             $$ = new Node("boolean", "true");
                              $$->setLine(@$.begin.line);
                             }
                 | T_FALSE   {
-                             $$ = new Node("false");
+                             $$ = new Node("boolean", "false");
                              $$->setLine(@$.begin.line);
                             }
                 ;
@@ -202,7 +202,8 @@ globaldeclarations      : globaldeclaration {
                         ;
 
 globaldeclaration       : variabledeclaration {
-                             $$ = $1;
+                             $$ = new Node("globalVardeclaration");
+                             $$ -> addChildNode($1);
                             }
                         | functiondeclaration{
                              $$ = $1;

@@ -21,7 +21,7 @@ public:
     void globalDeclarationsPass(Node *node);
 
     // Pass 2 -- PrePostOrder
-    void identifierPass(Node *node, bool postOrder);
+    void identifierPass(Node *node, bool postOrder); //can only be identified as formal variable decs, global var decs, or functionDeclarations
 
     // Pass 3 -- PostOrder
     void typeCheckingPass(Node *node);
@@ -33,12 +33,12 @@ public:
     void execute();
 
     // returns true on success, else returns false
-    bool defineEntry(std::string id, std::string retType, std::string type = "");
+    bool defineEntry(std::string id, std::string retType, std::string functionArgs = "");
 
     void openScope(std::string scopeName) { scopeStack.push_back(new SymbolTable(scopeName)); };
     void closeScope() { scopeStack.pop_back(); };
 
-    // Lookup ID -- returns nullptr if not found
+    // Lookup ID -- exits program if not found else returns SymbolTableEntry
     SymbolTableEntry *lookup(std::string id);
 
     // AST

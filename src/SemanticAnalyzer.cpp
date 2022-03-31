@@ -10,10 +10,10 @@ SemanticAnalyzer::SemanticAnalyzer(Node *tree)
     /** Fill out predefined Functions **/
 
     // getChar()
-    defineEntry("getChar", "int", "function()");
+    defineEntry("getChar", "int", "function");
 
     // halt()
-    defineEntry("halt", "void", "function()");
+    defineEntry("halt", "void", "function");
 
     // printb()
     defineEntry("printb", "int", "function(boolean)");
@@ -26,8 +26,6 @@ SemanticAnalyzer::SemanticAnalyzer(Node *tree)
 
     // prints()
     defineEntry("prints", "void", "function(string)");
-
-
 
     // Add globalDeclarations to the scope stack. This scope will stay open for the rest of the program.
     openScope("globalDeclarations");
@@ -68,8 +66,66 @@ void SemanticAnalyzer::postTraversal(Node *node, void (SemanticAnalyzer::*passCB
 /** Pass Functions **/
 void SemanticAnalyzer::globalDeclarationsPass(Node *node)
 {
+    std::string nodeType = node->type;
 
-    return;
+    //Define Entry Here
+    if (nodeType == "mainFunctionDeclaration")
+    {
+        defineEntry(node->childNodes[1]->value, node->childNodes[1]->type);
+        mainDeclarationCounter++;
+        if(mainDeclarationCounter > 1)
+        {
+            std::cerr <<"Multiple main declarations found. \n";
+            exit(EXIT_FAILURE);
+        }
+        else if(mainDeclarationCounter < 1)
+        {
+            std::cerr <<"No main declaration found. \n";
+            exit(EXIT_FAILURE);
+        }
+    }
+
+    //Define Entry Here
+    else if (nodeType == "globalVardeclaration")
+    {
+        defineEntry(node->childNodes[0]->semanticID, node->childNodes[0]->semanticType);
+    }
+
+    //Define Entry Here
+    else if (nodeType == "functionDeclaration")
+    {
+        defineEntry(node->childNodes[1]->value, node->childNodes[0]->type,"function"+node->childNodes[2]->semanticType);
+    }
+
+    else if (nodeType == "variableDeclaration")
+    {
+        node->semanticType = node->childNodes[0]->type;
+        node->semanticID = node->childNodes[1]->value;
+    }
+
+    else if (nodeType == "formalParameters")
+    {
+        std::string returnString = "(";
+        for (auto formalParameter : node->childNodes)
+        {
+            returnString += node->childNodes[0]->semanticType +",";
+        }
+
+        returnString.pop_back();
+        returnString += ")";
+
+        node->semanticType = returnString;
+
+        
+    }
+
+    else if (nodeType == "formalParameter")
+    {
+        node->semanticType = node->childNodes[0]->type;
+    }
+
+
+    
 }
 
 void SemanticAnalyzer::identifierPass(Node *node, bool postOrder)
@@ -113,23 +169,23 @@ SymbolTableEntry *SemanticAnalyzer::lookup(std::string id)
         if (retVal != nullptr)
             return retVal;
     }
-    std::cerr<<"SEMANTIC ERROR: An undeclared identifier: \""<< id <<"\" is used. \n";
+    std::cerr << "SEMANTIC ERROR: An undeclared identifier: \"" << id << "\" is used. \n";
     exit(EXIT_FAILURE);
 }
 
-bool SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::string type)
+bool SemanticAnalyzer::defineEntry(std::string id, std::string retType, std::string functionArgs)
 {
     SymbolTableEntry *newEntry;
-    if (type != "")
-        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, type);
+    if (functionArgs != "")
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, functionArgs);
     else
-        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, retType);
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType);
 
-    if(scopeStack.back()->defineEntry(id, newEntry))
+    if (scopeStack.back()->defineEntry(id, newEntry))
         return true;
     else
     {
-        std::cerr<<"SEMANTIC ERROR: The identifier: \"" << id <<"\" is redefined within the same scope.\n";
+        std::cerr << "SEMANTIC ERROR: The identifier: \"" << id << "\" is redefined within the same scope.\n";
         exit(EXIT_FAILURE);
     }
 }

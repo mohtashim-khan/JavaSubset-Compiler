@@ -13,19 +13,17 @@ class SymbolTableEntry
 {
 public:
 
-    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retType, std::string typ) {identifier = id; scope = sp; returnType = retType; type = typ;}; //used for Functions within a certain scope
-    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retTyp) {identifier = id; scope = sp; returnType = retTyp; type = retTyp;}; //used for Terminal nodes such as integers
+    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retType, std::string funcArg) {identifier = id; scope = sp; returnType = retType; functionArgs = funcArg;}; //used for Functions within a certain scope
+    SymbolTableEntry(std::string id, SymbolTable* sp, std::string retTyp) {identifier = id; scope = sp; returnType = retTyp;}; //used for Terminal nodes such as integers
     
-    SymbolTableEntry(std::string id,std::string retType, std::string typ) {identifier = id; returnType = retType; type = typ;}; // used for Functions, this is defined more for felxibility
-    SymbolTableEntry(std::string id,std::string retTyp) {identifier = id; returnType = retTyp; type = retTyp;}; //used for Terminal nodes such as integers, this is defined more for felxibility
     
 
     SymbolTableEntry(); //default constructor
 
     SymbolTable* scope = nullptr;
     std::string returnType;
-    std::string type;
-    std::string identifier; //not used but good to have.
+    std::string functionArgs;
+    std::string identifier; //not used but good to have for error checking.
 
 
 
