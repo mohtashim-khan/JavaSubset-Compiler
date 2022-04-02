@@ -29,6 +29,10 @@ public:
     // Pass 4 -- PrePostOrder
     void miscPass(Node *node, bool processedChildren);
 
+    //Extra pass -- used for testing
+    void testPass(Node *node);
+    
+
     // Driver Function
     void execute();
 
@@ -39,7 +43,10 @@ public:
     void closeScope() { scopeStack.pop_back(); };
 
     // Lookup ID -- exits program if not found else returns SymbolTableEntry
-    SymbolTableEntry *lookup(std::string id);
+    SymbolTableEntry *lookup(std::string id, int lineNo);
+
+    //initilaize typeCheckingTable
+    void fillTypeCheckingTable();
 
     // AST
     Node *ast;
@@ -47,9 +54,24 @@ public:
     // Scope stack -- define it as a vector as that gives us the ability to iterate through it for look ups
     std::vector<SymbolTable *> scopeStack;
 
+    // Type Checking table
+    //table return entry structure == (left type, right type, return type)
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>>typeCheckingTable;
+
 private:
     // Helper Attributes
     int mainDeclarationCounter = 0;
+    int whileCounter = 0;
+    int breakCounter = 0;
+    int returnCounter = 0;
+    std::string functionReturnType = "";
+
+    //Helper vector
+    std::vector<SymbolTableEntry *> test;
+
+    //Helper Function
+    std::vector<std::string> getChildTypes(Node* node);
+
 };
 
 #endif

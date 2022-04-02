@@ -45,7 +45,7 @@
 #ifndef YY_YY_PARSER_TAB_HPP_INCLUDED
 # define YY_YY_PARSER_TAB_HPP_INCLUDED
 // "%code requires" blocks.
-#line 14 "parser.ypp"
+#line 15 "parser.ypp"
 
     #include <vector>
     #include <iostream>
@@ -55,8 +55,9 @@
     // Forward Declaration.
     // Compiler outputs error otherwise
     class Driver;
+    #define YYERROR_VERBOSE 1
 
-#line 60 "parser.tab.hpp"
+#line 61 "parser.tab.hpp"
 
 
 # include <cstdlib> // std::abort
@@ -186,7 +187,7 @@
 
 #line 8 "parser.ypp"
 namespace JCC {
-#line 190 "parser.tab.hpp"
+#line 191 "parser.tab.hpp"
 
 
 
@@ -199,14 +200,14 @@ namespace JCC {
     /// Symbol semantic values.
     union semantic_type
     {
-#line 41 "parser.ypp"
+#line 43 "parser.ypp"
 
     std::string *strVal;
     int ival;
 
     Node* node;
 
-#line 210 "parser.tab.hpp"
+#line 211 "parser.tab.hpp"
 
     };
 #else
@@ -242,9 +243,9 @@ namespace JCC {
     T_EOF = 0,                     // T_EOF
     YYerror = 256,                 // error
     YYUNDEF = 257,                 // "invalid token"
-    T_ID = 258,                    // T_ID
-    T_NUM = 259,                   // T_NUM
-    T_STRING = 260,                // T_STRING
+    T_ID = 258,                    // "id"
+    T_NUM = 259,                   // "number"
+    T_STRING = 260,                // "string"
     T_CESC_B = 261,                // T_CESC_B
     T_CESC_F = 262,                // T_CESC_F
     T_CESC_T = 263,                // T_CESC_T
@@ -253,37 +254,37 @@ namespace JCC {
     T_CESC_APOST = 266,            // T_CESC_APOST
     T_CESC_QUOT = 267,             // T_CESC_QUOT
     T_CESC_SLASH = 268,            // T_CESC_SLASH
-    T_TRUE = 269,                  // T_TRUE
-    T_FALSE = 270,                 // T_FALSE
-    T_BOOLEAN = 271,               // T_BOOLEAN
-    T_INT = 272,                   // T_INT
-    T_VOID = 273,                  // T_VOID
-    T_IF = 274,                    // T_IF
-    T_ELSE = 275,                  // T_ELSE
-    T_WHILE = 276,                 // T_WHILE
-    T_BREAK = 277,                 // T_BREAK
-    T_RETURN = 278,                // T_RETURN
-    T_ADD = 279,                   // T_ADD
-    T_SUB = 280,                   // T_SUB
-    T_MULT = 281,                  // T_MULT
-    T_DIV = 282,                   // T_DIV
-    T_MOD = 283,                   // T_MOD
-    T_LT = 284,                    // T_LT
-    T_GT = 285,                    // T_GT
-    T_LTE = 286,                   // T_LTE
-    T_GTE = 287,                   // T_GTE
-    T_ASSIGN = 288,                // T_ASSIGN
-    T_EQUAL = 289,                 // T_EQUAL
-    T_NEQUAL = 290,                // T_NEQUAL
-    T_NOT = 291,                   // T_NOT
-    T_AND = 292,                   // T_AND
-    T_OR = 293,                    // T_OR
-    T_LPARA = 294,                 // T_LPARA
-    T_RPARA = 295,                 // T_RPARA
-    T_LBRACE = 296,                // T_LBRACE
-    T_RBRACE = 297,                // T_RBRACE
-    T_SEMICOLON = 298,             // T_SEMICOLON
-    T_COMMA = 299,                 // T_COMMA
+    T_TRUE = 269,                  // "true"
+    T_FALSE = 270,                 // "false"
+    T_BOOLEAN = 271,               // "boolean"
+    T_INT = 272,                   // "int"
+    T_VOID = 273,                  // "void"
+    T_IF = 274,                    // "if"
+    T_ELSE = 275,                  // "else"
+    T_WHILE = 276,                 // "while"
+    T_BREAK = 277,                 // "break"
+    T_RETURN = 278,                // "return"
+    T_ADD = 279,                   // "+"
+    T_SUB = 280,                   // "-"
+    T_MULT = 281,                  // "*"
+    T_DIV = 282,                   // "/"
+    T_MOD = 283,                   // "%"
+    T_LT = 284,                    // "<"
+    T_GT = 285,                    // ">"
+    T_LTE = 286,                   // "<="
+    T_GTE = 287,                   // ">="
+    T_ASSIGN = 288,                // "="
+    T_EQUAL = 289,                 // "=="
+    T_NEQUAL = 290,                // "!="
+    T_NOT = 291,                   // "!"
+    T_AND = 292,                   // "&&"
+    T_OR = 293,                    // "||"
+    T_LPARA = 294,                 // "("
+    T_RPARA = 295,                 // ")"
+    T_LBRACE = 296,                // "{"
+    T_RBRACE = 297,                // "}"
+    T_SEMICOLON = 298,             // ";"
+    T_COMMA = 299,                 // ","
     T_ERR = 300                    // T_ERR
       };
       /// Backward compatibility alias (Bison 3.6).
@@ -306,9 +307,9 @@ namespace JCC {
         S_YYEOF = 0,                             // T_EOF
         S_YYerror = 1,                           // error
         S_YYUNDEF = 2,                           // "invalid token"
-        S_T_ID = 3,                              // T_ID
-        S_T_NUM = 4,                             // T_NUM
-        S_T_STRING = 5,                          // T_STRING
+        S_T_ID = 3,                              // "id"
+        S_T_NUM = 4,                             // "number"
+        S_T_STRING = 5,                          // "string"
         S_T_CESC_B = 6,                          // T_CESC_B
         S_T_CESC_F = 7,                          // T_CESC_F
         S_T_CESC_T = 8,                          // T_CESC_T
@@ -317,37 +318,37 @@ namespace JCC {
         S_T_CESC_APOST = 11,                     // T_CESC_APOST
         S_T_CESC_QUOT = 12,                      // T_CESC_QUOT
         S_T_CESC_SLASH = 13,                     // T_CESC_SLASH
-        S_T_TRUE = 14,                           // T_TRUE
-        S_T_FALSE = 15,                          // T_FALSE
-        S_T_BOOLEAN = 16,                        // T_BOOLEAN
-        S_T_INT = 17,                            // T_INT
-        S_T_VOID = 18,                           // T_VOID
-        S_T_IF = 19,                             // T_IF
-        S_T_ELSE = 20,                           // T_ELSE
-        S_T_WHILE = 21,                          // T_WHILE
-        S_T_BREAK = 22,                          // T_BREAK
-        S_T_RETURN = 23,                         // T_RETURN
-        S_T_ADD = 24,                            // T_ADD
-        S_T_SUB = 25,                            // T_SUB
-        S_T_MULT = 26,                           // T_MULT
-        S_T_DIV = 27,                            // T_DIV
-        S_T_MOD = 28,                            // T_MOD
-        S_T_LT = 29,                             // T_LT
-        S_T_GT = 30,                             // T_GT
-        S_T_LTE = 31,                            // T_LTE
-        S_T_GTE = 32,                            // T_GTE
-        S_T_ASSIGN = 33,                         // T_ASSIGN
-        S_T_EQUAL = 34,                          // T_EQUAL
-        S_T_NEQUAL = 35,                         // T_NEQUAL
-        S_T_NOT = 36,                            // T_NOT
-        S_T_AND = 37,                            // T_AND
-        S_T_OR = 38,                             // T_OR
-        S_T_LPARA = 39,                          // T_LPARA
-        S_T_RPARA = 40,                          // T_RPARA
-        S_T_LBRACE = 41,                         // T_LBRACE
-        S_T_RBRACE = 42,                         // T_RBRACE
-        S_T_SEMICOLON = 43,                      // T_SEMICOLON
-        S_T_COMMA = 44,                          // T_COMMA
+        S_T_TRUE = 14,                           // "true"
+        S_T_FALSE = 15,                          // "false"
+        S_T_BOOLEAN = 16,                        // "boolean"
+        S_T_INT = 17,                            // "int"
+        S_T_VOID = 18,                           // "void"
+        S_T_IF = 19,                             // "if"
+        S_T_ELSE = 20,                           // "else"
+        S_T_WHILE = 21,                          // "while"
+        S_T_BREAK = 22,                          // "break"
+        S_T_RETURN = 23,                         // "return"
+        S_T_ADD = 24,                            // "+"
+        S_T_SUB = 25,                            // "-"
+        S_T_MULT = 26,                           // "*"
+        S_T_DIV = 27,                            // "/"
+        S_T_MOD = 28,                            // "%"
+        S_T_LT = 29,                             // "<"
+        S_T_GT = 30,                             // ">"
+        S_T_LTE = 31,                            // "<="
+        S_T_GTE = 32,                            // ">="
+        S_T_ASSIGN = 33,                         // "="
+        S_T_EQUAL = 34,                          // "=="
+        S_T_NEQUAL = 35,                         // "!="
+        S_T_NOT = 36,                            // "!"
+        S_T_AND = 37,                            // "&&"
+        S_T_OR = 38,                             // "||"
+        S_T_LPARA = 39,                          // "("
+        S_T_RPARA = 40,                          // ")"
+        S_T_LBRACE = 41,                         // "{"
+        S_T_RBRACE = 42,                         // "}"
+        S_T_SEMICOLON = 43,                      // ";"
+        S_T_COMMA = 44,                          // ","
         S_T_ERR = 45,                            // T_ERR
         S_YYACCEPT = 46,                         // $accept
         S_start = 47,                            // start
@@ -442,14 +443,11 @@ namespace JCC {
         Base::clear ();
       }
 
-#if YYDEBUG || 0
       /// The user-facing name of this symbol.
       const char *name () const YY_NOEXCEPT
       {
         return Parser::symbol_name (this->kind ());
       }
-#endif // #if YYDEBUG || 0
-
 
       /// Backward compatibility (Bison 3.6).
       symbol_kind_type type_get () const YY_NOEXCEPT;
@@ -559,14 +557,29 @@ namespace JCC {
     /// Report a syntax error.
     void error (const syntax_error& err);
 
-#if YYDEBUG || 0
     /// The user-facing name of the symbol whose (internal) number is
     /// YYSYMBOL.  No bounds checking.
     static const char *symbol_name (symbol_kind_type yysymbol);
-#endif // #if YYDEBUG || 0
 
 
 
+    class context
+    {
+    public:
+      context (const Parser& yyparser, const symbol_type& yyla);
+      const symbol_type& lookahead () const YY_NOEXCEPT { return yyla_; }
+      symbol_kind_type token () const YY_NOEXCEPT { return yyla_.kind (); }
+      const location_type& location () const YY_NOEXCEPT { return yyla_.location; }
+
+      /// Put in YYARG at most YYARGN of the expected tokens, and return the
+      /// number of tokens stored in YYARG.  If YYARG is null, return the
+      /// number of expected tokens (guaranteed to be less than YYNTOKENS).
+      int expected_tokens (symbol_kind_type yyarg[], int yyargn) const;
+
+    private:
+      const Parser& yyparser_;
+      const symbol_type& yyla_;
+    };
 
   private:
 #if YY_CPLUSPLUS < 201103L
@@ -580,6 +593,13 @@ namespace JCC {
     /// Stored state numbers (used for stacks).
     typedef unsigned char state_type;
 
+    /// The arguments of the error message.
+    int yy_syntax_error_arguments_ (const context& yyctx,
+                                    symbol_kind_type yyarg[], int yyargn) const;
+
+    /// Generate an error message.
+    /// \param yyctx     the context in which the error occurred.
+    virtual std::string yysyntax_error_ (const context& yyctx) const;
     /// Compute post-reduction state.
     /// \param yystate   the current state
     /// \param yysym     the nonterminal to push on the stack
@@ -601,10 +621,6 @@ namespace JCC {
     /// are valid, yet not members of the token_type enum.
     static symbol_kind_type yytranslate_ (int t);
 
-#if YYDEBUG || 0
-    /// For a symbol, its name in clear.
-    static const char* const yytname_[];
-#endif // #if YYDEBUG || 0
 
 
     // Tables.
@@ -870,7 +886,7 @@ namespace JCC {
     /// Constants.
     enum
     {
-      yylast_ = 174,     ///< Last index in yytable_.
+      yylast_ = 181,     ///< Last index in yytable_.
       yynnts_ = 34,  ///< Number of nonterminal symbols.
       yyfinal_ = 17 ///< Termination state number.
     };
@@ -884,7 +900,7 @@ namespace JCC {
 
 #line 8 "parser.ypp"
 } // JCC
-#line 888 "parser.tab.hpp"
+#line 904 "parser.tab.hpp"
 
 
 

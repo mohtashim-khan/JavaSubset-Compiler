@@ -6,6 +6,10 @@ Node::Node(std::string typ, std::string val, std::vector<Node*> nodes)
     type = typ;
     value = val;
     childNodes = nodes;
+    if(typ == "number")
+    {
+        semanticType = "int";
+    }
 }
 
 

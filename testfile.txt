@@ -18,7 +18,7 @@ int _char;
 int getc()
 {
         if (_havechar) {
-                _havechar = false;
+                _havechar = true; //Changed this node
                 return _char;
         }
         return getchar();
@@ -42,6 +42,8 @@ boolean _havetoken;
 int _token;
 int attr;
 
+int hello;
+
 int peek()
 {
         if (_havetoken)
@@ -60,11 +62,24 @@ void match(int expect)
                 halt();
         }
         _havetoken = false;
+
+        while(_havetoken)
+        {
+                break;
+        }
+
 }
+
 
 int scanner()
 {
         int ch;
+
+        int a;
+
+        int b;
+
+        boolean test;
 
         while (isspace(ch = getc()))
                 ;

@@ -3,14 +3,15 @@
 SemanticAnalyzer::SemanticAnalyzer(Node *tree)
 {
     ast = tree;
+    fillTypeCheckingTable();
 
     // Add preDefinedFunctions to the scope stack -- this will stay open for the rest of the program
     openScope("preDefined");
 
     /** Fill out predefined Functions **/
 
-    // getChar()
-    defineEntry("getChar", "int", "function");
+    // getchar()
+    defineEntry("getchar", "int", "function");
 
     // halt()
     defineEntry("halt", "void", "function");
@@ -100,10 +101,15 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
 
     else if (nodeType == "formalParameters")
     {
+        if (node->getParentNode()->type == "mainFunctionDeclaration")
+        {
+            std::cerr << "The main declaration can't have parameters.\n";
+            exit(EXIT_FAILURE);
+        }
         std::string returnString = "(";
         for (auto formalParameter : node->childNodes)
         {
-            returnString += node->childNodes[0]->semanticType + ",";
+            returnString += formalParameter->semanticType + ",";
         }
 
         returnString.pop_back();
@@ -113,6 +119,11 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     }
 
     else if (nodeType == "formalParameter")
+    {
+        node->semanticType = node->childNodes[0]->type;
+    }
+
+    else if (nodeType == "unaryExpression")
     {
         node->semanticType = node->childNodes[0]->type;
     }
@@ -141,13 +152,13 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
         if (nodeType == "id")
         {
             Node *parentNode = node->getParentNode();
-            
-            //if id belongs to a variableDeclaration
+
+            // if id belongs to a variableDeclaration -- check if this is a global variable, if not define it within the current scope.
             if (parentNode->type == "variableDeclaration")
             {
                 if (parentNode->getParentNode()->type == "globalVardeclaration")
                 {
-                    node->semanticInformation = lookup(node->value);
+                    node->semanticInformation = lookup(node->value, node->getLineNum());
                 }
                 else
                 {
@@ -155,17 +166,38 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
                 }
             }
 
-            //If id belongs to a function declaration
+            // If id belongs to a function declaration -- this will already be defined in the global scope
             else if (parentNode->type == "functionDeclaration" || parentNode->type == "mainFunctionDeclaration")
             {
-                node->semanticInformation = lookup(node->value);
+                node->semanticInformation = lookup(node->value, node->getLineNum());
             }
-            
-            //Otherwise lookup information about the id
+
+            // If id belongs to a formalParameter -- this will be declared in the local scope
+            else if (parentNode->type == "formalParameter")
+            {
+                node->semanticInformation = defineEntry(node->value, parentNode->childNodes[0]->type);
+            }
+
+            else if (parentNode->type == "functionInvocation")
+            {
+                node->semanticInformation = lookup(node->value, node->getLineNum());
+                if (parentNode->semanticInformation == nullptr)
+                    parentNode->semanticInformation = node->semanticInformation;
+            }
+
+            // Otherwise lookup information about the id
             else
             {
-                node->semanticInformation = lookup(node->value);
+                node->semanticInformation = lookup(node->value, node->getLineNum());
             }
+        }
+        // Handle unaryExpression Edge case for type checking
+        if (nodeType == "unaryExpression")
+        {
+            if (node->childNodes[0]->semanticInformation != nullptr)
+                node->semanticType = node->childNodes[0]->semanticInformation->returnType;
+            else
+                node->semanticType = node->childNodes[0]->semanticType;
         }
     }
     return;
@@ -173,7 +205,45 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
 
 void SemanticAnalyzer::typeCheckingPass(Node *node)
 {
-    return;
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>>::const_iterator validTypes = typeCheckingTable.find(node->type);
+
+    // TypeChecking if a Operator Node is Encountered
+    if (validTypes != typeCheckingTable.end())
+    {
+        std::vector<std::string> childArgs;
+        // Get Child Types
+        childArgs = getChildTypes(node);
+
+        for (auto &validType : validTypes->second)
+        {
+            bool errorFlag = false;
+            // Will comapre either only the L type or both L and R types with the child types. Skips over return type
+            for (unsigned long i = 0; i < validType.size() - 1; i++)
+            {
+                if (validType[i].compare(childArgs[i]) != 0)
+                {
+                    errorFlag = true;
+                    break;
+                }
+            }
+
+            if (errorFlag)
+            {
+                // If there are no more types to check, throw error  and exit
+                if (validType == validTypes->second.back())
+                {
+                    std::cerr << "SEMANTIC ERROR: Type mismatch for an operator \'" + node->type + "\' at line: " + std::to_string(node->getLineNum()) + "\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+            // If valid type found stop the type checking and set the return type for the operator
+            else
+            {
+                node->semanticType = validType.back();
+                break;
+            }
+        }
+    }
 }
 
 void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
@@ -181,11 +251,77 @@ void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
     // PreOrder
     if (!processedChildren)
     {
+        if (node->type == "whileStatement")
+        {
+            whileCounter++;
+        }
+
+        // Break Check
+        else if (node->type == "breakStatement")
+        {
+            if (whileCounter == 0)
+            {
+                std::cerr << "SEMANTIC ERROR: Break statement must be inside a while statement. at line: " + std::to_string(node->getLineNum()) + "\n";
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if (node->type == "returnStatement")
+        {
+            returnCounter++;
+        }
+
+        // Store function Return type if a functionDeclaration encountered
+        else if (node->type == "functionDeclaration")
+        {
+            functionReturnType = node->semanticInformation->returnType;
+        }
     }
 
     // PostOrder
     else
     {
+        if (node->type == "whileStatement")
+        {
+            whileCounter--;
+            std::vector<std::string> expressionType = getChildTypes(node);
+
+            if (expressionType[0] != "boolean")
+            {
+                std::cerr << "SEMANTIC ERROR: while-condition must be of Boolean type. at line: " + std::to_string(node->getLineNum()) + "\n";
+                exit(EXIT_FAILURE);
+            }
+        }
+        else if (node->type == "ifStatement")
+        {
+            std::vector<std::string> expressionType = getChildTypes(node);
+
+            if (expressionType[0] != "boolean")
+            {
+                std::cerr << "SEMANTIC ERROR: if-condition must be of Boolean type. at line: " + std::to_string(node->getLineNum()) + "\n";
+                exit(EXIT_FAILURE);
+            }
+        }
+        // Clear function Return type if a functionDeclaration encountered
+        else if (node->type == "functionDeclaration")
+        {
+            functionReturnType = "";
+        }
+
+        // if a returnStatement is encountered, check the return type
+        else if (node->type == "returnStatement")
+        {
+            std::vector<std::string> expressionType = getChildTypes(node);
+            if(expressionType.empty())
+            {
+                expressionType.push_back("void");
+            }
+            
+            if (expressionType[0] != functionReturnType)
+            {
+                std::cerr << "SEMANTIC ERROR: A value \'"+ expressionType[0] +"\' returned from a function has the wrong type, it should be \'"+functionReturnType+"\' at line: " + std::to_string(node->getLineNum()) + "\n";
+                exit(EXIT_FAILURE);
+            }
+        }
     }
     return;
 }
@@ -204,15 +340,17 @@ void SemanticAnalyzer::execute()
     // Perform Pass 2
     prePostTraversal(ast, &SemanticAnalyzer::identifierPass);
 
+    postTraversal(ast, &SemanticAnalyzer::testPass);
+
     // Perform Pass 3
     postTraversal(ast, &SemanticAnalyzer::typeCheckingPass);
 
     // Perform Pass 4
-    prePostTraversal(ast, &SemanticAnalyzer::identifierPass);
+    prePostTraversal(ast, &SemanticAnalyzer::miscPass);
 }
 
 /** Symbol Table functions **/
-SymbolTableEntry *SemanticAnalyzer::lookup(std::string id)
+SymbolTableEntry *SemanticAnalyzer::lookup(std::string id, int lineNo)
 {
     SymbolTableEntry *retVal;
     for (std::vector<SymbolTable *>::reverse_iterator i = scopeStack.rbegin(); i != scopeStack.rend(); ++i)
@@ -221,7 +359,7 @@ SymbolTableEntry *SemanticAnalyzer::lookup(std::string id)
         if (retVal != nullptr)
             return retVal;
     }
-    std::cerr << "SEMANTIC ERROR: An undeclared identifier: \"" << id << "\" is used. \n";
+    std::cerr << "SEMANTIC ERROR: An undeclared identifier \"" << id << "\" is used at line: " + std::to_string(lineNo) + "\n";
     exit(EXIT_FAILURE);
 }
 
@@ -229,9 +367,9 @@ SymbolTableEntry *SemanticAnalyzer::defineEntry(std::string id, std::string retT
 {
     SymbolTableEntry *newEntry;
     if (functionArgs != "")
-        newEntry = new SymbolTableEntry(id, scopeStack.back()->scopeName, retType, functionArgs);
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType, functionArgs);
     else
-        newEntry = new SymbolTableEntry(id, scopeStack.back()->scopeName, retType);
+        newEntry = new SymbolTableEntry(id, scopeStack.back(), retType);
 
     SymbolTableEntry *retValue = scopeStack.back()->defineEntry(id, newEntry);
     if (retValue != nullptr)
@@ -240,5 +378,67 @@ SymbolTableEntry *SemanticAnalyzer::defineEntry(std::string id, std::string retT
     {
         std::cerr << "SEMANTIC ERROR: The identifier: \"" << id << "\" is redefined within the same scope.\n";
         exit(EXIT_FAILURE);
+    }
+}
+
+/** Fill out typeChecking Table **/
+
+void SemanticAnalyzer::fillTypeCheckingTable()
+{
+    // table return entry structure == (left type, right type, return type)
+    //                              == (left type, result type) -- unary operations
+    typeCheckingTable["||"] = std::vector<std::vector<std::string>>{{"boolean", "boolean", "boolean"}};
+    typeCheckingTable["&&"] = std::vector<std::vector<std::string>>{{"boolean", "boolean", "boolean"}};
+    typeCheckingTable["=="] = std::vector<std::vector<std::string>>{{"boolean", "boolean", "boolean"}, {"int", "int", "boolean"}};
+    typeCheckingTable["!="] = std::vector<std::vector<std::string>>{{"boolean", "boolean", "boolean"}, {"int", "int", "boolean"}};
+    typeCheckingTable["="] = std::vector<std::vector<std::string>>{{"boolean", "boolean", "boolean"}, {"int", "int", "int"}};
+    typeCheckingTable["<"] = std::vector<std::vector<std::string>>{{"int", "int", "boolean"}};
+    typeCheckingTable[">"] = std::vector<std::vector<std::string>>{{"int", "int", "boolean"}};
+    typeCheckingTable["<="] = std::vector<std::vector<std::string>>{{"int", "int", "boolean"}};
+    typeCheckingTable[">="] = std::vector<std::vector<std::string>>{{"int", "int", "boolean"}};
+    typeCheckingTable["+"] = std::vector<std::vector<std::string>>{{"int", "int", "int"}};
+    typeCheckingTable["*"] = std::vector<std::vector<std::string>>{{"int", "int", "int"}};
+    typeCheckingTable["/"] = std::vector<std::vector<std::string>>{{"int", "int", "int"}};
+    typeCheckingTable["%"] = std::vector<std::vector<std::string>>{{"int", "int", "int"}};
+    typeCheckingTable["!"] = std::vector<std::vector<std::string>>{{"boolean", "boolean"}};
+    typeCheckingTable["-"] = std::vector<std::vector<std::string>>{{"int", "int", "int"}, {"int", "int"}};
+}
+
+std::vector<std::string> SemanticAnalyzer::getChildTypes(Node *node)
+{
+    std::vector<std::string> childArgs;
+    // Get Child Types
+    for (unsigned long i = 0; i < node->childNodes.size(); i++)
+    {
+        if (node->childNodes[i]->type == "boolean" || node->childNodes[i]->type == "int")
+        {
+            childArgs.push_back(node->childNodes[i]->type);
+        }
+        else
+        {
+            if (node->childNodes[i]->semanticInformation != nullptr)
+            {
+                childArgs.push_back(node->childNodes[i]->semanticInformation->returnType);
+            }
+            else
+            {
+                childArgs.push_back(node->childNodes[i]->semanticType);
+            }
+        }
+    }
+
+    return childArgs;
+}
+
+/**DEBUGGING FUNCTION**/
+void SemanticAnalyzer::testPass(Node *node)
+{
+    if (node->type == "id" && node->semanticInformation == nullptr)
+    {
+        std::cerr << "ERROR ON ID: \'" + node->value + "\'";
+    }
+    if (node->type == "functionInvocation")
+    {
+        test.push_back(node->semanticInformation);
     }
 }

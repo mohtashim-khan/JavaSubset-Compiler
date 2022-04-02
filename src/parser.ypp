@@ -7,6 +7,7 @@
 
 %define api.namespace {JCC}
 %define api.parser.class {Parser}
+%define parse.error detailed
 
 %locations
 
@@ -20,6 +21,7 @@
     // Forward Declaration.
     // Compiler outputs error otherwise
     class Driver;
+    #define YYERROR_VERBOSE 1
 }
 
 %parse-param {Driver &driver}
@@ -50,9 +52,9 @@
 %token T_EOF  0
 
 // Literals
-%token <strVal> T_ID 
-%token <ival> T_NUM 
-%token <strVal> T_STRING 
+%token <strVal> T_ID "id"
+%token <ival> T_NUM "number"
+%token <strVal> T_STRING "string"
 
 %token T_CESC_B
 %token T_CESC_F
@@ -64,41 +66,41 @@
 %token T_CESC_SLASH
 
     // Reserved Words
-%token T_TRUE 
-%token T_FALSE 
-%token T_BOOLEAN 
-%token T_INT 
-%token T_VOID 
-%token T_IF 
-%token T_ELSE 
-%token T_WHILE 
-%token T_BREAK  
-%token T_RETURN 
+%token T_TRUE "true"
+%token T_FALSE "false"
+%token T_BOOLEAN "boolean"
+%token T_INT "int"
+%token T_VOID "void"
+%token T_IF "if"
+%token T_ELSE "else"
+%token T_WHILE "while"
+%token T_BREAK  "break"
+%token T_RETURN "return"
 
     // Operators
-%token T_ADD 
-%token T_SUB 
-%token T_MULT 
-%token T_DIV 
-%token T_MOD 
-%token T_LT 
-%token T_GT 
-%token T_LTE 
-%token T_GTE 
-%token T_ASSIGN 
-%token T_EQUAL 
-%token T_NEQUAL
-%token T_NOT 
-%token T_AND 
-%token T_OR 
+%token T_ADD "+"
+%token T_SUB "-"
+%token T_MULT "*"
+%token T_DIV "/"
+%token T_MOD "%"
+%token T_LT "<"
+%token T_GT ">"
+%token T_LTE "<="
+%token T_GTE ">="
+%token T_ASSIGN "="
+%token T_EQUAL "=="
+%token T_NEQUAL "!="
+%token T_NOT "!"
+%token T_AND "&&"
+%token T_OR "||"
 
     // Other Things
-%token T_LPARA 
-%token T_RPARA 
-%token T_LBRACE 
-%token T_RBRACE 
-%token T_SEMICOLON 
-%token T_COMMA 
+%token T_LPARA "("
+%token T_RPARA ")"
+%token T_LBRACE "{"
+%token T_RBRACE "}"
+%token T_SEMICOLON ";" 
+%token T_COMMA ","
 
     // ERROR TOKEN
 %token T_ERR 
@@ -203,6 +205,7 @@ globaldeclarations      : globaldeclaration {
 
 globaldeclaration       : variabledeclaration {
                              $$ = new Node("globalVardeclaration");
+                             $$ -> setLine(@$.begin.line);
                              $$ -> addChildNode($1);
                             }
                         | functiondeclaration{
@@ -252,6 +255,7 @@ functionheader          : type functiondeclarator {
                             }
                         | T_VOID functiondeclarator{
                              $$ = new Node("void");
+                             $$->setLine(@$.begin.line);
                              $$->setSibling($2);
                             }
                         ;
@@ -260,6 +264,7 @@ functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
                              
                              $$ = $1;
                              Node * temp = new Node("formalParameters");
+                             temp->setLine(@$.begin.line);
                              temp->addChildNode($3);
                              $$->setSibling(temp);
                             }
@@ -311,7 +316,16 @@ mainfunctiondeclaration : mainfunctiondeclarator block{
 
 mainfunctiondeclarator  : identifier T_LPARA T_RPARA{
                              $$ = new Node("void");
+                             $$->setLine(@$.begin.line);
                              $$->setSibling($1);
+                            }
+                            |
+                            identifier T_LPARA formalparameterlist T_RPARA {
+                             
+                             $$ = $1;
+                             Node * temp = new Node("formalParameters");
+                             temp->addChildNode($3);
+                             $$->setSibling(temp);
                             }
                         ;
 
@@ -618,5 +632,5 @@ expression              : assignmentexpression{
 
 void JCC::Parser::error(const location_type &loc, const std::string &errmsg)
 {
-   std::cerr << "Error: " << errmsg << " at " << loc << "\n";
+   std::cerr << "Error: " << errmsg << " at line: " << loc.begin.line << "\n";
 }
