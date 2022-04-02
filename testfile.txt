@@ -95,6 +95,7 @@ int scanner()
         if (ch == ASCII_RPAREN)         return TK_RPAREN;
 
         if (isdigit(ch)) {
+                int x;
                 attr = 0;
                 while (isdigit(ch)) {
                         attr = attr * 10 + (ch - ASCII_0);

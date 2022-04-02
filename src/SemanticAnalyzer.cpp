@@ -99,12 +99,18 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
         node->semanticType = node->childNodes[0]->type;
         node->semanticID = node->childNodes[1]->value;
 
+        Node *parentNode = node->getParentNode();
+        Node *grandParentNode = parentNode->getParentNode();
+        
+
+
+
         // Outer Block Check
-        if (node->getParentNode()->type == "block")
+        if (parentNode->type == "block")
         {
-            if (node->getParentNode()->getParentNode()->type != "functionDeclaration" || node->getParentNode()->getParentNode()->type != "mainFunctionDeclaration")
+            if (grandParentNode->type != "functionDeclaration" && grandParentNode->type != "mainFunctionDeclaration")
             {
-                std::cerr << "SEMANTIC ERROR: local declaration was not in the outermost block on line: " + std::to_string(node->getLineNum()) + "\n";
+                std::cerr << "SEMANTIC ERROR: local declaration \'"+ node->semanticID+"\' was not in the outermost block on line: " + std::to_string(node->getLineNum()) + "\n";
                 exit(EXIT_FAILURE);
             }
         }
