@@ -1,0 +1,6 @@
+main(){
+    boolean i;
+    i = -i;
+    i = -------i;
+
+}

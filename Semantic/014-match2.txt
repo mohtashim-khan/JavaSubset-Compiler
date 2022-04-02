@@ -1,0 +1,10 @@
+void foo(boolean a, int b){}
+
+int temp(){
+    return 1;
+}
+
+main(){
+    int i;
+    foo(true, temp());
+}

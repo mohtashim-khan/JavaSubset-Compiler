@@ -1,0 +1,10 @@
+main(){
+    int i;
+    boolean j;
+    i = i + foo();
+
+}
+
+int foo(){
+    return false;
+}

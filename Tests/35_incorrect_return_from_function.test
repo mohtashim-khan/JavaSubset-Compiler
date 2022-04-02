@@ -1,0 +1,10 @@
+boolean foo(){
+    int x;
+    x = 6;
+    return 9;
+}
+
+main(){
+    boolean d;
+    d = foo();
+}

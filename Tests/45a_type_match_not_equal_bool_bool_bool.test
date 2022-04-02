@@ -1,0 +1,8 @@
+main (){
+    boolean x;
+    boolean y;
+    boolean r;
+    x = false;
+    y = false;
+    r = y != x;
+}

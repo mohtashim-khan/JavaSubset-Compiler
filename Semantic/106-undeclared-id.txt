@@ -1,0 +1,7 @@
+main(){
+    int i;
+}
+
+int foo(){
+    return i;
+}

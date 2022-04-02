@@ -16,7 +16,7 @@ bool Driver::createAST(std::fstream &in)
         return 1;
     }
     bool res = parse(in);
-    if (!res) tree->print();
+    if (!res) //tree->print();
 
     return res;
 }
@@ -52,5 +52,6 @@ void Driver::analyze()
 {
     analyzer = std::make_unique<SemanticAnalyzer>(tree);
     analyzer->execute();
+    tree->print();
 
 }

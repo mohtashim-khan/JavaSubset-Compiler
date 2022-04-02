@@ -1,0 +1,8 @@
+main (){
+    int x;
+    x = 10;
+    boolean f;
+    f = true;
+    boolean g;
+    g = x == f;
+}

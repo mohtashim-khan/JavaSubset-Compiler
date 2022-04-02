@@ -1,0 +1,7 @@
+main(){
+    boolean i;
+    i = true;
+    while(i){
+        
+    }
+}

@@ -1,0 +1,15 @@
+int j;
+
+main (){
+    boolean x;
+    int g;
+    g = 6;
+    x = foo(6);
+}
+
+boolean foo (int argument_foo){
+    int x;
+    x = 5 + argument_foo;
+    x = x + j;
+    return false;
+}

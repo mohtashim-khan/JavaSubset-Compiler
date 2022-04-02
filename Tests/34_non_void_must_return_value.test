@@ -1,0 +1,10 @@
+int foo(){
+    int x;
+    x = 6;
+    return;
+}
+
+main(){
+    int d;
+    d = foo();
+}

@@ -1,0 +1,10 @@
+main (){
+    int z;
+    z = foo();
+}
+
+int foo(){
+    int x;
+
+    return x+10;
+}

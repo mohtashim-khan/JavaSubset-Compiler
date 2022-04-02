@@ -1,0 +1,11 @@
+boolean f(){
+    return true;
+}
+
+main(){
+    boolean i;
+    i = true;
+    if(f()){
+        
+    }
+}

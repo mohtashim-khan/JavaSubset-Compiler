@@ -1,0 +1,14 @@
+int foo(){
+    boolean p;
+    p = true;
+    if (p){
+        int x;
+        x = 7;
+        return x;
+    }
+}
+
+main (){
+    int x;
+    x = foo();
+}

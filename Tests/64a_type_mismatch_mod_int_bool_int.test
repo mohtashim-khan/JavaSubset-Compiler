@@ -1,0 +1,8 @@
+main (){
+    int x;
+    boolean y;
+    int r;
+    x = 123;
+    y = false;
+    r = x%y;
+}

@@ -1,0 +1,5 @@
+main (){
+    boolean x;
+    int r;
+    r = !x;
+}

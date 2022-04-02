@@ -1,0 +1,8 @@
+main (){
+    int x;
+    int y;
+    boolean r;
+    x = 10;
+    y = 45;
+    r = x/y;
+}

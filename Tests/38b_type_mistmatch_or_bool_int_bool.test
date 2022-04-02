@@ -1,0 +1,8 @@
+main (){
+    boolean x;
+    x = true;
+    int y;
+    y = 0;
+    boolean f;
+    f = x || y;
+}

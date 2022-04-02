@@ -1,0 +1,8 @@
+int foo(){
+        
+    int i;
+    boolean i;
+    return i;
+}
+
+main(){}

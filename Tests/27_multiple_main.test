@@ -1,0 +1,14 @@
+int foo(){
+    int z;
+    z = 0;
+    return z;
+}
+
+main (){
+
+}
+
+main (){
+    int x;
+    x = foo();
+}

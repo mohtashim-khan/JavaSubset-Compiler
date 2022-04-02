@@ -1,0 +1,8 @@
+boolean foo(){
+    return true;
+}
+
+main(){
+    int i;
+    i = foo();
+}

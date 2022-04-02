@@ -1,0 +1,8 @@
+main(){
+    boolean i;
+    i = true;
+    if(i){
+        
+        
+    }
+}

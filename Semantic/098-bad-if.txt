@@ -1,0 +1,12 @@
+main(){
+    int i;
+    i = 3;
+    if(f()){
+        
+        
+    }
+}
+
+int f(){
+    return 1;
+}
