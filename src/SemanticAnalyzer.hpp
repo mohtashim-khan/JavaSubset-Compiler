@@ -65,6 +65,8 @@ private:
     int breakCounter = 0;
     int returnCounter = 0;
     std::string functionReturnType = "";
+    std::string mainFunctionID = "";
+
 
     //Helper vector
     std::vector<SymbolTableEntry *> test;

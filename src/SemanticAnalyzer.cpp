@@ -74,6 +74,7 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     {
         node->semanticInformation = defineEntry(node->childNodes[1]->value, node->childNodes[1]->type, "function");
         mainDeclarationCounter++;
+        mainFunctionID = node->childNodes[1]->value;
         if (mainDeclarationCounter > 1)
         {
             std::cerr << "SEMANTIC ERROR: Multiple main declarations found. \n";
@@ -97,13 +98,23 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     {
         node->semanticType = node->childNodes[0]->type;
         node->semanticID = node->childNodes[1]->value;
+
+        // Outer Block Check
+        if (node->getParentNode()->type == "block")
+        {
+            if (node->getParentNode()->getParentNode()->type != "functionDeclaration" || node->getParentNode()->getParentNode()->type != "mainFunctionDeclaration")
+            {
+                std::cerr << "SEMANTIC ERROR: local declaration was not in the outermost block on line: " + std::to_string(node->getLineNum()) + "\n";
+                exit(EXIT_FAILURE);
+            }
+        }
     }
 
     else if (nodeType == "formalParameters")
     {
         if (node->getParentNode()->type == "mainFunctionDeclaration")
         {
-            std::cerr << "The main declaration can't have parameters.\n";
+            std::cerr << "SEMANTIC ERROR: The main declaration can't have parameters.\n";
             exit(EXIT_FAILURE);
         }
         std::string returnString = "(";
@@ -183,6 +194,12 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
                 node->semanticInformation = lookup(node->value, node->getLineNum());
                 if (parentNode->semanticInformation == nullptr)
                     parentNode->semanticInformation = node->semanticInformation;
+
+                if (node->value == mainFunctionID)
+                {
+                    std::cerr << "SEMANTIC ERROR: The main function can't be called. it is being called on line: " + std::to_string(node->getLineNum()) + "\n";
+                    exit(EXIT_FAILURE);
+                }
             }
 
             // Otherwise lookup information about the id
@@ -304,21 +321,71 @@ void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
         // Clear function Return type if a functionDeclaration encountered
         else if (node->type == "functionDeclaration")
         {
+            if (functionReturnType != "" && functionReturnType != "void")
+            {
+                if (returnCounter == 0)
+                {
+                    std::cerr << "SEMANTIC ERROR: No return statement in a non-void function. at line: " + std::to_string(node->getLineNum()) + "\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
             functionReturnType = "";
+            returnCounter = 0;
         }
 
         // if a returnStatement is encountered, check the return type
         else if (node->type == "returnStatement")
         {
             std::vector<std::string> expressionType = getChildTypes(node);
-            if(expressionType.empty())
+            if (expressionType.empty())
             {
                 expressionType.push_back("void");
             }
-            
+
             if (expressionType[0] != functionReturnType)
             {
-                std::cerr << "SEMANTIC ERROR: A value \'"+ expressionType[0] +"\' returned from a function has the wrong type, it should be \'"+functionReturnType+"\' at line: " + std::to_string(node->getLineNum()) + "\n";
+                if (functionReturnType != "void")
+                {
+                    if (expressionType[0] == "void")
+                    {
+                        std::cerr << "SEMANTIC ERROR: A non-void function must return a value. At line: " + std::to_string(node->getLineNum()) + "\n";
+                        exit(EXIT_FAILURE);
+                    }
+
+                    std::cerr << "SEMANTIC ERROR: A value \'" + expressionType[0] + "\' returned from a function has the wrong type, it should be \'" + functionReturnType + "\' at line: " + std::to_string(node->getLineNum()) + "\n";
+                    exit(EXIT_FAILURE);
+                }
+
+                else if (functionReturnType == "void")
+                {
+                    std::cerr << "SEMANTIC ERROR: A void function can't return a value. at line: " + std::to_string(node->getLineNum()) + "\n";
+                    exit(EXIT_FAILURE);
+                }
+            }
+        }
+
+        else if (node->type == "functionInvocation")
+        {
+            // Function Invocation vs Function Declaration check
+            std::vector<std::string> funcInvocArguments = getChildTypes(node);
+            std::string funcArgs = node->semanticInformation->functionArgs;
+            std::string compareString = "function";
+            if (funcInvocArguments.size() >= 2)
+            {
+                compareString += "(";
+                for (unsigned long i = 1; i < funcInvocArguments.size(); i++)
+                {
+                    compareString += funcInvocArguments[i] + ",";
+                }
+
+                compareString.pop_back();
+                compareString += ")";
+            }
+
+            if (compareString.compare(funcArgs) != 0)
+            {
+                std::cerr << "SEMANTIC ERROR: The number/type of arguments \'" + compareString + "\' in a function call doesn't match the function's declaration \'" + funcArgs + "\' at line: " + std::to_string(node->getLineNum()) + "\n";
+                ;
                 exit(EXIT_FAILURE);
             }
         }
@@ -410,7 +477,7 @@ std::vector<std::string> SemanticAnalyzer::getChildTypes(Node *node)
     // Get Child Types
     for (unsigned long i = 0; i < node->childNodes.size(); i++)
     {
-        if (node->childNodes[i]->type == "boolean" || node->childNodes[i]->type == "int")
+        if (node->childNodes[i]->type == "boolean" || node->childNodes[i]->type == "int" || node->childNodes[i]->type == "string")
         {
             childArgs.push_back(node->childNodes[i]->type);
         }

@@ -37,8 +37,8 @@ public:
     std::vector<Node*> childNodes;
     std::string type; //Used by terminal Nodes for their types
     std::string value;
-    std::string semanticType = "Invalid"; //Used by Non-ID Non-Terminal nodes to determine their types and the number node
-    std::string semanticID = "Invalid"; //Used by semantic Analyzer to send information regarding Identifiers up the tree -- Only used on Pass 1
+    std::string semanticType; //Used by Non-ID Non-Terminal nodes to determine their types and the number node
+    std::string semanticID; //Used by semantic Analyzer to send information regarding Identifiers up the tree -- Only used on Pass 1
     SymbolTableEntry* semanticInformation = nullptr; //Used for Identifiers and their types
     
     int line;

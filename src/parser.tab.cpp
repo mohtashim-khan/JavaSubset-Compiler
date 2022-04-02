@@ -1011,7 +1011,7 @@ namespace JCC {
   case 39: // statement: "return" ";"
 #line 395 "parser.ypp"
                                               {
-                             (yylhs.value.node) = new Node("emptyReturnStatement");
+                             (yylhs.value.node) = new Node("returnStatement");
                              (yylhs.value.node)->setLine(yylhs.location.begin.line);
                             }
 #line 1018 "parser.tab.cpp"

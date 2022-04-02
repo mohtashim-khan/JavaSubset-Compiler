@@ -393,7 +393,7 @@ statement               : block{
                              $$->addChildNode($2);
                             }
                         | T_RETURN T_SEMICOLON{
-                             $$ = new Node("emptyReturnStatement");
+                             $$ = new Node("returnStatement");
                              $$->setLine(@$.begin.line);
                             }
                         | T_IF T_LPARA expression T_RPARA statement{
