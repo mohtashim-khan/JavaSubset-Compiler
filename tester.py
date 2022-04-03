@@ -24,6 +24,6 @@ with open("results.txt", "w") as output_file:
                 differences_count += 1
 
     if differences_count == 0:
-        output_file.write("################################## ALL TESTS PASSED. ##################################")
+        output_file.write("################################## ALL TESTS PASSED. ##################################\n")
     else:
-        output_file.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " + str(differences_count) + " TESTS FAILED. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
+        output_file.write("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " + str(differences_count) + " TESTS FAILED. XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX\n")
