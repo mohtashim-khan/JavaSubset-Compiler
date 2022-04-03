@@ -2003,4 +2003,5 @@ namespace JCC {
 void JCC::Parser::error(const location_type &loc, const std::string &errmsg)
 {
    std::cerr << "Error: " << errmsg << " at line: " << loc.begin.line << "\n";
+   exit(1);
 }

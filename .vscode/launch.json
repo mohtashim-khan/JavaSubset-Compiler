@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "testfile.txt"
+        "./Tests/58a_type_mistmatch_subtraction_int_bool_int.test"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

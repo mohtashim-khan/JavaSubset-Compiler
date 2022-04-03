@@ -241,7 +241,7 @@ void SemanticAnalyzer::typeCheckingPass(Node *node)
         {
             bool errorFlag = false;
             // Will comapre either only the L type or both L and R types with the child types. Skips over return type
-            for (unsigned long i = 0; i < validType.size() - 1; i++)
+            for (unsigned long i = 0; i < childArgs.size(); i++)
             {
                 if (validType[i].compare(childArgs[i]) != 0)
                 {
