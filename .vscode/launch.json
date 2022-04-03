@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Tests/58a_type_mistmatch_subtraction_int_bool_int.test"
+        "./Tests/65_type_match_mod_int_int_int.test"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

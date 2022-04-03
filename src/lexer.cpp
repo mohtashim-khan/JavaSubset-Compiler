@@ -383,6 +383,10 @@ void Lexer::readOperator()
     case '*':
         curr_token = JCC::Parser::token::T_MULT;
         break;
+    case '%':
+        curr_token = JCC::Parser::token::T_MOD;
+        break;
+    
     case '<':
         curr_token = JCC::Parser::token::T_LT;
         if (in->peek() == '=')
