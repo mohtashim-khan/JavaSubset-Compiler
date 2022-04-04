@@ -263,10 +263,19 @@ functionheader          : type functiondeclarator {
 functiondeclarator      : identifier T_LPARA formalparameterlist T_RPARA {
                              
                              $$ = $1;
-                             Node * temp = new Node("formalParameters");
-                             temp->setLine(@$.begin.line);
-                             temp->addChildNode($3);
-                             $$->setSibling(temp);
+                             Node * formalParameters = new Node("formalParameters");
+                             formalParameters->setLine(@$.begin.line);
+                             formalParameters->addChildNode($3);
+                             if($3->checkSibling())
+                             {
+                                 Node* temp = $3;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     formalParameters->addChildNode(temp);
+                                 }
+                             }
+                             $$->setSibling(formalParameters);
                             }
                         | identifier T_LPARA T_RPARA {
                              $$ = $1;
@@ -279,8 +288,8 @@ formalparameterlist     : formalparameter{
                             }
                         | formalparameterlist T_COMMA formalparameter{
                              $$ = $1;
-                             Node* temp = $1;
-                             //Go to end of sibing chain and and add extra formal parameter at the end
+                             Node* temp = $1;                            
+                             //Go to end of sibing chain and and add extra formal parameter at the end, this checks for a non existant sibling! BUG!!
                              while(temp->checkSibling())
                              {
                                  temp = temp->getSibling();
@@ -294,6 +303,7 @@ formalparameter         : type identifier{
                              $$->setLine(@$.begin.line);
                              $$->addChildNode($1);
                              $$->addChildNode($2);
+
                             }
                         ;
 
@@ -323,9 +333,19 @@ mainfunctiondeclarator  : identifier T_LPARA T_RPARA{
                             identifier T_LPARA formalparameterlist T_RPARA {
                              
                              $$ = $1;
-                             Node * temp = new Node("formalParameters");
-                             temp->addChildNode($3);
-                             $$->setSibling(temp);
+                             Node * formalParameters = new Node("formalParameters");
+                             formalParameters->setLine(@$.begin.line);
+                             formalParameters->addChildNode($3);
+                             if($3->checkSibling())
+                             {
+                                 Node* temp = $3;
+                                 while(temp->checkSibling())
+                                 {
+                                     temp = temp->getSibling();
+                                     formalParameters->addChildNode(temp);
+                                 }
+                             }
+                             $$->setSibling(formalParameters);
                             }
                         ;
 

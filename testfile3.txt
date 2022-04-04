@@ -1,9 +1,11 @@
+void function (int a, int b, int c){}
 
-int callBack()
-{
+main() {
 
- print("hello World");
- print("hello World \n");
+    int a;
+    int b;
+    int c;
+
+    function(a,b,c);
 
 }
-

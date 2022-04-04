@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Tests/65_type_match_mod_int_int_int.test"
+        "./Tests/74_argument_number_mismatch.test"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
