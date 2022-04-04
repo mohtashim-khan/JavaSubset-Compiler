@@ -433,6 +433,8 @@ void SemanticAnalyzer::execute()
 SymbolTableEntry *SemanticAnalyzer::lookup(std::string id, int lineNo)
 {
     SymbolTableEntry *retVal;
+    
+    //Traverse Scope Stack vector in reverse since the back is the top of the "stack"
     for (std::vector<SymbolTable *>::reverse_iterator i = scopeStack.rbegin(); i != scopeStack.rend(); ++i)
     {
         retVal = (*i)->lookup(id);
