@@ -299,7 +299,7 @@ void SemanticAnalyzer::miscPass(Node *node, bool processedChildren)
         }
 
         // Store function Return type if a functionDeclaration encountered
-        else if (node->type == "functionDeclaration")
+        else if (node->type == "functionDeclaration" || node->type == "mainFunctionDeclaration")
         {
             functionReturnType = node->semanticInformation->returnType;
         }
