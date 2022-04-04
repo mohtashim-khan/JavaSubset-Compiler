@@ -101,16 +101,13 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
 
         Node *parentNode = node->getParentNode();
         Node *grandParentNode = parentNode->getParentNode();
-        
-
-
 
         // Outer Block Check
         if (parentNode->type == "block")
         {
             if (grandParentNode->type != "functionDeclaration" && grandParentNode->type != "mainFunctionDeclaration")
             {
-                std::cerr << "SEMANTIC ERROR: local declaration \'"+ node->semanticID+"\' was not in the outermost block on line: " + std::to_string(node->getLineNum()) + "\n";
+                std::cerr << "SEMANTIC ERROR: local declaration \'" + node->semanticID + "\' was not in the outermost block on line: " + std::to_string(node->getLineNum()) + "\n";
                 exit(EXIT_FAILURE);
             }
         }
@@ -228,7 +225,12 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
 
 void SemanticAnalyzer::typeCheckingPass(Node *node)
 {
-    std::unordered_map<std::string, std::vector<std::vector<std::string>>>::const_iterator validTypes = typeCheckingTable.find(node->type);
+    std::string typeCheck;
+    if (node->type == "unaryExpression")
+        typeCheck = node->value;
+    else
+        typeCheck = node->type;
+    std::unordered_map<std::string, std::vector<std::vector<std::string>>>::const_iterator validTypes = typeCheckingTable.find(typeCheck);
 
     // TypeChecking if a Operator Node is Encountered
     if (validTypes != typeCheckingTable.end())
@@ -241,7 +243,7 @@ void SemanticAnalyzer::typeCheckingPass(Node *node)
         {
             bool errorFlag = false;
 
-            if(childArgs.size() >= validType.size())
+            if (childArgs.size() >= validType.size())
             {
                 errorFlag = true;
             }
