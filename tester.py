@@ -14,7 +14,7 @@ with open("results.txt", "w") as output_file:
         file_path = dir_containing_tests + test_file
         if(isfile(file_path)):
             # outputFile.write("Testing" + file_path + " - ")
-            compiler = subprocess.run(["main", file_path])
+            compiler = subprocess.run(["./output_debug", file_path])
             # outputFile.write("Returned " + str(cp.returncode))
             reference_compiler = subprocess.run(["/home/profs/aycock/411/TEST/reference/main", "-psemantic", file_path])
             # outputFile.write(", Ref returned " + str(cpRef.returncode) + "\n") 
