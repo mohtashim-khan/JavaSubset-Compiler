@@ -72,7 +72,7 @@ void SemanticAnalyzer::globalDeclarationsPass(Node *node)
     // Define Entry Here
     if (nodeType == "mainFunctionDeclaration")
     {
-        node->semanticInformation = defineEntry(node->childNodes[1]->value, node->childNodes[1]->type, "function");
+        node->semanticInformation = defineEntry(node->childNodes[1]->value, node->childNodes[0]->type, "function");
         mainDeclarationCounter++;
         mainFunctionID = node->childNodes[1]->value;
         if (mainDeclarationCounter > 1)
