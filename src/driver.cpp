@@ -50,6 +50,13 @@ void Driver::analyze()
 {
     analyzer = std::make_unique<SemanticAnalyzer>(tree);
     analyzer->execute();
-    tree->print();
+    //tree->print();
 
+}
+
+void Driver::generate()
+{
+    generator = std::make_unique<CodeGenerator>(tree);
+    generator->execute();
+    //tree->print();
 }

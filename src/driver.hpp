@@ -6,6 +6,7 @@
 #include "Node.hpp"
 #include "parser.tab.hpp"
 #include "SemanticAnalyzer.hpp"
+#include "CodeGenerator.hpp"
 #include <fstream>
 #include <memory>
 
@@ -24,6 +25,7 @@ class Driver {
     // Will execute the semanticAnalyzer
     void analyze();
 
+    void generate();
     // Stores AST. Parser will fill this.
     Node* tree = nullptr;
 
@@ -40,6 +42,8 @@ class Driver {
     std::unique_ptr<JCC::Parser> parser{nullptr};
     std::unique_ptr<Lexer> lexer{nullptr};
     std::unique_ptr<SemanticAnalyzer> analyzer{nullptr};
+    std::unique_ptr<CodeGenerator> generator{nullptr};
+
 
 };
 
