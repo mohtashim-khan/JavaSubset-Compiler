@@ -66,6 +66,7 @@ private:
     int returnCounter = 0;
     std::string functionReturnType = "";
     std::string mainFunctionID = "";
+    int varDecs = 0;
 
 
     //Helper vector

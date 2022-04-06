@@ -152,6 +152,7 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
         if (nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
         {
             openScope(node->semanticInformation->identifier);
+            varDecs = 0;
         }
     }
 
@@ -161,6 +162,7 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
         if (nodeType == "mainFunctionDeclaration" || nodeType == "functionDeclaration")
         {
             closeScope();
+            node->variableDecs=varDecs;
         }
 
         if (nodeType == "id")
@@ -177,6 +179,7 @@ void SemanticAnalyzer::identifierPass(Node *node, bool processedChildren)
                 else
                 {
                     node->semanticInformation = defineEntry(node->value, parentNode->childNodes[0]->type);
+                    varDecs++;
                 }
             }
 
@@ -419,8 +422,6 @@ void SemanticAnalyzer::execute()
     }
     // Perform Pass 2
     prePostTraversal(ast, &SemanticAnalyzer::identifierPass);
-
-    postTraversal(ast, &SemanticAnalyzer::testPass);
 
     // Perform Pass 3
     postTraversal(ast, &SemanticAnalyzer::typeCheckingPass);

@@ -40,6 +40,8 @@ public:
     std::string semanticType; //Used by Non-ID Non-Terminal nodes to determine their types and the number node
     std::string semanticID; //Used by semantic Analyzer to send information regarding Identifiers up the tree -- Only used on Pass 1
     SymbolTableEntry* semanticInformation = nullptr; //Used for Identifiers and their types
+
+    int variableDecs=0;
     
     int line;
 

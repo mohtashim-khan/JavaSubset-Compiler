@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Semantic/061-bad-unary.txt"
+        "testfile.txt"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

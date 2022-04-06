@@ -4,6 +4,9 @@
 
 calculator()
 {
+        int i1;
+        int i2;
+        int i3;
         init();
         parser();
 }
@@ -17,6 +20,8 @@ int _char;
 
 int getc()
 {
+        int i1;
+        int i2;
         if (_havechar) {
                 _havechar = true; //Changed this node
                 return _char;

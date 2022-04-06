@@ -38,7 +38,7 @@ int main(int argc, char *argv[])
         return EXIT_FAILURE;
     }
     //Semantic Analysis
-    //driver -> analyze();
+    driver -> analyze();
 
     //CodeGen
     driver->generate();
