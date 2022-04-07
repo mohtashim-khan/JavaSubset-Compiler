@@ -63,7 +63,7 @@ void match(int expect)
         if (peek() != expect) {
                 prints("Error: expected ");
                 printc(expect);                 // XXX - not always printable
-                prints("\n");
+                prints("\n"); prints("the second n");
                 halt();
         }
         _havetoken = false;

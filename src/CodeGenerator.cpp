@@ -5,6 +5,8 @@ CodeGenerator::CodeGenerator(Node *node)
     ast = node;
     output += ".data\n";
     output += "error_msg: .asciiz \"MIPS ERROR\\n\"  \n";
+    output += "boolean_true: .asciiz \"true\\n\"  \n";
+    output += "boolean_false: .asciiz \"false\\n\"  \n";
 }
 
 // Traversal Engine
@@ -28,15 +30,16 @@ void CodeGenerator::prePostTraversal(Node *node, void (CodeGenerator::*passCB)(N
 void CodeGenerator::execute()
 {
     prePostTraversal(ast, &CodeGenerator::globalVarsCodeGen);
-    output += ".text";
-    prePostTraversal(ast, &CodeGenerator::assignmentsAndOpsCodeGen);
+    output += ".text\n";
+    output += ".globl main\n";
+    mipsFunctionCall("main");
 
-    // saveRegistersCodeGen(14);
-    // loadRegistersCodeGen(14);
+    prePostTraversal(ast, &CodeGenerator::assignmentsAndOpsCodeGen);
 }
 
 /**PASS FUNCTIONS**/
 
+// Create function Labels and fill out global variables
 void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
 {
 
@@ -48,6 +51,20 @@ void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
     // PostOrder
     else
     {
+        if (node->type == "functionDeclaration")
+        {
+            createFunctionLabel(node->semanticInformation->identifier);
+        }
+
+        else if (node->type == "globalVardeclaration")
+        {
+            output += node->semanticInformation->identifier + ": .word 0 \n"; // GlobalVar initialization to initial 0 values
+        }
+
+        else if (node->type == "string")
+        {
+            node->codeGenLabel = createLabel();
+        }
     }
 }
 
@@ -73,7 +90,8 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
         else if (node->type == "functionDeclaration")
         {
-            prolouge(node);
+            addRegisterPool();
+            prolouge(node->semanticInformation->identifier, node->type);
         }
     }
 
@@ -82,13 +100,14 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
     {
         if (node->type == "functionDeclaration")
         {
-            epilouge(node);
+            epilouge(node->semanticInformation->identifier, node->semanticInformation->returnType, node->type);
+            removeRegisterPool();
         }
     }
 }
 
 /** REGISTER ALLOCATER FUNCTIONS **/
-std::string CodeGenerator::getRegister()
+std::string RegisterPool::getRegister()
 {
 
     for (auto &reg : registerPool)
@@ -103,7 +122,7 @@ std::string CodeGenerator::getRegister()
     exit(EXIT_FAILURE);
 }
 
-void CodeGenerator::freeRegister(std::string regName)
+void RegisterPool::freeRegister(std::string regName)
 {
     for (auto &reg : registerPool)
     {
@@ -117,17 +136,27 @@ void CodeGenerator::freeRegister(std::string regName)
     exit(EXIT_FAILURE);
 }
 
+std::string CodeGenerator::getRegister()
+{
+    return registerStack.top()->getRegister();
+}
+
+void CodeGenerator::freeRegister(std::string regName)
+{
+    registerStack.top()->freeRegister(regName);
+}
+
 /** STACK FUNCTIONS -- These functions will only be executed on function open and close **/
-void CodeGenerator::prolouge(Node *node)
+void CodeGenerator::prolouge(std::string id, std::string type)
 {
     // Create Prolouge label
-    if (node->type == "mainFunctionDeclaration")
+    if (type == "mainFunctionDeclaration")
     {
-        output += "L0: \n";
+        output += "main: \n";
     }
     else
     {
-        output += createFunctionLabel(node->semanticInformation->identifier);
+        output += getFunctionLabel(id);
     }
 
     // Save Return Address
@@ -153,23 +182,23 @@ void CodeGenerator::prolouge(Node *node)
     }
 }
 
-void CodeGenerator::epilouge(Node *node)
+void CodeGenerator::epilouge(std::string id, std::string returnType, std::string type)
 {
     // Check for a return
-    if (node->semanticInformation->returnType != "void")
+    if (returnType != "void")
     {
-        mipsError(); // Generate mips Error Code
+        mipsError(); // Generate mips Error Code if there is a return
     }
 
     // Create epilouge label
-    if (node->type == "mainFunctionDeclaration")
+    if (type == "mainFunctionDeclaration")
     {
         output += "L1: \n";
     }
 
     else
     {
-        output += getFunctionLabel(node->semanticInformation->identifier + "epilouge");
+        output += getFunctionLabel(id + "epilouge");
     }
 
     // Stack Operations
@@ -199,7 +228,7 @@ void CodeGenerator::epilouge(Node *node)
     output += "lw $ra, 0($sp) \n";
     output += "addiu $sp, $sp, 4 \n";
 
-    if (node->type == "mainFunctionDeclaration")
+    if (type == "mainFunctionDeclaration")
     {
         // Exit if main function
         output += "li $v0,10\n";
@@ -264,13 +293,27 @@ void CodeGenerator::mipsFunctionCall(std::string functionId, std::vector<std::st
         std::cerr << "function Call has More than 4 args. Not enough $a registers \n";
         exit(EXIT_FAILURE);
     }
-    //Assign $a registers
-    for(unsigned long i = 0; i < argRegisters.size(); i++)
+    // Assign $a registers
+    for (unsigned long i = 0; i < argRegisters.size(); i++)
     {
-        output += "move $a"+std::to_string(i)+", "+argRegisters.at(i)+ "\n";
+        output += "move $a" + std::to_string(i) + ", " + argRegisters.at(i) + "\n";
     }
 
-    output+="jal "+ getFunctionLabel(functionId)+ "\n";
+    output += "jal " + getFunctionLabel(functionId) + "\n";
+}
+
+void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::string newValReg)
+{
+    std::string addressReg = getRegister();
+    output += "la " + addressReg + "," + globalVarLabel + "\n";
+    output += "sw " + newValReg + ",0(" + addressReg + ") \n";
+    freeRegister(addressReg);
+}
+
+// Remember to Free register after calling and using this function
+std::string CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg)
+{
+    output += "lw " + returnReg + "," + globalVarLabel + "\n";
 }
 
 /**Prune functions**/
@@ -286,3 +329,91 @@ void CodeGenerator::whileStatementPrune(Node *node)
 {
 }
 
+/** J-- Library Functions Code Gen **/
+
+void CodeGenerator::mipsGetChar()
+{
+    createFunctionLabel("getChar");
+    prolouge("getChar", "functionDeclaration");
+    output += "li $v0,12\n";
+    output += "syscall\n"; // v0 Contains the return value
+
+    epilouge("getChar", "int", "functionDeclaration");
+}
+void CodeGenerator::mipsHalt()
+{
+    createFunctionLabel("halt");
+    prolouge("halt", "functionDeclaration");
+
+    output += "li $v0,10\n";
+    output += "syscall\n";
+
+    epilouge("halt", "void", "functionDeclaration");
+}
+
+void CodeGenerator::mipsPrintb()
+{
+    createFunctionLabel("printb");
+    prolouge("printb", "functionDeclaration");
+
+    output += "beq $a0, $zero, isFalse\n";
+
+    // If a0 != 0 then load true address
+    output += "isTrue:\n";
+    output += "la $a0, boolean_true\n";
+    output += "j printBoolean\n";
+
+    // If a0 == 0 then load false address
+    output += "isFalse:\n";
+    output += "la $a0, boolean_false\n";
+
+    // Print
+    output += "printBoolean:\n";
+    output += "li $v0,4\n";
+    output += "syscall\n";
+
+    epilouge("printb", "void", "functionDeclaration");
+}
+
+void CodeGenerator::mipsPrintc()
+{
+    createFunctionLabel("printc");
+    prolouge("printc", "functionDeclaration");
+
+    output += "li $v0,11\n";
+    output += "syscall\n";
+
+    epilouge("printc", "void", "functionDeclaration");
+}
+void CodeGenerator::mipsPrinti()
+{
+    createFunctionLabel("printi");
+    prolouge("printi", "functionDeclaration");
+
+    output += "li $v0,1\n";
+    output += "syscall\n";
+
+    epilouge("printi", "void", "functionDeclaration");
+}
+
+// Assume a0 contains the address of the string
+void CodeGenerator::mipsPrints()
+{
+    createFunctionLabel("prints");
+    prolouge("prints", "functionDeclaration");
+
+    output += "li $v0,4\n";
+    output += "syscall\n";
+
+    epilouge("prints", "void", "functionDeclaration");
+}
+
+void CodeGenerator::generateLibraryFunctions()
+{
+    mipsGetChar();
+    mipsHalt();
+    mipsPrintb();
+    mipsPrintc();
+    mipsPrinti();
+    mipsPrints();
+}

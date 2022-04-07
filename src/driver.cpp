@@ -50,7 +50,7 @@ void Driver::analyze()
 {
     analyzer = std::make_unique<SemanticAnalyzer>(tree);
     analyzer->execute();
-    //tree->print();
+    tree->print();
 
 }
 
