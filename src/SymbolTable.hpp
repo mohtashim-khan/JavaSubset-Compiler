@@ -26,6 +26,8 @@ public:
     std::string returnType;
     std::string functionArgs;
     std::string identifier; //not used but good to have for error checking.
+    std::string idRegister; // used to keep track of which register an identifier is stored in
+    std::string codeGenLabel;
     SymbolTable* scope; //only used for debugging
 
 

@@ -1,11 +1,3 @@
-void function (int a, int b, int c){}
-
 main() {
-
-    int a;
-    int b;
-    int c;
-
-    function(a,b,c);
-
+        prints("Hello, world!\n");
 }

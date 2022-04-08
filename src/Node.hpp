@@ -41,6 +41,7 @@ public:
     std::string semanticID; //Used by semantic Analyzer to send information regarding Identifiers up the tree -- Only used on Pass 1
     SymbolTableEntry* semanticInformation = nullptr; //Used for Identifiers and their types
     std::string codeGenLabel;
+    std::string returnRegister;
 
     int variableDecs=0;
     
