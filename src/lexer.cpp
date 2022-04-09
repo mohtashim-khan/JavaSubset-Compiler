@@ -115,7 +115,7 @@ JCC::Parser::token::token_kind_type Lexer::lex(JCC::Parser::semantic_type *yylva
         {
             // Read Int until non digit is found . Set Current token to Number
             readInt();
-            yylval->ival = std::stoul(lexeme);
+            yylval->strVal = new std::string(lexeme);
             return curr_token;
         }
 

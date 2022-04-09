@@ -639,7 +639,7 @@ namespace JCC {
   case 4: // literal: "number"
 #line 165 "parser.ypp"
                             {
-                             (yylhs.value.node) = new Node("number", std::to_string((yystack_[0].value.ival)));
+                             (yylhs.value.node) = new Node("number", *(yystack_[0].value.strVal));
                              (yylhs.value.node)->setLine(yylhs.location.begin.line);
                             }
 #line 646 "parser.tab.cpp"

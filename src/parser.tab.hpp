@@ -203,7 +203,7 @@ namespace JCC {
 #line 43 "parser.ypp"
 
     std::string *strVal;
-    int ival;
+    long long ival;
 
     Node* node;
 

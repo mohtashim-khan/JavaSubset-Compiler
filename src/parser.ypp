@@ -42,7 +42,7 @@
 /* Semantic type / YYSTYPE */
 %union{
     std::string *strVal;
-    int ival;
+    long long ival;
 
     Node* node;
 };
@@ -53,7 +53,7 @@
 
 // Literals
 %token <strVal> T_ID "id"
-%token <ival> T_NUM "number"
+%token <strVal> T_NUM "number"
 %token <strVal> T_STRING "string"
 
 %token T_CESC_B
@@ -163,7 +163,7 @@ start           : /* empty */ { driver.tree = new Node ("start");
                 ;
 
 literal         : T_NUM     {
-                             $$ = new Node("number", std::to_string($1));
+                             $$ = new Node("number", *$1);
                              $$->setLine(@$.begin.line);
                             }
                 | T_STRING  {

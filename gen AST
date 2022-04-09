@@ -1,0 +1,638 @@
+
+start {'type': 'start', 'lineno': 5} 
+        mainFunctionDeclaration {'type': 'mainFunctionDeclaration', 'lineno': 5} 
+                void {'type': 'void', 'lineno': 5} 
+                calculator {'type': 'id', 'lineno': 5, 'attr': 'calculator'} 
+                block {'type': 'block', 'lineno': 6} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 7} 
+                                int {'type': 'int', 'lineno': 7} 
+                                i1 {'type': 'id', 'lineno': 7, 'attr': 'i1'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 8} 
+                                int {'type': 'int', 'lineno': 8} 
+                                i2 {'type': 'id', 'lineno': 8, 'attr': 'i2'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 9} 
+                                int {'type': 'int', 'lineno': 9} 
+                                i3 {'type': 'id', 'lineno': 9, 'attr': 'i3'} 
+                        functionInvocation {'type': 'functionInvocation', 'lineno': 10} 
+                                init {'type': 'id', 'lineno': 10, 'attr': 'init'} 
+                        functionInvocation {'type': 'functionInvocation', 'lineno': 11} 
+                                parser {'type': 'id', 'lineno': 11, 'attr': 'parser'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 18} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 18} 
+                        boolean {'type': 'boolean', 'lineno': 18} 
+                        _havechar {'type': 'id', 'lineno': 18, 'attr': '_havechar'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 19} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 19} 
+                        int {'type': 'int', 'lineno': 19} 
+                        _char {'type': 'id', 'lineno': 19, 'attr': '_char'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 21} 
+                int {'type': 'int', 'lineno': 21} 
+                getc {'type': 'id', 'lineno': 21, 'attr': 'getc'} 
+                block {'type': 'block', 'lineno': 22} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 23} 
+                                int {'type': 'int', 'lineno': 23} 
+                                i1 {'type': 'id', 'lineno': 23, 'attr': 'i1'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 24} 
+                                int {'type': 'int', 'lineno': 24} 
+                                i2 {'type': 'id', 'lineno': 24, 'attr': 'i2'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 25} 
+                                _havechar {'type': 'id', 'lineno': 25, 'attr': '_havechar'} 
+                                block {'type': 'block', 'lineno': 25} 
+                                        = {'type': '=', 'lineno': 26} 
+                                                _havechar {'type': 'id', 'lineno': 26, 'attr': '_havechar'} 
+                                                true {'type': 'boolean', 'lineno': 26, 'attr': 'true'} 
+                                        returnStatement {'type': 'returnStatement', 'lineno': 27} 
+                                                _char {'type': 'id', 'lineno': 27, 'attr': '_char'} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 29} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 29} 
+                                        getchar {'type': 'id', 'lineno': 29, 'attr': 'getchar'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 32} 
+                void {'type': 'void', 'lineno': 32} 
+                ungetc {'type': 'id', 'lineno': 32, 'attr': 'ungetc'} 
+                formalParameters {'type': 'formalParameters', 'lineno': 32} 
+                        formalParameter {'type': 'formalParameter', 'lineno': 32} 
+                                int {'type': 'int', 'lineno': 32} 
+                                ch {'type': 'id', 'lineno': 32, 'attr': 'ch'} 
+                block {'type': 'block', 'lineno': 33} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 34} 
+                                _havechar {'type': 'id', 'lineno': 34, 'attr': '_havechar'} 
+                                block {'type': 'block', 'lineno': 34} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 35} 
+                                                prints {'type': 'id', 'lineno': 35, 'attr': 'prints'} 
+                                                Internal error: too many ungets!\n {'type': 'string', 'lineno': 35, 'attr': 'Internal error: too many ungets!\n'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 36} 
+                                                halt {'type': 'id', 'lineno': 36, 'attr': 'halt'} 
+                        = {'type': '=', 'lineno': 38} 
+                                _havechar {'type': 'id', 'lineno': 38, 'attr': '_havechar'} 
+                                true {'type': 'boolean', 'lineno': 38, 'attr': 'true'} 
+                        = {'type': '=', 'lineno': 39} 
+                                _char {'type': 'id', 'lineno': 39, 'attr': '_char'} 
+                                ch {'type': 'id', 'lineno': 39, 'attr': 'ch'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 46} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 46} 
+                        boolean {'type': 'boolean', 'lineno': 46} 
+                        _havetoken {'type': 'id', 'lineno': 46, 'attr': '_havetoken'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 47} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 47} 
+                        int {'type': 'int', 'lineno': 47} 
+                        _token {'type': 'id', 'lineno': 47, 'attr': '_token'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 48} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 48} 
+                        int {'type': 'int', 'lineno': 48} 
+                        attr {'type': 'id', 'lineno': 48, 'attr': 'attr'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 50} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 50} 
+                        int {'type': 'int', 'lineno': 50} 
+                        hello {'type': 'id', 'lineno': 50, 'attr': 'hello'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 52} 
+                int {'type': 'int', 'lineno': 52} 
+                peek {'type': 'id', 'lineno': 52, 'attr': 'peek'} 
+                block {'type': 'block', 'lineno': 53} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 54} 
+                                _havetoken {'type': 'id', 'lineno': 54, 'attr': '_havetoken'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 55} 
+                                        _token {'type': 'id', 'lineno': 55, 'attr': '_token'} 
+                        = {'type': '=', 'lineno': 57} 
+                                _havetoken {'type': 'id', 'lineno': 57, 'attr': '_havetoken'} 
+                                true {'type': 'boolean', 'lineno': 57, 'attr': 'true'} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 58} 
+                                = {'type': '=', 'lineno': 58} 
+                                        _token {'type': 'id', 'lineno': 58, 'attr': '_token'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 58} 
+                                                scanner {'type': 'id', 'lineno': 58, 'attr': 'scanner'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 61} 
+                void {'type': 'void', 'lineno': 61} 
+                match {'type': 'id', 'lineno': 61, 'attr': 'match'} 
+                formalParameters {'type': 'formalParameters', 'lineno': 61} 
+                        formalParameter {'type': 'formalParameter', 'lineno': 61} 
+                                int {'type': 'int', 'lineno': 61} 
+                                expect {'type': 'id', 'lineno': 61, 'attr': 'expect'} 
+                block {'type': 'block', 'lineno': 62} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 63} 
+                                != {'type': '!=', 'lineno': 63} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 63} 
+                                                peek {'type': 'id', 'lineno': 63, 'attr': 'peek'} 
+                                        expect {'type': 'id', 'lineno': 63, 'attr': 'expect'} 
+                                block {'type': 'block', 'lineno': 63} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 64} 
+                                                prints {'type': 'id', 'lineno': 64, 'attr': 'prints'} 
+                                                Error: expected  {'type': 'string', 'lineno': 64, 'attr': 'Error: expected '} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 65} 
+                                                printc {'type': 'id', 'lineno': 65, 'attr': 'printc'} 
+                                                expect {'type': 'id', 'lineno': 65, 'attr': 'expect'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 66} 
+                                                prints {'type': 'id', 'lineno': 66, 'attr': 'prints'} 
+                                                \n {'type': 'string', 'lineno': 66, 'attr': '\n'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 66} 
+                                                prints {'type': 'id', 'lineno': 66, 'attr': 'prints'} 
+                                                the second n {'type': 'string', 'lineno': 66, 'attr': 'the second n'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 67} 
+                                                halt {'type': 'id', 'lineno': 67, 'attr': 'halt'} 
+                        = {'type': '=', 'lineno': 69} 
+                                _havetoken {'type': 'id', 'lineno': 69, 'attr': '_havetoken'} 
+                                false {'type': 'boolean', 'lineno': 69, 'attr': 'false'} 
+                        whileStatement {'type': 'whileStatement', 'lineno': 71} 
+                                _havetoken {'type': 'id', 'lineno': 71, 'attr': '_havetoken'} 
+                                block {'type': 'block', 'lineno': 72} 
+                                        breakStatement {'type': 'breakStatement', 'lineno': 73} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 80} 
+                int {'type': 'int', 'lineno': 80} 
+                scanner {'type': 'id', 'lineno': 80, 'attr': 'scanner'} 
+                block {'type': 'block', 'lineno': 81} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 82} 
+                                int {'type': 'int', 'lineno': 82} 
+                                ch {'type': 'id', 'lineno': 82, 'attr': 'ch'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 84} 
+                                int {'type': 'int', 'lineno': 84} 
+                                a {'type': 'id', 'lineno': 84, 'attr': 'a'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 86} 
+                                int {'type': 'int', 'lineno': 86} 
+                                b {'type': 'id', 'lineno': 86, 'attr': 'b'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 88} 
+                                boolean {'type': 'boolean', 'lineno': 88} 
+                                test {'type': 'id', 'lineno': 88, 'attr': 'test'} 
+                        whileStatement {'type': 'whileStatement', 'lineno': 90} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 90} 
+                                        isspace {'type': 'id', 'lineno': 90, 'attr': 'isspace'} 
+                                        = {'type': '=', 'lineno': 90} 
+                                                ch {'type': 'id', 'lineno': 90, 'attr': 'ch'} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 90} 
+                                                        getc {'type': 'id', 'lineno': 90, 'attr': 'getc'} 
+                                emptyStatement {'type': 'emptyStatement', 'lineno': 91} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 93} 
+                                == {'type': '==', 'lineno': 93} 
+                                        ch {'type': 'id', 'lineno': 93, 'attr': 'ch'} 
+                                        EOF {'type': 'id', 'lineno': 93, 'attr': 'EOF'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 93} 
+                                        TK_EOF {'type': 'id', 'lineno': 93, 'attr': 'TK_EOF'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 94} 
+                                == {'type': '==', 'lineno': 94} 
+                                        ch {'type': 'id', 'lineno': 94, 'attr': 'ch'} 
+                                        ASCII_NL {'type': 'id', 'lineno': 94, 'attr': 'ASCII_NL'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 94} 
+                                        TK_EOLN {'type': 'id', 'lineno': 94, 'attr': 'TK_EOLN'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 95} 
+                                == {'type': '==', 'lineno': 95} 
+                                        ch {'type': 'id', 'lineno': 95, 'attr': 'ch'} 
+                                        ASCII_PLUS {'type': 'id', 'lineno': 95, 'attr': 'ASCII_PLUS'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 95} 
+                                        TK_ADD {'type': 'id', 'lineno': 95, 'attr': 'TK_ADD'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 96} 
+                                == {'type': '==', 'lineno': 96} 
+                                        ch {'type': 'id', 'lineno': 96, 'attr': 'ch'} 
+                                        ASCII_MINUS {'type': 'id', 'lineno': 96, 'attr': 'ASCII_MINUS'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 96} 
+                                        TK_SUB {'type': 'id', 'lineno': 96, 'attr': 'TK_SUB'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 97} 
+                                == {'type': '==', 'lineno': 97} 
+                                        ch {'type': 'id', 'lineno': 97, 'attr': 'ch'} 
+                                        ASCII_STAR {'type': 'id', 'lineno': 97, 'attr': 'ASCII_STAR'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 97} 
+                                        TK_MUL {'type': 'id', 'lineno': 97, 'attr': 'TK_MUL'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 98} 
+                                == {'type': '==', 'lineno': 98} 
+                                        ch {'type': 'id', 'lineno': 98, 'attr': 'ch'} 
+                                        ASCII_SLASH {'type': 'id', 'lineno': 98, 'attr': 'ASCII_SLASH'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 98} 
+                                        TK_DIV {'type': 'id', 'lineno': 98, 'attr': 'TK_DIV'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 99} 
+                                == {'type': '==', 'lineno': 99} 
+                                        ch {'type': 'id', 'lineno': 99, 'attr': 'ch'} 
+                                        ASCII_LPAREN {'type': 'id', 'lineno': 99, 'attr': 'ASCII_LPAREN'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 99} 
+                                        TK_LPAREN {'type': 'id', 'lineno': 99, 'attr': 'TK_LPAREN'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 100} 
+                                == {'type': '==', 'lineno': 100} 
+                                        ch {'type': 'id', 'lineno': 100, 'attr': 'ch'} 
+                                        ASCII_RPAREN {'type': 'id', 'lineno': 100, 'attr': 'ASCII_RPAREN'} 
+                                returnStatement {'type': 'returnStatement', 'lineno': 100} 
+                                        TK_RPAREN {'type': 'id', 'lineno': 100, 'attr': 'TK_RPAREN'} 
+                        ifStatement {'type': 'ifStatement', 'lineno': 102} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 102} 
+                                        isdigit {'type': 'id', 'lineno': 102, 'attr': 'isdigit'} 
+                                        ch {'type': 'id', 'lineno': 102, 'attr': 'ch'} 
+                                block {'type': 'block', 'lineno': 102} 
+                                        = {'type': '=', 'lineno': 103} 
+                                                attr {'type': 'id', 'lineno': 103, 'attr': 'attr'} 
+                                                0 {'type': 'number', 'lineno': 103, 'attr': '0'} 
+                                        whileStatement {'type': 'whileStatement', 'lineno': 104} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 104} 
+                                                        isdigit {'type': 'id', 'lineno': 104, 'attr': 'isdigit'} 
+                                                        ch {'type': 'id', 'lineno': 104, 'attr': 'ch'} 
+                                                block {'type': 'block', 'lineno': 104} 
+                                                        = {'type': '=', 'lineno': 105} 
+                                                                attr {'type': 'id', 'lineno': 105, 'attr': 'attr'} 
+                                                                + {'type': '+', 'lineno': 105} 
+                                                                        * {'type': '*', 'lineno': 105} 
+                                                                                attr {'type': 'id', 'lineno': 105, 'attr': 'attr'} 
+                                                                                10 {'type': 'number', 'lineno': 105, 'attr': '10'} 
+                                                                        - {'type': '-', 'lineno': 105} 
+                                                                                ch {'type': 'id', 'lineno': 105, 'attr': 'ch'} 
+                                                                                ASCII_0 {'type': 'id', 'lineno': 105, 'attr': 'ASCII_0'} 
+                                                        = {'type': '=', 'lineno': 106} 
+                                                                ch {'type': 'id', 'lineno': 106, 'attr': 'ch'} 
+                                                                functionInvocation {'type': 'functionInvocation', 'lineno': 106} 
+                                                                        getc {'type': 'id', 'lineno': 106, 'attr': 'getc'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 108} 
+                                                ungetc {'type': 'id', 'lineno': 108, 'attr': 'ungetc'} 
+                                                ch {'type': 'id', 'lineno': 108, 'attr': 'ch'} 
+                                        returnStatement {'type': 'returnStatement', 'lineno': 109} 
+                                                TK_NUMBER {'type': 'id', 'lineno': 109, 'attr': 'TK_NUMBER'} 
+                        functionInvocation {'type': 'functionInvocation', 'lineno': 112} 
+                                prints {'type': 'id', 'lineno': 112, 'attr': 'prints'} 
+                                Error: invalid character.\n {'type': 'string', 'lineno': 112, 'attr': 'Error: invalid character.\n'} 
+                        functionInvocation {'type': 'functionInvocation', 'lineno': 113} 
+                                halt {'type': 'id', 'lineno': 113, 'attr': 'halt'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 116} 
+                boolean {'type': 'boolean', 'lineno': 116} 
+                isdigit {'type': 'id', 'lineno': 116, 'attr': 'isdigit'} 
+                formalParameters {'type': 'formalParameters', 'lineno': 116} 
+                        formalParameter {'type': 'formalParameter', 'lineno': 116} 
+                                int {'type': 'int', 'lineno': 116} 
+                                ch {'type': 'id', 'lineno': 116, 'attr': 'ch'} 
+                block {'type': 'block', 'lineno': 117} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 118} 
+                                && {'type': '&&', 'lineno': 118} 
+                                        >= {'type': '>=', 'lineno': 118} 
+                                                ch {'type': 'id', 'lineno': 118, 'attr': 'ch'} 
+                                                ASCII_0 {'type': 'id', 'lineno': 118, 'attr': 'ASCII_0'} 
+                                        <= {'type': '<=', 'lineno': 118} 
+                                                ch {'type': 'id', 'lineno': 118, 'attr': 'ch'} 
+                                                ASCII_9 {'type': 'id', 'lineno': 118, 'attr': 'ASCII_9'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 121} 
+                boolean {'type': 'boolean', 'lineno': 121} 
+                isspace {'type': 'id', 'lineno': 121, 'attr': 'isspace'} 
+                formalParameters {'type': 'formalParameters', 'lineno': 121} 
+                        formalParameter {'type': 'formalParameter', 'lineno': 121} 
+                                int {'type': 'int', 'lineno': 121} 
+                                ch {'type': 'id', 'lineno': 121, 'attr': 'ch'} 
+                block {'type': 'block', 'lineno': 122} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 123} 
+                                || {'type': '||', 'lineno': 123} 
+                                        || {'type': '||', 'lineno': 123} 
+                                                == {'type': '==', 'lineno': 123} 
+                                                        ch {'type': 'id', 'lineno': 123, 'attr': 'ch'} 
+                                                        ASCII_SPACE {'type': 'id', 'lineno': 123, 'attr': 'ASCII_SPACE'} 
+                                                == {'type': '==', 'lineno': 124} 
+                                                        ch {'type': 'id', 'lineno': 124, 'attr': 'ch'} 
+                                                        ASCII_TAB {'type': 'id', 'lineno': 124, 'attr': 'ASCII_TAB'} 
+                                        == {'type': '==', 'lineno': 125} 
+                                                ch {'type': 'id', 'lineno': 125, 'attr': 'ch'} 
+                                                ASCII_CR {'type': 'id', 'lineno': 125, 'attr': 'ASCII_CR'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 132} 
+                void {'type': 'void', 'lineno': 132} 
+                parser {'type': 'id', 'lineno': 132, 'attr': 'parser'} 
+                block {'type': 'block', 'lineno': 133} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 134} 
+                                int {'type': 'int', 'lineno': 134} 
+                                result {'type': 'id', 'lineno': 134, 'attr': 'result'} 
+                        whileStatement {'type': 'whileStatement', 'lineno': 136} 
+                                != {'type': '!=', 'lineno': 136} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 136} 
+                                                peek {'type': 'id', 'lineno': 136, 'attr': 'peek'} 
+                                        TK_EOF {'type': 'id', 'lineno': 136, 'attr': 'TK_EOF'} 
+                                block {'type': 'block', 'lineno': 136} 
+                                        = {'type': '=', 'lineno': 137} 
+                                                result {'type': 'id', 'lineno': 137, 'attr': 'result'} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 137} 
+                                                        E {'type': 'id', 'lineno': 137, 'attr': 'E'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 138} 
+                                                match {'type': 'id', 'lineno': 138, 'attr': 'match'} 
+                                                TK_EOLN {'type': 'id', 'lineno': 138, 'attr': 'TK_EOLN'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 140} 
+                                                prints {'type': 'id', 'lineno': 140, 'attr': 'prints'} 
+                                                 =  {'type': 'string', 'lineno': 140, 'attr': ' = '} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 141} 
+                                                printi {'type': 'id', 'lineno': 141, 'attr': 'printi'} 
+                                                result {'type': 'id', 'lineno': 141, 'attr': 'result'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 142} 
+                                                prints {'type': 'id', 'lineno': 142, 'attr': 'prints'} 
+                                                \n {'type': 'string', 'lineno': 142, 'attr': '\n'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 148} 
+                int {'type': 'int', 'lineno': 148} 
+                E {'type': 'id', 'lineno': 148, 'attr': 'E'} 
+                block {'type': 'block', 'lineno': 149} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 150} 
+                                int {'type': 'int', 'lineno': 150} 
+                                l {'type': 'id', 'lineno': 150, 'attr': 'l'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 151} 
+                                int {'type': 'int', 'lineno': 151} 
+                                r {'type': 'id', 'lineno': 151, 'attr': 'r'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 152} 
+                                int {'type': 'int', 'lineno': 152} 
+                                token {'type': 'id', 'lineno': 152, 'attr': 'token'} 
+                        = {'type': '=', 'lineno': 154} 
+                                l {'type': 'id', 'lineno': 154, 'attr': 'l'} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 154} 
+                                        T {'type': 'id', 'lineno': 154, 'attr': 'T'} 
+                        whileStatement {'type': 'whileStatement', 'lineno': 155} 
+                                || {'type': '||', 'lineno': 155} 
+                                        == {'type': '==', 'lineno': 155} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 155} 
+                                                        peek {'type': 'id', 'lineno': 155, 'attr': 'peek'} 
+                                                TK_ADD {'type': 'id', 'lineno': 155, 'attr': 'TK_ADD'} 
+                                        == {'type': '==', 'lineno': 155} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 155} 
+                                                        peek {'type': 'id', 'lineno': 155, 'attr': 'peek'} 
+                                                TK_SUB {'type': 'id', 'lineno': 155, 'attr': 'TK_SUB'} 
+                                block {'type': 'block', 'lineno': 155} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 156} 
+                                                match {'type': 'id', 'lineno': 156, 'attr': 'match'} 
+                                                = {'type': '=', 'lineno': 156} 
+                                                        token {'type': 'id', 'lineno': 156, 'attr': 'token'} 
+                                                        functionInvocation {'type': 'functionInvocation', 'lineno': 156} 
+                                                                peek {'type': 'id', 'lineno': 156, 'attr': 'peek'} 
+                                        = {'type': '=', 'lineno': 157} 
+                                                r {'type': 'id', 'lineno': 157, 'attr': 'r'} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 157} 
+                                                        T {'type': 'id', 'lineno': 157, 'attr': 'T'} 
+                                        ifElseStatement {'type': 'ifElseStatement', 'lineno': 159} 
+                                                == {'type': '==', 'lineno': 159} 
+                                                        token {'type': 'id', 'lineno': 159, 'attr': 'token'} 
+                                                        TK_ADD {'type': 'id', 'lineno': 159, 'attr': 'TK_ADD'} 
+                                                = {'type': '=', 'lineno': 160} 
+                                                        l {'type': 'id', 'lineno': 160, 'attr': 'l'} 
+                                                        + {'type': '+', 'lineno': 160} 
+                                                                l {'type': 'id', 'lineno': 160, 'attr': 'l'} 
+                                                                r {'type': 'id', 'lineno': 160, 'attr': 'r'} 
+                                                = {'type': '=', 'lineno': 162} 
+                                                        l {'type': 'id', 'lineno': 162, 'attr': 'l'} 
+                                                        - {'type': '-', 'lineno': 162} 
+                                                                l {'type': 'id', 'lineno': 162, 'attr': 'l'} 
+                                                                r {'type': 'id', 'lineno': 162, 'attr': 'r'} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 164} 
+                                l {'type': 'id', 'lineno': 164, 'attr': 'l'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 167} 
+                int {'type': 'int', 'lineno': 167} 
+                T {'type': 'id', 'lineno': 167, 'attr': 'T'} 
+                block {'type': 'block', 'lineno': 168} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 169} 
+                                int {'type': 'int', 'lineno': 169} 
+                                l {'type': 'id', 'lineno': 169, 'attr': 'l'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 170} 
+                                int {'type': 'int', 'lineno': 170} 
+                                r {'type': 'id', 'lineno': 170, 'attr': 'r'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 171} 
+                                int {'type': 'int', 'lineno': 171} 
+                                token {'type': 'id', 'lineno': 171, 'attr': 'token'} 
+                        = {'type': '=', 'lineno': 173} 
+                                l {'type': 'id', 'lineno': 173, 'attr': 'l'} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 173} 
+                                        F {'type': 'id', 'lineno': 173, 'attr': 'F'} 
+                        whileStatement {'type': 'whileStatement', 'lineno': 174} 
+                                || {'type': '||', 'lineno': 174} 
+                                        == {'type': '==', 'lineno': 174} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 174} 
+                                                        peek {'type': 'id', 'lineno': 174, 'attr': 'peek'} 
+                                                TK_MUL {'type': 'id', 'lineno': 174, 'attr': 'TK_MUL'} 
+                                        == {'type': '==', 'lineno': 174} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 174} 
+                                                        peek {'type': 'id', 'lineno': 174, 'attr': 'peek'} 
+                                                TK_DIV {'type': 'id', 'lineno': 174, 'attr': 'TK_DIV'} 
+                                block {'type': 'block', 'lineno': 174} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 175} 
+                                                match {'type': 'id', 'lineno': 175, 'attr': 'match'} 
+                                                = {'type': '=', 'lineno': 175} 
+                                                        token {'type': 'id', 'lineno': 175, 'attr': 'token'} 
+                                                        functionInvocation {'type': 'functionInvocation', 'lineno': 175} 
+                                                                peek {'type': 'id', 'lineno': 175, 'attr': 'peek'} 
+                                        = {'type': '=', 'lineno': 176} 
+                                                r {'type': 'id', 'lineno': 176, 'attr': 'r'} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 176} 
+                                                        F {'type': 'id', 'lineno': 176, 'attr': 'F'} 
+                                        ifElseStatement {'type': 'ifElseStatement', 'lineno': 178} 
+                                                == {'type': '==', 'lineno': 178} 
+                                                        token {'type': 'id', 'lineno': 178, 'attr': 'token'} 
+                                                        TK_MUL {'type': 'id', 'lineno': 178, 'attr': 'TK_MUL'} 
+                                                = {'type': '=', 'lineno': 179} 
+                                                        l {'type': 'id', 'lineno': 179, 'attr': 'l'} 
+                                                        * {'type': '*', 'lineno': 179} 
+                                                                l {'type': 'id', 'lineno': 179, 'attr': 'l'} 
+                                                                r {'type': 'id', 'lineno': 179, 'attr': 'r'} 
+                                                = {'type': '=', 'lineno': 181} 
+                                                        l {'type': 'id', 'lineno': 181, 'attr': 'l'} 
+                                                        / {'type': '/', 'lineno': 181} 
+                                                                l {'type': 'id', 'lineno': 181, 'attr': 'l'} 
+                                                                r {'type': 'id', 'lineno': 181, 'attr': 'r'} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 183} 
+                                l {'type': 'id', 'lineno': 183, 'attr': 'l'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 186} 
+                int {'type': 'int', 'lineno': 186} 
+                F {'type': 'id', 'lineno': 186, 'attr': 'F'} 
+                block {'type': 'block', 'lineno': 187} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 188} 
+                                int {'type': 'int', 'lineno': 188} 
+                                result {'type': 'id', 'lineno': 188, 'attr': 'result'} 
+                        variableDeclaration {'type': 'variableDeclaration', 'lineno': 190} 
+                                int {'type': 'int', 'lineno': 190} 
+                                token {'type': 'id', 'lineno': 190, 'attr': 'token'} 
+                        = {'type': '=', 'lineno': 191} 
+                                token {'type': 'id', 'lineno': 191, 'attr': 'token'} 
+                                functionInvocation {'type': 'functionInvocation', 'lineno': 191} 
+                                        peek {'type': 'id', 'lineno': 191, 'attr': 'peek'} 
+                        ifElseStatement {'type': 'ifElseStatement', 'lineno': 193} 
+                                == {'type': '==', 'lineno': 193} 
+                                        token {'type': 'id', 'lineno': 193, 'attr': 'token'} 
+                                        TK_LPAREN {'type': 'id', 'lineno': 193, 'attr': 'TK_LPAREN'} 
+                                block {'type': 'block', 'lineno': 193} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 194} 
+                                                match {'type': 'id', 'lineno': 194, 'attr': 'match'} 
+                                                TK_LPAREN {'type': 'id', 'lineno': 194, 'attr': 'TK_LPAREN'} 
+                                        = {'type': '=', 'lineno': 195} 
+                                                result {'type': 'id', 'lineno': 195, 'attr': 'result'} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 195} 
+                                                        E {'type': 'id', 'lineno': 195, 'attr': 'E'} 
+                                        functionInvocation {'type': 'functionInvocation', 'lineno': 196} 
+                                                match {'type': 'id', 'lineno': 196, 'attr': 'match'} 
+                                                TK_RPAREN {'type': 'id', 'lineno': 196, 'attr': 'TK_RPAREN'} 
+                                ifElseStatement {'type': 'ifElseStatement', 'lineno': 198} 
+                                        == {'type': '==', 'lineno': 198} 
+                                                token {'type': 'id', 'lineno': 198, 'attr': 'token'} 
+                                                TK_SUB {'type': 'id', 'lineno': 198, 'attr': 'TK_SUB'} 
+                                        block {'type': 'block', 'lineno': 198} 
+                                                functionInvocation {'type': 'functionInvocation', 'lineno': 199} 
+                                                        match {'type': 'id', 'lineno': 199, 'attr': 'match'} 
+                                                        TK_SUB {'type': 'id', 'lineno': 199, 'attr': 'TK_SUB'} 
+                                                = {'type': '=', 'lineno': 200} 
+                                                        result {'type': 'id', 'lineno': 200, 'attr': 'result'} 
+                                                        - {'type': 'unaryExpression', 'lineno': 200, 'attr': '-'} 
+                                                                functionInvocation {'type': 'functionInvocation', 'lineno': 200} 
+                                                                        F {'type': 'id', 'lineno': 200, 'attr': 'F'} 
+                                        ifElseStatement {'type': 'ifElseStatement', 'lineno': 202} 
+                                                == {'type': '==', 'lineno': 202} 
+                                                        token {'type': 'id', 'lineno': 202, 'attr': 'token'} 
+                                                        TK_NUMBER {'type': 'id', 'lineno': 202, 'attr': 'TK_NUMBER'} 
+                                                block {'type': 'block', 'lineno': 202} 
+                                                        functionInvocation {'type': 'functionInvocation', 'lineno': 203} 
+                                                                match {'type': 'id', 'lineno': 203, 'attr': 'match'} 
+                                                                TK_NUMBER {'type': 'id', 'lineno': 203, 'attr': 'TK_NUMBER'} 
+                                                        = {'type': '=', 'lineno': 204} 
+                                                                result {'type': 'id', 'lineno': 204, 'attr': 'result'} 
+                                                                attr {'type': 'id', 'lineno': 204, 'attr': 'attr'} 
+                                                block {'type': 'block', 'lineno': 206} 
+                                                        functionInvocation {'type': 'functionInvocation', 'lineno': 207} 
+                                                                prints {'type': 'id', 'lineno': 207, 'attr': 'prints'} 
+                                                                Error: expected factor.\n {'type': 'string', 'lineno': 207, 'attr': 'Error: expected factor.\n'} 
+                                                        functionInvocation {'type': 'functionInvocation', 'lineno': 208} 
+                                                                halt {'type': 'id', 'lineno': 208, 'attr': 'halt'} 
+                        returnStatement {'type': 'returnStatement', 'lineno': 210} 
+                                result {'type': 'id', 'lineno': 210, 'attr': 'result'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 217} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 217} 
+                        int {'type': 'int', 'lineno': 217} 
+                        EOF {'type': 'id', 'lineno': 217, 'attr': 'EOF'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 219} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 219} 
+                        int {'type': 'int', 'lineno': 219} 
+                        TK_EOF {'type': 'id', 'lineno': 219, 'attr': 'TK_EOF'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 220} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 220} 
+                        int {'type': 'int', 'lineno': 220} 
+                        TK_EOLN {'type': 'id', 'lineno': 220, 'attr': 'TK_EOLN'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 221} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 221} 
+                        int {'type': 'int', 'lineno': 221} 
+                        TK_NUMBER {'type': 'id', 'lineno': 221, 'attr': 'TK_NUMBER'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 222} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 222} 
+                        int {'type': 'int', 'lineno': 222} 
+                        TK_ADD {'type': 'id', 'lineno': 222, 'attr': 'TK_ADD'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 223} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 223} 
+                        int {'type': 'int', 'lineno': 223} 
+                        TK_SUB {'type': 'id', 'lineno': 223, 'attr': 'TK_SUB'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 224} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 224} 
+                        int {'type': 'int', 'lineno': 224} 
+                        TK_MUL {'type': 'id', 'lineno': 224, 'attr': 'TK_MUL'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 225} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 225} 
+                        int {'type': 'int', 'lineno': 225} 
+                        TK_DIV {'type': 'id', 'lineno': 225, 'attr': 'TK_DIV'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 226} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 226} 
+                        int {'type': 'int', 'lineno': 226} 
+                        TK_LPAREN {'type': 'id', 'lineno': 226, 'attr': 'TK_LPAREN'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 227} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 227} 
+                        int {'type': 'int', 'lineno': 227} 
+                        TK_RPAREN {'type': 'id', 'lineno': 227, 'attr': 'TK_RPAREN'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 229} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 229} 
+                        int {'type': 'int', 'lineno': 229} 
+                        ASCII_0 {'type': 'id', 'lineno': 229, 'attr': 'ASCII_0'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 230} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 230} 
+                        int {'type': 'int', 'lineno': 230} 
+                        ASCII_9 {'type': 'id', 'lineno': 230, 'attr': 'ASCII_9'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 231} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 231} 
+                        int {'type': 'int', 'lineno': 231} 
+                        ASCII_PLUS {'type': 'id', 'lineno': 231, 'attr': 'ASCII_PLUS'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 232} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 232} 
+                        int {'type': 'int', 'lineno': 232} 
+                        ASCII_MINUS {'type': 'id', 'lineno': 232, 'attr': 'ASCII_MINUS'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 233} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 233} 
+                        int {'type': 'int', 'lineno': 233} 
+                        ASCII_STAR {'type': 'id', 'lineno': 233, 'attr': 'ASCII_STAR'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 234} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 234} 
+                        int {'type': 'int', 'lineno': 234} 
+                        ASCII_SLASH {'type': 'id', 'lineno': 234, 'attr': 'ASCII_SLASH'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 235} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 235} 
+                        int {'type': 'int', 'lineno': 235} 
+                        ASCII_LPAREN {'type': 'id', 'lineno': 235, 'attr': 'ASCII_LPAREN'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 236} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 236} 
+                        int {'type': 'int', 'lineno': 236} 
+                        ASCII_RPAREN {'type': 'id', 'lineno': 236, 'attr': 'ASCII_RPAREN'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 237} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 237} 
+                        int {'type': 'int', 'lineno': 237} 
+                        ASCII_SPACE {'type': 'id', 'lineno': 237, 'attr': 'ASCII_SPACE'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 238} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 238} 
+                        int {'type': 'int', 'lineno': 238} 
+                        ASCII_TAB {'type': 'id', 'lineno': 238, 'attr': 'ASCII_TAB'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 239} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 239} 
+                        int {'type': 'int', 'lineno': 239} 
+                        ASCII_CR {'type': 'id', 'lineno': 239, 'attr': 'ASCII_CR'} 
+        globalVardeclaration {'type': 'globalVardeclaration', 'lineno': 240} 
+                variableDeclaration {'type': 'variableDeclaration', 'lineno': 240} 
+                        int {'type': 'int', 'lineno': 240} 
+                        ASCII_NL {'type': 'id', 'lineno': 240, 'attr': 'ASCII_NL'} 
+        functionDeclaration {'type': 'functionDeclaration', 'lineno': 242} 
+                void {'type': 'void', 'lineno': 242} 
+                init {'type': 'id', 'lineno': 242, 'attr': 'init'} 
+                block {'type': 'block', 'lineno': 243} 
+                        = {'type': '=', 'lineno': 244} 
+                                EOF {'type': 'id', 'lineno': 244, 'attr': 'EOF'} 
+                                - {'type': 'unaryExpression', 'lineno': 244, 'attr': '-'} 
+                                        1 {'type': 'number', 'lineno': 244, 'attr': '1'} 
+                        = {'type': '=', 'lineno': 246} 
+                                ASCII_0 {'type': 'id', 'lineno': 246, 'attr': 'ASCII_0'} 
+                                48 {'type': 'number', 'lineno': 246, 'attr': '48'} 
+                        = {'type': '=', 'lineno': 247} 
+                                ASCII_9 {'type': 'id', 'lineno': 247, 'attr': 'ASCII_9'} 
+                                57 {'type': 'number', 'lineno': 247, 'attr': '57'} 
+                        = {'type': '=', 'lineno': 248} 
+                                ASCII_PLUS {'type': 'id', 'lineno': 248, 'attr': 'ASCII_PLUS'} 
+                                43 {'type': 'number', 'lineno': 248, 'attr': '43'} 
+                        = {'type': '=', 'lineno': 249} 
+                                ASCII_MINUS {'type': 'id', 'lineno': 249, 'attr': 'ASCII_MINUS'} 
+                                45 {'type': 'number', 'lineno': 249, 'attr': '45'} 
+                        = {'type': '=', 'lineno': 250} 
+                                ASCII_STAR {'type': 'id', 'lineno': 250, 'attr': 'ASCII_STAR'} 
+                                42 {'type': 'number', 'lineno': 250, 'attr': '42'} 
+                        = {'type': '=', 'lineno': 251} 
+                                ASCII_SLASH {'type': 'id', 'lineno': 251, 'attr': 'ASCII_SLASH'} 
+                                47 {'type': 'number', 'lineno': 251, 'attr': '47'} 
+                        = {'type': '=', 'lineno': 252} 
+                                ASCII_LPAREN {'type': 'id', 'lineno': 252, 'attr': 'ASCII_LPAREN'} 
+                                40 {'type': 'number', 'lineno': 252, 'attr': '40'} 
+                        = {'type': '=', 'lineno': 253} 
+                                ASCII_RPAREN {'type': 'id', 'lineno': 253, 'attr': 'ASCII_RPAREN'} 
+                                41 {'type': 'number', 'lineno': 253, 'attr': '41'} 
+                        = {'type': '=', 'lineno': 254} 
+                                ASCII_SPACE {'type': 'id', 'lineno': 254, 'attr': 'ASCII_SPACE'} 
+                                32 {'type': 'number', 'lineno': 254, 'attr': '32'} 
+                        = {'type': '=', 'lineno': 255} 
+                                ASCII_TAB {'type': 'id', 'lineno': 255, 'attr': 'ASCII_TAB'} 
+                                9 {'type': 'number', 'lineno': 255, 'attr': '9'} 
+                        = {'type': '=', 'lineno': 256} 
+                                ASCII_CR {'type': 'id', 'lineno': 256, 'attr': 'ASCII_CR'} 
+                                13 {'type': 'number', 'lineno': 256, 'attr': '13'} 
+                        = {'type': '=', 'lineno': 257} 
+                                ASCII_NL {'type': 'id', 'lineno': 257, 'attr': 'ASCII_NL'} 
+                                10 {'type': 'number', 'lineno': 257, 'attr': '10'} 
+                        = {'type': '=', 'lineno': 259} 
+                                TK_EOF {'type': 'id', 'lineno': 259, 'attr': 'TK_EOF'} 
+                                256 {'type': 'number', 'lineno': 259, 'attr': '256'} 
+                        = {'type': '=', 'lineno': 260} 
+                                TK_NUMBER {'type': 'id', 'lineno': 260, 'attr': 'TK_NUMBER'} 
+                                257 {'type': 'number', 'lineno': 260, 'attr': '257'} 
+                        = {'type': '=', 'lineno': 261} 
+                                TK_ADD {'type': 'id', 'lineno': 261, 'attr': 'TK_ADD'} 
+                                ASCII_PLUS {'type': 'id', 'lineno': 261, 'attr': 'ASCII_PLUS'} 
+                        = {'type': '=', 'lineno': 262} 
+                                TK_SUB {'type': 'id', 'lineno': 262, 'attr': 'TK_SUB'} 
+                                ASCII_MINUS {'type': 'id', 'lineno': 262, 'attr': 'ASCII_MINUS'} 
+                        = {'type': '=', 'lineno': 263} 
+                                TK_MUL {'type': 'id', 'lineno': 263, 'attr': 'TK_MUL'} 
+                                ASCII_STAR {'type': 'id', 'lineno': 263, 'attr': 'ASCII_STAR'} 
+                        = {'type': '=', 'lineno': 264} 
+                                TK_DIV {'type': 'id', 'lineno': 264, 'attr': 'TK_DIV'} 
+                                ASCII_SLASH {'type': 'id', 'lineno': 264, 'attr': 'ASCII_SLASH'} 
+                        = {'type': '=', 'lineno': 265} 
+                                TK_LPAREN {'type': 'id', 'lineno': 265, 'attr': 'TK_LPAREN'} 
+                                ASCII_LPAREN {'type': 'id', 'lineno': 265, 'attr': 'ASCII_LPAREN'} 
+                        = {'type': '=', 'lineno': 266} 
+                                TK_RPAREN {'type': 'id', 'lineno': 266, 'attr': 'TK_RPAREN'} 
+                                ASCII_RPAREN {'type': 'id', 'lineno': 266, 'attr': 'ASCII_RPAREN'} 
+                        = {'type': '=', 'lineno': 267} 
+                                TK_EOLN {'type': 'id', 'lineno': 267, 'attr': 'TK_EOLN'} 
+                                ASCII_NL {'type': 'id', 'lineno': 267, 'attr': 'ASCII_NL'}

@@ -26,7 +26,6 @@ void CodeGenerator::prePostTraversal(Node *node, void (CodeGenerator::*passCB)(N
         // Do something to node after processing Children -- PostOrder
 
         (this->*passCB)(node, true);
-
     }
 }
 
@@ -96,10 +95,50 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
     {
         if (node->type == "ifStatement")
         {
+            std::string successLabel = createLabel();
+            std::string exitLabel = createLabel();
+            // Generate the assembly code for the Expression to be evaluated
+            prePostTraversal(node->childNodes[0], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            // Evaluate Expression, Jump to the end if Expression is false
+            std::string expressionReturn = getReturnRegister(node->childNodes[0]);
+            mipsInstruction("bne", expressionReturn, "$zero", successLabel);
+            mipsInstruction("j",exitLabel);
+            output+= successLabel + ": \n";
+            // Generate If block code, skip over this using the exit label if needed
+            prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            // Place Exit label after code block
+            output += exitLabel + ": \n";
+            // Mark this node and child nodes as 'done' to not generate anymore code from them
+            node->codeGenProcessed = true;
         }
 
         else if (node->type == "ifElseStatement")
         {
+            std::string successLabel = createLabel();
+            std::string elseLabel = createLabel();
+            std::string exitLabel = createLabel();
+            // Generate the assembly code for the Expression to be evaluated
+            prePostTraversal(node->childNodes[0], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            // Evaluate Expression, Jump to the else if Expression is false
+            std::string expressionReturn = getReturnRegister(node->childNodes[0]);
+            mipsInstruction("bne", expressionReturn, "$zero", successLabel);
+            mipsInstruction("j",elseLabel);
+            output+= successLabel + ": \n";
+            
+            // Generate If block code, skip over else code if successful
+            prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
+            mipsInstruction("j",exitLabel);
+            
+            //Generate else block code
+            output += elseLabel + ": \n";
+            prePostTraversal(node->childNodes[2], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            output += exitLabel + ": \n";
+            // Mark this node and child nodes as 'done' to not generate anymore code from them
+            node->codeGenProcessed = true;
         }
 
         else if (node->type == "whileStatement")
@@ -162,7 +201,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         else if (node->type == "number")
         {
             node->returnRegister = getRegister();
-            mipsInstruction("addiu", node->returnRegister, "$zero", node->value); // assign returnRegister the value of the number
+            mipsInstruction("addu", node->returnRegister, "$zero", node->value); // assign returnRegister the value of the number
         }
 
         else if (node->type == "boolean")
@@ -170,13 +209,13 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             if (node->value == "true")
             {
                 node->returnRegister = getRegister();
-                mipsInstruction("addiu", node->returnRegister, "$zero", "1");
+                mipsInstruction("addu", node->returnRegister, "$zero", "1");
             }
 
             else if (node->value == "false")
             {
                 node->returnRegister = getRegister();
-                mipsInstruction("addiu", node->returnRegister, "$zero", "0");
+                mipsInstruction("addu", node->returnRegister, "$zero", "0");
             }
         }
 
@@ -240,14 +279,30 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             }
 
             mipsInstruction("j", getFunctionLabel(currentFunctionId + "epilouge"));
-        }
-
-        else if (node->type == "unaryExpression")
-        {
-            node->returnRegister = getReturnRegister(node->childNodes[0]);
+            freeChildReturnRegisters(node);
         }
 
         /** OPERATIONS **/
+        else if (node->type == "unaryExpression")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            if (node->value == "-")
+            {
+                mipsInstruction("negu", node->returnRegister, firstRegisterOperand);
+            }
+            else if (node->value == "!")
+            {
+                mipsInstruction("not", node->returnRegister, firstRegisterOperand);
+                std::string tempReg = getRegister();
+                mipsInstruction("addu", tempReg, "31");
+                mipsInstruction("sll", node->returnRegister, node->returnRegister, tempReg);
+                mipsInstruction("srl", node->returnRegister, node->returnRegister, tempReg);
+                freeRegister(tempReg);
+            }
+            freeChildReturnRegisters(node);
+        }
+
         else if (node->type == "+")
         {
             node->returnRegister = getRegister(); // store return of the function in this register
@@ -359,11 +414,11 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             mipsInstruction("beq", secondRegResult, "$zero", falseLabel);
 
             output += trueLabel + ": \n";
-            mipsInstruction("addiu", node->returnRegister, "1");
+            mipsInstruction("addu", node->returnRegister, "1");
             mipsInstruction("j", exitLabel);
 
             output += falseLabel + ": \n";
-            mipsInstruction("addiu", node->returnRegister, "0");
+            mipsInstruction("addu", node->returnRegister, "0");
 
             output += exitLabel + ": \n";
             freeRegister(firstRegResult);
@@ -387,11 +442,11 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             mipsInstruction("bne", secondRegResult, "$zero", trueLabel);
 
             output += falseLabel + ": \n";
-            mipsInstruction("addiu", node->returnRegister, "0");
+            mipsInstruction("addu", node->returnRegister, "0");
             mipsInstruction("j", exitLabel);
 
             output += trueLabel + ": \n";
-            mipsInstruction("addiu", node->returnRegister, "1");
+            mipsInstruction("addu", node->returnRegister, "1");
 
             output += exitLabel + ": \n";
             freeRegister(firstRegResult);
@@ -401,7 +456,6 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
         node->codeGenProcessed = true;
     }
-    
 }
 
 /** REGISTER ALLOCATER FUNCTIONS **/
@@ -476,24 +530,24 @@ void CodeGenerator::prolouge(std::string id, std::string type)
     if (stackOperations)
     {
         // Save Return Address -- COMMENT THESE OUT TO HELP READABILITY FOR NOW
-        output += "addiu $sp, $sp, -4 \n";
+        output += "addu $sp, $sp, -4 \n";
         output += "sw $ra, 0($sp)\n";
 
         for (int i = 0; i < 4; i++)
         {
-            output += "addiu $sp, $sp, -4 \n";
+            output += "addu $sp, $sp, -4 \n";
             output += "sw $a" + std::to_string(i) + ", 0($sp)\n";
         }
 
         for (int i = 0; i < 10; i++)
         {
-            output += "addiu $sp, $sp, -4 \n";
+            output += "addu $sp, $sp, -4 \n";
             output += "sw $t" + std::to_string(i) + ", 0($sp)\n";
         }
 
         for (int i = 0; i < 8; i++)
         {
-            output += "addiu $sp, $sp, -4 \n";
+            output += "addu $sp, $sp, -4 \n";
             output += "sw $s" + std::to_string(i) + ", 0($sp)\n";
         }
     }
@@ -518,26 +572,26 @@ void CodeGenerator::epilouge(std::string id, std::string returnType, std::string
         for (int i = 0; i < 8; i++)
         {
             output += "lw $s" + std::to_string(7 - i) + ", 0($sp) \n";
-            output += "addiu $sp, $sp, 4 \n";
+            output += "addu $sp, $sp, 4 \n";
         }
 
         // Load T registers
         for (int i = 0; i < 10; i++)
         {
             output += "lw $t" + std::to_string(9 - i) + ", 0($sp) \n";
-            output += "addiu $sp, $sp, 4 \n";
+            output += "addu $sp, $sp, 4 \n";
         }
 
         // Load Argument registers
         for (int i = 0; i < 4; i++)
         {
             output += "lw $a" + std::to_string(3 - i) + ", 0($sp) \n";
-            output += "addiu $sp, $sp, 4 \n";
+            output += "addu $sp, $sp, 4 \n";
         }
 
         // Load return address Register
         output += "lw $ra, 0($sp) \n";
-        output += "addiu $sp, $sp, 4 \n";
+        output += "addu $sp, $sp, 4 \n";
     }
 
     if (type == "mainFunctionDeclaration")

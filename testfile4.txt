@@ -1,10 +1,33 @@
+
 void nl() {
         prints("\n");
 }
 
 main() {
-        printi(-123);           nl();
-        printi(-2147483648);    nl();
-        printi(--2147483648);   nl();
-        printi(---2147483648);  nl();
+
+        boolean enteredIf;
+        boolean enteredElse;
+
+        enteredIf = false;
+        enteredElse = false;
+        
+        if(false)
+        {
+                enteredIf = true;
+        }
+
+        else
+        {
+                enteredElse = true;
+        }
+
+        prints("enteredIf: "); nl();
+        printb(enteredIf); nl();
+        prints("enteredElse: "); nl();
+        printb(enteredElse); nl();
+
+
+
+
+
 }
