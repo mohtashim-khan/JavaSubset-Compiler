@@ -1,3 +1,64 @@
-main() {
-        prints("Hello, world!\n");
+
+int global_1;
+int global_2;
+
+int function_global_1;
+int function_global_2;
+
+main ()
+{
+        int i;
+        int j;
+
+        i = 100;
+        j = 100;
+        int mod;
+        mod = i % j;
+
+        prints("the first mod should be 0 and is : \n");
+        printi(mod);
+        prints("\n");
+
+        int mod2;
+        mod2 = i % 50;
+        
+        prints("the second mod should be 0 and is: \n");
+        printi(mod2);
+        prints("\n");
+
+        prints("the Function mod should be 4 and is: \n");
+        printi(modFunction(4, 5));
+        prints("\n");
+
+        global_1 = 75;
+        global_2 = 50;
+        int globalmod;
+        globalmod = global_1 % global_2;
+        
+        prints("the global mod should be 25 and is: \n");
+        printi(globalmod);
+        prints("\n");
+
+        function_global_1 = 30;
+        function_global_2 = 25;
+
+        prints("function_global_1 is: \n");
+        printi(function_global_1);
+        prints("\n");
+
+        prints("function_global_2 is: \n");
+        printi(function_global_2);
+        prints("\n");
+
+
+
+
+        prints("the Function Global should be 5 and is: \n");
+        printi(modFunction(function_global_1, function_global_2));
+        prints("\n");
+}
+
+int modFunction(int a, int b)
+{
+        return a % b;
 }

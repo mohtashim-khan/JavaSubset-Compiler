@@ -109,6 +109,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         {
             addRegisterPool();
             prolouge(node->semanticInformation->identifier, node->type);
+            currentFunctionId = node->semanticInformation->identifier;
         }
     }
 
@@ -119,11 +120,23 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         {
             epilouge(node->semanticInformation->identifier, node->semanticInformation->returnType, node->type);
             removeRegisterPool();
+            currentFunctionId = "";
         }
 
         else if (node->type == "variableDeclaration" && node->getParentNode()->type != "globalVardeclaration")
         {
             node->childNodes[1]->semanticInformation->idRegister = getRegister(); // Assign every variable declaration its own register to map to.
+        }
+
+        else if (node->type == "formalParameters")
+        {
+            int argCounter = 0;
+            for (auto &formalParameter : node->childNodes)
+            {
+                formalParameter->childNodes[1]->semanticInformation->idRegister = getRegister();
+                mipsInstruction("move", formalParameter->childNodes[1]->semanticInformation->idRegister, "$a" + std::to_string(argCounter));
+                argCounter++;
+            }
         }
 
         else if (node->type == "=")
@@ -133,21 +146,15 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             {
                 mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, node->childNodes[1]->returnRegister);
                 node->returnRegister = node->childNodes[0]->semanticInformation->idRegister; // copy id register into '=' returnRegisterValue
-
-                // Free Register if it does not belong to an id
-                if (node->childNodes[1]->type != "id")
-                    freeRegister(node->childNodes[1]->returnRegister);
+                freeNodeRegister(node->childNodes[1]);
             }
             else
             {
-                mipsModifyGlobalVarValue(node->semanticInformation->identifier, node->childNodes[1]->returnRegister);
+                mipsModifyGlobalVarValue(node->childNodes[0]->semanticInformation->identifier, node->childNodes[1]->returnRegister);
 
                 node->returnRegister = getRegister();
                 mipsInstruction("move", node->returnRegister, node->childNodes[1]->returnRegister); // Assign '=' registerValue the result of the right hand side.
-
-                // Free Register if it does not belong to an id
-                if (node->childNodes[1]->type != "id")
-                    freeRegister(node->childNodes[1]->returnRegister);
+                freeNodeRegister(node->childNodes[1]);
             }
         }
 
@@ -175,39 +182,181 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         // POTENTIAL BUG: NO VOID TYPE CHECK TODO
         else if (node->type == "functionInvocation")
         {
-            node->returnRegister = getRegister(); // store function return value in this register
-
             // get Arguments
             std::vector<std::string> argumentRegisters;
             std::string stringAddressRegister;
+            std::string globalReg;
+            std::vector<std::string> freeRegisters;
             for (unsigned long i = 1; i < node->childNodes.size(); i++)
             {
                 Node *argNode = node->childNodes[i];
 
                 if (argNode->type == "string")
                 {
-                    std::string stringAddressRegister = getRegister();
+                    stringAddressRegister = getRegister();
                     mipsInstruction("la", stringAddressRegister, argNode->codeGenLabel);
                     argumentRegisters.push_back(stringAddressRegister);
+                    freeRegisters.push_back(stringAddressRegister);
                 }
 
                 else if (argNode->type == "id")
                 {
-                    argumentRegisters.push_back(argNode->semanticInformation->idRegister);
+                    if (argNode->semanticInformation->scope->scopeName == "globalDeclarations")
+                    {
+                        globalReg = getRegister();
+                        mipsGetGlobalVarValueinReg(argNode->semanticInformation->identifier, globalReg);
+                        argumentRegisters.push_back(globalReg);
+                        freeRegisters.push_back(globalReg);
+                    }
+                    else
+                    {
+                        argumentRegisters.push_back(argNode->semanticInformation->idRegister);
+                    }
                 }
 
                 else
                 {
                     argumentRegisters.push_back(argNode->returnRegister);
+                    freeNodeRegister(argNode);
                 }
             }
             mipsFunctionCall(node->semanticInformation->identifier, argumentRegisters);
-            mipsInstruction("move", node->returnRegister, "$v0"); // Assign the return value to the function return register
+            node->returnRegister = "$v0"; // Assign the return value to the function return register
+
+            // Free global and string registers
+            for (auto &regName : freeRegisters)
+            {
+                freeRegister(regName);
+            }
         }
 
-        else if(node->type == "returnStatement")
+        // This wont need to allocate any return registers since it returns nothing up the tree
+        else if (node->type == "returnStatement")
         {
+            if (!node->childNodes.empty())
+            {
+                mipsInstruction("move", "$v0", node->childNodes[0]->returnRegister);
+            }
+
+            mipsInstruction("j", getFunctionLabel(currentFunctionId + "epilouge"));
+        }
+
+        /** OPERATIONS **/
+        else if (node->type == "+")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("addu", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "-")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("subu", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
+
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "*")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("mul", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
+
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "/")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("div", firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("mflo", node->returnRegister);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "%")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("div", firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("mfhi", node->returnRegister);
+            freeChildReturnRegisters(node);
+        }
+
+        else if (node->type == ">")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("sgt", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == ">=")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("sge", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "<")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("slt", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "<=")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("sle", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "!=")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("sne", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "==")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            mipsInstruction("seq", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "&&")
+        {
+            node->returnRegister = getRegister(); // store return of the function in this register
             
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            std::string firstRegResult = getRegister();
+            std::string secondRegResult = getRegister();
+            std::string trueLabel = createLabel();
+            std::string falseLabel = createLabel();
+            mipsInstruction("sne", firstRegResult,firstRegisterOperand, "$zero"); // if firstRegisterOperand == true set firstRegResult = true
+
+            mipsInstruction("sne", secondRegResult,secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
+            output+= trueLabel+": \n";
+            mipsInstruction("addiu", node->returnRegister, "1");
+            freeRegister(firstRegResult);
+            freeRegister(secondRegResult);
+            freeChildReturnRegisters(node);
+        }
+        else if (node->type == "||")
+        {
+
         }
     }
 }
@@ -230,12 +379,17 @@ std::string RegisterPool::getRegister()
 
 void RegisterPool::freeRegister(std::string regName)
 {
+    if (regName == "$v0" || regName == "$v1" || regName == "$a0" || regName == "$a1" || regName == "$a2" || regName == "$a3" || regName == "$a4")
+    {
+        return;
+    }
+
     for (auto &reg : registerPool)
     {
         if (reg.first == regName)
         {
             reg.second = true;
-            break;
+            return;
         }
     }
     std::cerr << "REGISTER NOT FOUND \n";
@@ -247,11 +401,29 @@ std::string CodeGenerator::getRegister()
     return registerStack.top()->getRegister();
 }
 
-void CodeGenerator::freeRegister(std::string regName)
+void CodeGenerator::freeNodeRegister(Node *node)
 {
-    registerStack.top()->freeRegister(regName);
+    if (node->type == "id")
+    {
+        return;
+    }
+    else
+        registerStack.top()->freeRegister(node->returnRegister);
 }
 
+void CodeGenerator::freeChildReturnRegisters(Node *node)
+{
+    // Free Child Registers
+    for (auto &child : node->childNodes)
+    {
+        freeNodeRegister(child);
+    }
+}
+
+void CodeGenerator::freeRegister(std::string RegName)
+{
+    registerStack.top()->freeRegister(RegName);
+}
 /** STACK FUNCTIONS -- These functions will only be executed on function open and close **/
 void CodeGenerator::prolouge(std::string id, std::string type)
 {
@@ -380,6 +552,29 @@ std::string CodeGenerator::getFunctionLabel(std::string id)
     return returnVal; // change to first for debugging
 }
 
+std::string CodeGenerator::getReturnRegister(Node *node)
+{
+    std::string globalVarReg;
+    if (node->type == "id")
+    {
+        if (node->semanticInformation->scope->scopeName == "globalDeclarations")
+        {
+            globalVarReg = getRegister();
+            mipsGetGlobalVarValueinReg(node->semanticInformation->identifier, globalVarReg);
+            return globalVarReg;
+        }
+        else
+        {
+            return node->semanticInformation->idRegister;
+        }
+    }
+
+    else
+    {
+        return node->returnRegister;
+    }
+}
+
 /**MIPS code generation helper functions**/
 
 void CodeGenerator::mipsError()
@@ -419,7 +614,7 @@ void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::st
 }
 
 // Remember to Free register after calling and using this function
-std::string CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg)
+void CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg)
 {
     output += "lw " + returnReg + "," + globalVarLabel + "\n";
 }
@@ -428,8 +623,10 @@ void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal
 {
     if (rightVal != "")
         output += instruction + " " + leftVal + "," + middleVal + "," + rightVal + "\n";
-    else
+    else if (middleVal != "")
         output += instruction + " " + leftVal + "," + middleVal + "\n";
+    else
+        output += instruction + " " + leftVal + "\n";
 }
 /**Prune functions**/
 void CodeGenerator::ifStatementPrune(Node *node)
@@ -453,7 +650,6 @@ void CodeGenerator::mipsGetChar()
     output += "li $v0,12\n";
     output += "syscall\n"; // v0 Contains the return value
     output += "jr $ra \n";
-
 }
 void CodeGenerator::mipsHalt()
 {
@@ -462,7 +658,6 @@ void CodeGenerator::mipsHalt()
     output += "li $v0,10\n";
     output += "syscall\n";
     output += "jr $ra \n";
-
 }
 
 void CodeGenerator::mipsPrintb()
@@ -503,7 +698,6 @@ void CodeGenerator::mipsPrinti()
     output += "li $v0,1\n";
     output += "syscall\n";
     output += "jr $ra \n";
-
 }
 
 // Assume a0 contains the address of the string
@@ -514,7 +708,6 @@ void CodeGenerator::mipsPrints()
     output += "li $v0,4\n";
     output += "syscall\n";
     output += "jr $ra \n";
-
 }
 
 void CodeGenerator::generateLibraryFunctions()
@@ -527,6 +720,7 @@ void CodeGenerator::generateLibraryFunctions()
     mipsPrints();
 }
 
+/** Write To output file **/
 void CodeGenerator::writetoOutputFile(std::string outputFile)
 {
     std::cout << output;

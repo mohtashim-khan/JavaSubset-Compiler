@@ -64,7 +64,9 @@ public:
 
     // Register Allocater
     std::string getRegister();
+    void freeNodeRegister(Node *node);
     void freeRegister(std::string regName);
+    void freeChildReturnRegisters(Node *node);
 
     // Generates code for adjusting the stack pointer when entering and exiting a function
     void prolouge(std::string id, std::string type);                         // Saves registers to the stack
@@ -79,8 +81,8 @@ public:
     void mipsError();
     void mipsFunctionCall(std::string functionId, std::vector<std::string> args = {}); // args assigns $a0-$a3
     void mipsModifyGlobalVarValue(std::string globalVar, std::string reg);
-    std::string mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg);
-    void mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal, std::string rightVal ="");
+    void mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg);
+    void mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal="", std::string rightVal ="");
 
     // J-- library functions Code Generation -- $a0-$a3 are desginated as argument registers, $v0 as return register
     void generateLibraryFunctions();
@@ -98,10 +100,16 @@ public:
     //Write to output file
     void writetoOutputFile(std::string outputfile);
 
+    //Helper functions
+    std::string getReturnRegister(Node *node);
+
     Node *ast;
 
     //Main function Identifier
     std::string mainFunctionId;
+
+    //Current Function Identifier
+    std::string currentFunctionId;
     // Stack of Register Pool
     std::stack<RegisterPool *> registerStack;
     // Assembly Output
