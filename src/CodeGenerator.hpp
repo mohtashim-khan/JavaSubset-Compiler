@@ -54,10 +54,6 @@ public:
     // Driver code for code gen
     void execute();
 
-    void ifStatementPrune(Node *node);
-    void ifElseStatementPrune(Node *node);
-    void whileStatementPrune(Node *node);
-
     void assignmentsAndOpsCodeGen(Node *node, bool processedChildren);
 
     void globalVarsCodeGen(Node *node, bool processedChildren);
@@ -118,7 +114,7 @@ public:
 
     // Function Labels
     std::unordered_map<std::string, std::string> functionIDToLabelMap;
-    int funcLabelCounter = 2; // 0 is reserved for the main function prolouge, 1 is reserved for main function epilouge
+    unsigned long funcLabelCounter = 2; // 0 is reserved for the main function prolouge, 1 is reserved for main function epilouge
 };
 
 

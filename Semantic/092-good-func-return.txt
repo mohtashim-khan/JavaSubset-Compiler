@@ -1,8 +1,0 @@
-boolean foo(){
-    return true;
-}
-
-main(){
-    boolean i;
-    i = foo();
-}

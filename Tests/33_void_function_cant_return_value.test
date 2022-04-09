@@ -1,9 +1,0 @@
-void foo(){
-    int x;
-    x = 7;
-    return x;
-}
-
-main (){
-    foo();
-}

@@ -1,6 +1,0 @@
-main(){
-    int i;
-    if(true){
-        int j;
-    }
-}

@@ -43,6 +43,8 @@ public:
     std::string codeGenLabel;
     std::string returnRegister;
 
+    bool codeGenProcessed = false;
+
     int variableDecs=0;
     
     int line;

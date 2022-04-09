@@ -1,8 +1,0 @@
-main (){
-    boolean x;
-    x = false;
-    boolean f;
-    f = true;
-    boolean g;
-    g = x == f;
-}

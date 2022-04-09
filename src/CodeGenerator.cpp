@@ -12,18 +12,22 @@ CodeGenerator::CodeGenerator(Node *node)
 // Traversal Engine
 void CodeGenerator::prePostTraversal(Node *node, void (CodeGenerator::*passCB)(Node *, bool childrenProcessed))
 {
-    // Do something to node before you see the children -- Preorder
-    (this->*passCB)(node, false);
-
-    // Process Children
-    for (Node *&child : node->childNodes)
+    if (!node->codeGenProcessed)
     {
-        prePostTraversal(child, passCB);
+        // Do something to node before you see the children -- Preorder
+        (this->*passCB)(node, false);
+
+        // Process Children
+        for (Node *&child : node->childNodes)
+        {
+            prePostTraversal(child, passCB);
+        }
+
+        // Do something to node after processing Children -- PostOrder
+
+        (this->*passCB)(node, true);
+
     }
-
-    // Do something to node after processing Children -- PostOrder
-
-    (this->*passCB)(node, true);
 }
 
 /*Driver Code*/
@@ -74,7 +78,7 @@ void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
 
         else if (node->type == "globalVardeclaration")
         {
-            output += node->semanticInformation->identifier + ": .word 0 \n"; // GlobalVar initialization to initial 0 values
+            output += "__" + node->semanticInformation->identifier + ": .word 0 \n"; // GlobalVar initialization to initial 0 values
         }
 
         else if (node->type == "string")
@@ -92,17 +96,14 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
     {
         if (node->type == "ifStatement")
         {
-            ifStatementPrune(node);
         }
 
         else if (node->type == "ifElseStatement")
         {
-            ifElseStatementPrune(node);
         }
 
         else if (node->type == "whileStatement")
         {
-            whileStatementPrune(node);
         }
 
         else if (node->type == "functionDeclaration" || node->type == "mainFunctionDeclaration")
@@ -241,6 +242,11 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             mipsInstruction("j", getFunctionLabel(currentFunctionId + "epilouge"));
         }
 
+        else if (node->type == "unaryExpression")
+        {
+            node->returnRegister = getReturnRegister(node->childNodes[0]);
+        }
+
         /** OPERATIONS **/
         else if (node->type == "+")
         {
@@ -346,7 +352,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             std::string trueLabel = createLabel();
             std::string falseLabel = createLabel();
             std::string exitLabel = createLabel();
-
+            mipsInstruction("move", node->returnRegister, "$zero");
             mipsInstruction("sne", firstRegResult, firstRegisterOperand, "$zero");   // if firstRegisterOperand == true set firstRegResult = true
             mipsInstruction("sne", secondRegResult, secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
             mipsInstruction("beq", firstRegResult, "$zero", falseLabel);
@@ -366,6 +372,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         }
         else if (node->type == "||")
         {
+            node->returnRegister = getRegister();
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
             std::string firstRegResult = getRegister();
@@ -373,7 +380,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             std::string trueLabel = createLabel();
             std::string falseLabel = createLabel();
             std::string exitLabel = createLabel();
-
+            mipsInstruction("move", node->returnRegister, "$zero");
             mipsInstruction("sne", firstRegResult, firstRegisterOperand, "$zero");   // if firstRegisterOperand == true set firstRegResult = true
             mipsInstruction("sne", secondRegResult, secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
             mipsInstruction("bne", firstRegResult, "$zero", trueLabel);
@@ -391,7 +398,10 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             freeRegister(secondRegResult);
             freeChildReturnRegisters(node);
         }
+
+        node->codeGenProcessed = true;
     }
+    
 }
 
 /** REGISTER ALLOCATER FUNCTIONS **/
@@ -641,7 +651,7 @@ void CodeGenerator::mipsFunctionCall(std::string functionId, std::vector<std::st
 void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::string newValReg)
 {
     std::string addressReg = getRegister();
-    output += "la " + addressReg + "," + globalVarLabel + "\n";
+    output += "la " + addressReg + "," + "__" + globalVarLabel + "\n";
     output += "sw " + newValReg + ",0(" + addressReg + ") \n";
     freeRegister(addressReg);
 }
@@ -649,7 +659,7 @@ void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::st
 // Remember to Free register after calling and using this function
 void CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg)
 {
-    output += "lw " + returnReg + "," + globalVarLabel + "\n";
+    output += "lw " + returnReg + "," + "__" + globalVarLabel + "\n";
 }
 
 void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal, std::string rightVal)
@@ -660,18 +670,6 @@ void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal
         output += instruction + " " + leftVal + "," + middleVal + "\n";
     else
         output += instruction + " " + leftVal + "\n";
-}
-/**Prune functions**/
-void CodeGenerator::ifStatementPrune(Node *node)
-{
-}
-
-void CodeGenerator::ifElseStatementPrune(Node *node)
-{
-}
-
-void CodeGenerator::whileStatementPrune(Node *node)
-{
 }
 
 /** J-- Library Functions Code Gen **/

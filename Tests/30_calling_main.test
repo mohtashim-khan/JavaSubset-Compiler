@@ -1,9 +1,0 @@
-int foo(){
-    main();
-    return 42;
-}
-
-main (){
-    int f;
-    f = foo();
-}

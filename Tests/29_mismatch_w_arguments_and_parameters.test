@@ -1,8 +1,0 @@
-int foo(){
-    return 8;
-}
-
-main (){
-    int x;
-    x = foo(123);
-}

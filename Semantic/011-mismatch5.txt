@@ -1,6 +1,0 @@
-void foo(boolean a, boolean b){}
-
-main(){
-    int i;
-    foo(true, false, true);
-}

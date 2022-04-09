@@ -1,9 +1,0 @@
-void foo(){
-    while (true) {
-        break;
-    }
-}
-
-main (){
-    foo();
-}

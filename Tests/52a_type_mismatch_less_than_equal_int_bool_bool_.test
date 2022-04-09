@@ -1,8 +1,0 @@
-main (){
-    boolean x;
-    int y;
-    boolean r;
-    x = false;
-    y = 0;
-    r = y <= x;
-}

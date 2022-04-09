@@ -1,6 +1,0 @@
-main (){
-    boolean x;
-    boolean r;
-    x = false;
-    r = !x;
-}

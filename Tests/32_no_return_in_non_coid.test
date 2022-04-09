@@ -1,9 +1,0 @@
-int foo (){
-    int x;
-    x = 7;
-}
-
-main (){
-    int t;
-    t = foo();
-}

@@ -1,7 +1,0 @@
-main(){
-    food();
-}
-
-int foo(){
-    return 1;
-}

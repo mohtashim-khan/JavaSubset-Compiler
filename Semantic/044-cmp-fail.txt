@@ -1,8 +1,0 @@
-main(){
-    while(foo() <= 3){
-    }
-}
-
-boolean foo(){
-    return false;
-}

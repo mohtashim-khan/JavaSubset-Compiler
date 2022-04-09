@@ -1,5 +1,0 @@
-main (){
-    int x;
-    boolean r;
-    r = !x;
-}
