@@ -292,7 +292,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("sgt", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("sgt", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == ">=")
@@ -300,7 +300,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("sge", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("sge", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "<")
@@ -308,7 +308,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("slt", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("slt", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "<=")
@@ -316,7 +316,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("sle", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("sle", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "!=")
@@ -324,7 +324,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("sne", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("sne", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "==")
@@ -332,31 +332,64 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("seq", node->returnRegister,firstRegisterOperand, secondRegisterOperand);
+            mipsInstruction("seq", node->returnRegister, firstRegisterOperand, secondRegisterOperand);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "&&")
         {
             node->returnRegister = getRegister(); // store return of the function in this register
-            
+
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
             std::string firstRegResult = getRegister();
             std::string secondRegResult = getRegister();
             std::string trueLabel = createLabel();
             std::string falseLabel = createLabel();
-            mipsInstruction("sne", firstRegResult,firstRegisterOperand, "$zero"); // if firstRegisterOperand == true set firstRegResult = true
+            std::string exitLabel = createLabel();
 
-            mipsInstruction("sne", secondRegResult,secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
-            output+= trueLabel+": \n";
+            mipsInstruction("sne", firstRegResult, firstRegisterOperand, "$zero");   // if firstRegisterOperand == true set firstRegResult = true
+            mipsInstruction("sne", secondRegResult, secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
+            mipsInstruction("beq", firstRegResult, "$zero", falseLabel);
+            mipsInstruction("beq", secondRegResult, "$zero", falseLabel);
+
+            output += trueLabel + ": \n";
             mipsInstruction("addiu", node->returnRegister, "1");
+            mipsInstruction("j", exitLabel);
+
+            output += falseLabel + ": \n";
+            mipsInstruction("addiu", node->returnRegister, "0");
+
+            output += exitLabel + ": \n";
             freeRegister(firstRegResult);
             freeRegister(secondRegResult);
             freeChildReturnRegisters(node);
         }
         else if (node->type == "||")
         {
+            std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
+            std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            std::string firstRegResult = getRegister();
+            std::string secondRegResult = getRegister();
+            std::string trueLabel = createLabel();
+            std::string falseLabel = createLabel();
+            std::string exitLabel = createLabel();
 
+            mipsInstruction("sne", firstRegResult, firstRegisterOperand, "$zero");   // if firstRegisterOperand == true set firstRegResult = true
+            mipsInstruction("sne", secondRegResult, secondRegisterOperand, "$zero"); // If secondRegisterOperand == true set secondRegResult = true
+            mipsInstruction("bne", firstRegResult, "$zero", trueLabel);
+            mipsInstruction("bne", secondRegResult, "$zero", trueLabel);
+
+            output += falseLabel + ": \n";
+            mipsInstruction("addiu", node->returnRegister, "0");
+            mipsInstruction("j", exitLabel);
+
+            output += trueLabel + ": \n";
+            mipsInstruction("addiu", node->returnRegister, "1");
+
+            output += exitLabel + ": \n";
+            freeRegister(firstRegResult);
+            freeRegister(secondRegResult);
+            freeChildReturnRegisters(node);
         }
     }
 }
