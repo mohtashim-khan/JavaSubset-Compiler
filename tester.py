@@ -131,8 +131,10 @@ for test in tests:
         if test_spim_output != reference_spim_output:
             print('\033[91m' + "FAIL" + '\033[0m')
             if SHOW_DIFF_OUTPUT:
+                print("MY SHIT: \n")
                 print(test_spim_output)
                 print("===")
+                print("AYCOCKS SHIT: \n")
                 print(reference_spim_output)            
             fail_count = fail_count + 1
         else:
