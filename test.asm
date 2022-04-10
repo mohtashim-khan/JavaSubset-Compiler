@@ -2,8 +2,6 @@
 error_msg: .asciiz "MIPS ERROR: Function did not return!\n"  
 boolean_true: .asciiz "true\n"  
 boolean_false: .asciiz "false\n"  
-__i: .word 0 
-__k: .word 0 
 .text
 .globl main
 main: 
@@ -89,40 +87,6 @@ L0:
 	 addu $sp, $sp, -4 
 	 sw $s7, 0($sp)
 
-	 addu $t1,$zero,123
-	 la $t2,__i
-	 sw $t1,0($t2) 
-	 addu $t1,$zero,456
-	 move $t0,$t1
-	 move $t2,$t0
-	 addu $t1,$zero,789
-	 la $t3,__k
-	 sw $t1,0($t3) 
-	 addu $t1,$zero,42
-	 la $t3,__k
-	 sw $t1,0($t3) 
-	 move $t3,$t1
-	 move $t0,$t3
-	 move $t1,$t0
-	 la $t3,__i
-	 sw $t1,0($t3) 
-	 addu $t3,$zero,10
-	 move $t1,$t3
-	 move $t4,$t1
-	 lw $t3,__i
-	 move $a0, $t3
-	 jal L10
-	 move $a0, $t1
-	 jal L8
-	 move $a0, $t0
-	 jal L10
-	 move $a0, $t1
-	 jal L8
-	 lw $t3,__k
-	 move $a0, $t3
-	 jal L10
-	 move $a0, $t1
-	 jal L8
 L1: 
 	 lw $s7, 0($sp) 
 	 addu $sp, $sp, 4 
