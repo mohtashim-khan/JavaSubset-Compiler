@@ -12,7 +12,11 @@ test_compiler = "./output_debug"
 
 # Dump your runtime system here after .text, make sure to prefix the function label names with 'L'
 runtime_system = """
-	.text
+	.data
+    error_msg: .asciiz "MIPS ERROR: Function did not return!\n"  
+    boolean_true: .asciiz "true\n"  
+    boolean_false: .asciiz "false\n"  
+    .text
 # 
 error:
     jal Lprints
