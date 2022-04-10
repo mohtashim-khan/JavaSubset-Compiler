@@ -1,21 +1,18 @@
+int i;
+
 main() {
-        int i;
+        int j;
+        i = 123;
+        j = 456;
+        k = 789;
+        i = j = k = 42;
 
-        i = 0;
-        // exceeds a 32-bit signed int for fib(47)
-        //while (i <= 47) {
-        while (i <= 46) {
-                prints("fib(");
-                printi(i);
-                prints(") = ");
-                printi(fib(i));
-                prints("\n");
-                i = i + 1;
-        }
+        int NL;
+        NL = 10;
+
+        printi(i);      printc(NL);
+        printi(j);      printc(NL);
+        printi(k);      printc(NL);
 }
 
-int fib(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-        return fib(n-1) + fib(n-2);
-}
+int k;

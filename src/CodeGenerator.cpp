@@ -4,7 +4,7 @@ CodeGenerator::CodeGenerator(Node *node)
 {
     ast = node;
     output += ".data\n";
-    output += "error_msg: .asciiz \"MIPS ERROR\\n\"  \n";
+    output += "error_msg: .asciiz \"MIPS ERROR: Function did not return!\\n\"  \n";
     output += "boolean_true: .asciiz \"true\\n\"  \n";
     output += "boolean_false: .asciiz \"false\\n\"  \n";
 }
@@ -47,7 +47,7 @@ void CodeGenerator::execute()
 
     // ACTUAL CODE GEN
     prePostTraversal(ast, &CodeGenerator::assignmentsAndOpsCodeGen);
-    writetoOutputFile("./assembly_testfiles/test.asm");
+    writetoOutputFile("test.asm");
 }
 
 /**PASS FUNCTIONS**/
@@ -215,8 +215,9 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
             if (node->childNodes[0]->semanticInformation->scope->scopeName != "globalDeclarations")
             {
+                node->returnRegister = getRegister();
                 mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, getReturnRegister(node->childNodes[1])); 
-                node->returnRegister = node->childNodes[0]->semanticInformation->idRegister; // copy id register into '=' returnRegisterValue
+                mipsInstruction("move", node->returnRegister, getReturnRegister(node->childNodes[0])); // copy id register into '=' returnRegisterValue
                 freeNodeRegister(node->childNodes[1]);
             }
             else
@@ -256,7 +257,6 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         // POTENTIAL BUG: NO VOID TYPE CHECK TODO
         else if (node->type == "functionInvocation")
         {
-            node->returnRegister = getRegister();
             // get Arguments
             std::vector<std::string> argumentRegisters;
             std::string stringAddressRegister;
@@ -296,7 +296,12 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
                 }
             }
             mipsFunctionCall(node->semanticInformation->identifier, argumentRegisters);
-            mipsInstruction("move", node->returnRegister, "$v0"); // Assign the return value to the function return register
+
+            if (node->semanticInformation->returnType != "void")
+                {
+                    node->returnRegister = getRegister();
+                    mipsInstruction("move", node->returnRegister, "$v0"); // Assign '=' registerValue the result of the right hand side.
+                }
 
             // Free global and string registers
             for (auto &regName : freeRegisters)
@@ -499,6 +504,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 }
 
 /** REGISTER ALLOCATER FUNCTIONS **/
+int counter = 0;
 std::string RegisterPool::getRegister()
 {
 
@@ -559,6 +565,7 @@ void CodeGenerator::freeChildReturnRegisters(Node *node)
 
 void CodeGenerator::freeRegister(std::string RegName)
 {
+    
     registerStack.top()->freeRegister(RegName);
 }
 /** STACK FUNCTIONS -- These functions will only be executed on function open and close **/
