@@ -103,15 +103,19 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             // Evaluate Expression, Jump to the end if Expression is false
             std::string expressionReturn = getReturnRegister(node->childNodes[0]);
             mipsInstruction("bne", expressionReturn, "$zero", successLabel);
-            mipsInstruction("j",exitLabel);
-            output+= successLabel + ": \n";
+            mipsInstruction("j", exitLabel);
+            output += successLabel + ": \n";
+            
+            
             // Generate If block code, skip over this using the exit label if needed
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
-
+            
             // Place Exit label after code block
             output += exitLabel + ": \n";
+            
             // Mark this node and child nodes as 'done' to not generate anymore code from them
             node->codeGenProcessed = true;
+            freeChildReturnRegisters(node);
         }
 
         else if (node->type == "ifElseStatement")
@@ -125,30 +129,57 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             // Evaluate Expression, Jump to the else if Expression is false
             std::string expressionReturn = getReturnRegister(node->childNodes[0]);
             mipsInstruction("bne", expressionReturn, "$zero", successLabel);
-            mipsInstruction("j",elseLabel);
-            output+= successLabel + ": \n";
-            
+            mipsInstruction("j", elseLabel);
+            output += successLabel + ": \n";
+
             // Generate If block code, skip over else code if successful
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
-            mipsInstruction("j",exitLabel);
-            
-            //Generate else block code
+            mipsInstruction("j", exitLabel);
+
+            // Generate else block code
             output += elseLabel + ": \n";
             prePostTraversal(node->childNodes[2], &CodeGenerator::assignmentsAndOpsCodeGen);
 
             output += exitLabel + ": \n";
             // Mark this node and child nodes as 'done' to not generate anymore code from them
             node->codeGenProcessed = true;
+            freeChildReturnRegisters(node);
         }
 
         else if (node->type == "whileStatement")
         {
+            std::string startLabel = createLabel();
+            std::string successLabel = createLabel();
+            std::string exitLabel = createLabel();
+            addWhileExitLabel(exitLabel);
+
+            output += startLabel + ": \n";
+
+            // assembly code for the Expression to be evaluated
+            prePostTraversal(node->childNodes[0], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            std::string expressionReturn = getReturnRegister(node->childNodes[0]);
+
+            mipsInstruction("bne", expressionReturn, "$zero", successLabel);
+            mipsInstruction("j", exitLabel);
+
+            output += successLabel + ": \n";
+            prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
+
+            mipsInstruction("j", startLabel);
+            // Place Exit label after code block
+            output += exitLabel + ": \n";
+
+            // Mark this node and child nodes as 'done' to not generate anymore code from them
+            node->codeGenProcessed = true;
+            removeWhileExitLabel();
+            freeChildReturnRegisters(node);
         }
 
         else if (node->type == "functionDeclaration" || node->type == "mainFunctionDeclaration")
         {
             addRegisterPool();
-            prolouge(node->semanticInformation->identifier, node->type);
+            prolouge(node->semanticInformation->identifier);
             currentFunctionId = node->semanticInformation->identifier;
         }
     }
@@ -184,16 +215,19 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
             if (node->childNodes[0]->semanticInformation->scope->scopeName != "globalDeclarations")
             {
-                mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, node->childNodes[1]->returnRegister);
+                mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, getReturnRegister(node->childNodes[1])); 
                 node->returnRegister = node->childNodes[0]->semanticInformation->idRegister; // copy id register into '=' returnRegisterValue
                 freeNodeRegister(node->childNodes[1]);
             }
             else
             {
-                mipsModifyGlobalVarValue(node->childNodes[0]->semanticInformation->identifier, node->childNodes[1]->returnRegister);
+                mipsModifyGlobalVarValue(node->childNodes[0]->semanticInformation->identifier, getReturnRegister(node->childNodes[1]));
+                if (node->getParentNode()->type != "block")
+                {
+                    node->returnRegister = getRegister();
+                    mipsInstruction("move", node->returnRegister, getReturnRegister(node->childNodes[1])); // Assign '=' registerValue the result of the right hand side.
+                }
 
-                node->returnRegister = getRegister();
-                mipsInstruction("move", node->returnRegister, node->childNodes[1]->returnRegister); // Assign '=' registerValue the result of the right hand side.
                 freeNodeRegister(node->childNodes[1]);
             }
         }
@@ -275,11 +309,16 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         {
             if (!node->childNodes.empty())
             {
-                mipsInstruction("move", "$v0", node->childNodes[0]->returnRegister);
+                mipsInstruction("move", "$v0", getReturnRegister(node->childNodes[0]));
             }
 
             mipsInstruction("j", getFunctionLabel(currentFunctionId + "epilouge"));
             freeChildReturnRegisters(node);
+        }
+
+        else if (node->type == "breakStatement")
+        {
+            mipsInstruction("j", getWhileExitLabel());
         }
 
         /** OPERATIONS **/
@@ -500,7 +539,7 @@ std::string CodeGenerator::getRegister()
 
 void CodeGenerator::freeNodeRegister(Node *node)
 {
-    if (node->type == "id")
+    if ((node->type == "id" && node->semanticInformation->scope->scopeName != "globalDeclarations") || node->returnRegister == "")
     {
         return;
     }
@@ -522,7 +561,7 @@ void CodeGenerator::freeRegister(std::string RegName)
     registerStack.top()->freeRegister(RegName);
 }
 /** STACK FUNCTIONS -- These functions will only be executed on function open and close **/
-void CodeGenerator::prolouge(std::string id, std::string type)
+void CodeGenerator::prolouge(std::string id)
 {
     // Create Prolouge label
     output += getFunctionLabel(id) + ": \n";
@@ -658,10 +697,12 @@ std::string CodeGenerator::getReturnRegister(Node *node)
         {
             globalVarReg = getRegister();
             mipsGetGlobalVarValueinReg(node->semanticInformation->identifier, globalVarReg);
+            node->returnRegister = globalVarReg;
             return globalVarReg;
         }
         else
         {
+            node->returnRegister = node->semanticInformation->idRegister;
             return node->semanticInformation->idRegister;
         }
     }
@@ -730,8 +771,8 @@ void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal
 
 void CodeGenerator::mipsGetChar()
 {
-    createFunctionLabel("getChar");
-    output += getFunctionLabel("getChar") + ": \n";
+    createFunctionLabel("getchar");
+    output += getFunctionLabel("getchar") + ": \n";
     output += "li $v0,12\n";
     output += "syscall\n"; // v0 Contains the return value
     output += "jr $ra \n";

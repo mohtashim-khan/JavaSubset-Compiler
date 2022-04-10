@@ -65,7 +65,7 @@ public:
     void freeChildReturnRegisters(Node *node);
 
     // Generates code for adjusting the stack pointer when entering and exiting a function
-    void prolouge(std::string id, std::string type);                         // Saves registers to the stack
+    void prolouge(std::string id);                         // Saves registers to the stack
     void epilouge(std::string id, std::string returnType, std::string type); // Loads registers from the stack
 
     // Label functions
@@ -93,6 +93,10 @@ public:
     void addRegisterPool() { registerStack.push(new RegisterPool()); };
     void removeRegisterPool() { registerStack.pop(); };
 
+    //whileLabel Stack Functions
+    void addWhileExitLabel(std::string exitLabel){whileLabelStack.push(exitLabel);};
+    void removeWhileExitLabel(){whileLabelStack.pop();};
+    std::string getWhileExitLabel(){return whileLabelStack.top();};
     //Write to output file
     void writetoOutputFile(std::string outputfile);
 
@@ -108,6 +112,10 @@ public:
     std::string currentFunctionId;
     // Stack of Register Pool
     std::stack<RegisterPool *> registerStack;
+
+    //Stack of While labels to return to
+    std::stack<std::string> whileLabelStack;
+
     // Assembly Output
     std::string output;
     bool stackOperations = true;
