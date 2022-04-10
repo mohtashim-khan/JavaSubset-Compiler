@@ -79,6 +79,8 @@ public:
     void mipsModifyGlobalVarValue(std::string globalVar, std::string reg);
     void mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg);
     void mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal="", std::string rightVal ="");
+    void mipsJumpAndLink(std::string label);
+    void mipsJump(std::string label);
 
     // J-- library functions Code Generation -- $a0-$a3 are desginated as argument registers, $v0 as return register
     void generateLibraryFunctions();

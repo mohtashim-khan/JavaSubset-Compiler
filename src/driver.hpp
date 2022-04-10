@@ -28,6 +28,7 @@ class Driver {
     void generate();
     // Stores AST. Parser will fill this.
     Node* tree = nullptr;
+    std::string *astOutput = new std::string();
 
 
     // Makes it easy to debug. Parser will set this as yylex.

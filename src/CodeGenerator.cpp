@@ -39,7 +39,7 @@ void CodeGenerator::execute()
     output += ".text\n";
     output += ".globl main\n";
     output += "main: \n";
-    mipsFunctionCall(mainFunctionId);
+    mipsInstruction("jal", getFunctionLabel(mainFunctionId));
     output += "li $v0,10\n";
     output += "syscall\n";
 
@@ -103,16 +103,16 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             // Evaluate Expression, Jump to the end if Expression is false
             std::string expressionReturn = getReturnRegister(node->childNodes[0]);
             mipsInstruction("bne", expressionReturn, "$zero", successLabel);
-            mipsInstruction("j", exitLabel);
+            mipsJump(exitLabel);
+            freeChildReturnRegisters(node);
             output += successLabel + ": \n";
-            
-            
+
             // Generate If block code, skip over this using the exit label if needed
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
-            
+
             // Place Exit label after code block
             output += exitLabel + ": \n";
-            
+
             // Mark this node and child nodes as 'done' to not generate anymore code from them
             node->codeGenProcessed = true;
             freeChildReturnRegisters(node);
@@ -129,13 +129,13 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             // Evaluate Expression, Jump to the else if Expression is false
             std::string expressionReturn = getReturnRegister(node->childNodes[0]);
             mipsInstruction("bne", expressionReturn, "$zero", successLabel);
-            mipsInstruction("j", elseLabel);
+            mipsJump(elseLabel);
+            freeChildReturnRegisters(node); // Free the child return registers after using them for the expression
             output += successLabel + ": \n";
 
             // Generate If block code, skip over else code if successful
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
-            mipsInstruction("j", exitLabel);
-
+            mipsJump(exitLabel);
             // Generate else block code
             output += elseLabel + ": \n";
             prePostTraversal(node->childNodes[2], &CodeGenerator::assignmentsAndOpsCodeGen);
@@ -159,14 +159,14 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             prePostTraversal(node->childNodes[0], &CodeGenerator::assignmentsAndOpsCodeGen);
 
             std::string expressionReturn = getReturnRegister(node->childNodes[0]);
-
             mipsInstruction("bne", expressionReturn, "$zero", successLabel);
-            mipsInstruction("j", exitLabel);
+            mipsJump(exitLabel);
+            freeChildReturnRegisters(node); // Free the child return registers after using them for the expression
 
             output += successLabel + ": \n";
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
 
-            mipsInstruction("j", startLabel);
+            mipsJump(startLabel);
             // Place Exit label after code block
             output += exitLabel + ": \n";
 
@@ -215,9 +215,14 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
             if (node->childNodes[0]->semanticInformation->scope->scopeName != "globalDeclarations")
             {
-                node->returnRegister = getRegister();
-                mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, getReturnRegister(node->childNodes[1])); 
-                mipsInstruction("move", node->returnRegister, getReturnRegister(node->childNodes[0])); // copy id register into '=' returnRegisterValue
+                mipsInstruction("move", node->childNodes[0]->semanticInformation->idRegister, getReturnRegister(node->childNodes[1]));
+
+                if (node->getParentNode()->type != "block")
+                {
+                    node->returnRegister = getRegister();
+                    mipsInstruction("move", node->returnRegister, getReturnRegister(node->childNodes[0])); // copy id register into '=' returnRegisterValue
+                }
+
                 freeNodeRegister(node->childNodes[1]);
             }
             else
@@ -298,10 +303,10 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             mipsFunctionCall(node->semanticInformation->identifier, argumentRegisters);
 
             if (node->semanticInformation->returnType != "void")
-                {
-                    node->returnRegister = getRegister();
-                    mipsInstruction("move", node->returnRegister, "$v0"); // Assign '=' registerValue the result of the right hand side.
-                }
+            {
+                node->returnRegister = getRegister();
+                mipsInstruction("move", node->returnRegister, "$v0"); // Assign '=' registerValue the result of the right hand side.
+            }
 
             // Free global and string registers
             for (auto &regName : freeRegisters)
@@ -318,13 +323,13 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
                 mipsInstruction("move", "$v0", getReturnRegister(node->childNodes[0]));
             }
 
-            mipsInstruction("j", getFunctionLabel(currentFunctionId + "epilouge"));
+            mipsJump(getFunctionLabel(currentFunctionId + "epilouge"));
             freeChildReturnRegisters(node);
         }
 
         else if (node->type == "breakStatement")
         {
-            mipsInstruction("j", getWhileExitLabel());
+            mipsJump(getWhileExitLabel());
         }
 
         /** OPERATIONS **/
@@ -565,7 +570,7 @@ void CodeGenerator::freeChildReturnRegisters(Node *node)
 
 void CodeGenerator::freeRegister(std::string RegName)
 {
-    
+
     registerStack.top()->freeRegister(RegName);
 }
 /** STACK FUNCTIONS -- These functions will only be executed on function open and close **/
@@ -597,7 +602,7 @@ void CodeGenerator::prolouge(std::string id)
             output += "\t addu $sp, $sp, -4 \n";
             output += "\t sw $s" + std::to_string(i) + ", 0($sp)\n";
         }
-        output+="\n";
+        output += "\n";
     }
 }
 
@@ -652,7 +657,7 @@ void CodeGenerator::epilouge(std::string id, std::string returnType, std::string
     {
         // Return to calling function if regular function
         output += "\t jr $ra \n";
-        output +="\n";
+        output += "\n";
     }
 }
 
@@ -750,9 +755,25 @@ void CodeGenerator::mipsFunctionCall(std::string functionId, std::vector<std::st
         output += "\t move $a" + std::to_string(i) + ", " + argRegisters.at(i) + "\n";
     }
 
-    output += "\t jal " + getFunctionLabel(functionId) + "\n";
+    mipsJumpAndLink(getFunctionLabel(functionId));
 }
 
+void CodeGenerator::mipsJump(std::string label)
+{
+    std::string jumpAddressReg = getRegister();
+    mipsInstruction("la", jumpAddressReg, label);
+    mipsInstruction("jr", jumpAddressReg);
+    freeRegister(jumpAddressReg);
+}
+
+void CodeGenerator::mipsJumpAndLink(std::string label)
+{
+    std::string jumpAddressReg = getRegister();
+    mipsInstruction("la", jumpAddressReg, label);
+    mipsInstruction("jalr", jumpAddressReg);
+    freeRegister(jumpAddressReg);
+
+}
 void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::string newValReg)
 {
     std::string addressReg = getRegister();
@@ -770,11 +791,11 @@ void CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::
 void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal, std::string rightVal)
 {
     if (rightVal != "")
-        output +="\t "+instruction + " " + leftVal + "," + middleVal + "," + rightVal + "\n";
+        output += "\t " + instruction + " " + leftVal + "," + middleVal + "," + rightVal + "\n";
     else if (middleVal != "")
-        output +="\t "+instruction + " " + leftVal + "," + middleVal + "\n";
+        output += "\t " + instruction + " " + leftVal + "," + middleVal + "\n";
     else
-        output += "\t "+instruction + " " + leftVal + "\n";
+        output += "\t " + instruction + " " + leftVal + "\n";
 }
 
 /** J-- Library Functions Code Gen **/

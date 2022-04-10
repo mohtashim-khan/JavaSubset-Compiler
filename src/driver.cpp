@@ -50,7 +50,16 @@ void Driver::analyze()
 {
     analyzer = std::make_unique<SemanticAnalyzer>(tree);
     analyzer->execute();
-    //tree->print();
+    tree->print(0, astOutput);
+
+    std::ofstream myfile;
+    myfile.open("genAST");
+    if (!myfile.is_open())
+    {
+        std::cout << "ERROR OPENING FILE \n";
+    }
+    myfile << *astOutput;
+    myfile.close();
 
 }
 

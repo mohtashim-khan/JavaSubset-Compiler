@@ -13,31 +13,31 @@ Node::Node(std::string typ, std::string val, std::vector<Node*> nodes)
 }
 
 
-void Node::print(int level)
+void Node::print(int level, std::string *appendToString)
 {
     for (int i = 0; i < level; i++)
     {
-        std::cout << "\t";
+        *appendToString += "\t";
     }
 
     if(value!="")
     {
-        std::cout << value;
+        *appendToString += value;
     }
     else
     {
-        std::cout << type;
+        *appendToString += type;
     }
 
 
-    std::cout <<" {'type': '" << type << "', 'lineno': " << getLineNum();
+    *appendToString +=" {'type': '" + type + "', 'lineno': " + std::to_string(getLineNum());
 
     if (value != "")
     {
-        std::cout << ", 'attr': '" << value << "'";
+        *appendToString += ", 'attr': '" + value + "'";
     }
 
-    std::cout << "} \n";
+    *appendToString += "} \n";
 
     int currLevel = level + 1;
 
@@ -45,6 +45,6 @@ void Node::print(int level)
     
     for (auto &node : childNodes)
     {
-        node->print(currLevel);
+        node->print(currLevel, appendToString);
     }
 }

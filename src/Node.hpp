@@ -16,7 +16,7 @@ public:
     //Default Destructor
     ~Node() = default;
 
-    void print(int level = 0);
+    void print(int level = 0, std::string *appendToString=nullptr);
 
     void addChildNode(Node* node) {childNodes.push_back(node); childNodes.back()->setParent(this);};
 

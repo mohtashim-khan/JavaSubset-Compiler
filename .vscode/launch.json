@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "testfile.txt"
+        "./Tests/final/art-select.j--"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
