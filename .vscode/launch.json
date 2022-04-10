@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Tests/final/art-select.j--"
+        "./Tests/final/gen.t12"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

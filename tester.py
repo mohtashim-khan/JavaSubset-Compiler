@@ -8,7 +8,7 @@ import ctypes
 DEFAULT_TIMEOUT_S = 5
 SHOW_DIFF_OUTPUT = True 
 asm_dir = "."
-test_compiler = "test.asm"
+test_compiler = "./output_debug"
 
 # Dump your runtime system here after .text, make sure to prefix the function label names with 'L'
 runtime_system = """
