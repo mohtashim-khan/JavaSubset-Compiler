@@ -1,31 +1,21 @@
-int globalCounter;
-int globali;
-
-
 main() {
-
-        globali = 0;
-        globalCounter = 25;
         int i;
-        int count;
-        count = 50;
 
-        while(i < count)
-        {
+        i = 0;
+        // exceeds a 32-bit signed int for fib(47)
+        //while (i <= 47) {
+        while (i <= 46) {
+                prints("fib(");
+                printi(i);
+                prints(") = ");
+                printi(fib(i));
+                prints("\n");
                 i = i + 1;
         }
-        printi(i);
+}
 
-        prints("\n");
-
-        while(globali < globalCounter)
-        {
-                globali = globali + 1;
-        }
-        printi(globali);
-
-        prints("\n");
-
-
-
+int fib(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        return fib(n-1) + fib(n-2);
 }

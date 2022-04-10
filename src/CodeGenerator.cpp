@@ -256,6 +256,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
         // POTENTIAL BUG: NO VOID TYPE CHECK TODO
         else if (node->type == "functionInvocation")
         {
+            node->returnRegister = getRegister();
             // get Arguments
             std::vector<std::string> argumentRegisters;
             std::string stringAddressRegister;
@@ -295,7 +296,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
                 }
             }
             mipsFunctionCall(node->semanticInformation->identifier, argumentRegisters);
-            node->returnRegister = "$v0"; // Assign the return value to the function return register
+            mipsInstruction("move", node->returnRegister, "$v0"); // Assign the return value to the function return register
 
             // Free global and string registers
             for (auto &regName : freeRegisters)
@@ -569,26 +570,27 @@ void CodeGenerator::prolouge(std::string id)
     if (stackOperations)
     {
         // Save Return Address -- COMMENT THESE OUT TO HELP READABILITY FOR NOW
-        output += "addu $sp, $sp, -4 \n";
-        output += "sw $ra, 0($sp)\n";
+        output += "\t addu $sp, $sp, -4 \n";
+        output += "\t sw $ra, 0($sp)\n";
 
         for (int i = 0; i < 4; i++)
         {
-            output += "addu $sp, $sp, -4 \n";
-            output += "sw $a" + std::to_string(i) + ", 0($sp)\n";
+            output += "\t addu $sp, $sp, -4 \n";
+            output += "\t sw $a" + std::to_string(i) + ", 0($sp)\n";
         }
 
         for (int i = 0; i < 10; i++)
         {
-            output += "addu $sp, $sp, -4 \n";
-            output += "sw $t" + std::to_string(i) + ", 0($sp)\n";
+            output += "\t addu $sp, $sp, -4 \n";
+            output += "\t sw $t" + std::to_string(i) + ", 0($sp)\n";
         }
 
         for (int i = 0; i < 8; i++)
         {
-            output += "addu $sp, $sp, -4 \n";
-            output += "sw $s" + std::to_string(i) + ", 0($sp)\n";
+            output += "\t addu $sp, $sp, -4 \n";
+            output += "\t sw $s" + std::to_string(i) + ", 0($sp)\n";
         }
+        output+="\n";
     }
 }
 
@@ -610,39 +612,40 @@ void CodeGenerator::epilouge(std::string id, std::string returnType, std::string
         // Load S registers
         for (int i = 0; i < 8; i++)
         {
-            output += "lw $s" + std::to_string(7 - i) + ", 0($sp) \n";
-            output += "addu $sp, $sp, 4 \n";
+            output += "\t lw $s" + std::to_string(7 - i) + ", 0($sp) \n";
+            output += "\t addu $sp, $sp, 4 \n";
         }
 
         // Load T registers
         for (int i = 0; i < 10; i++)
         {
-            output += "lw $t" + std::to_string(9 - i) + ", 0($sp) \n";
-            output += "addu $sp, $sp, 4 \n";
+            output += "\t lw $t" + std::to_string(9 - i) + ", 0($sp) \n";
+            output += "\t addu $sp, $sp, 4 \n";
         }
 
         // Load Argument registers
         for (int i = 0; i < 4; i++)
         {
-            output += "lw $a" + std::to_string(3 - i) + ", 0($sp) \n";
-            output += "addu $sp, $sp, 4 \n";
+            output += "\t lw $a" + std::to_string(3 - i) + ", 0($sp) \n";
+            output += "\t addu $sp, $sp, 4 \n";
         }
 
         // Load return address Register
-        output += "lw $ra, 0($sp) \n";
-        output += "addu $sp, $sp, 4 \n";
+        output += "\t lw $ra, 0($sp) \n";
+        output += "\t addu $sp, $sp, 4 \n";
     }
 
     if (type == "mainFunctionDeclaration")
     {
         // Exit if main function
-        output += "li $v0,10\n";
-        output += "syscall\n";
+        output += "\t li $v0,10\n";
+        output += "\t syscall\n";
     }
     else
     {
         // Return to calling function if regular function
-        output += "jr $ra \n";
+        output += "\t jr $ra \n";
+        output +="\n";
     }
 }
 
@@ -737,34 +740,34 @@ void CodeGenerator::mipsFunctionCall(std::string functionId, std::vector<std::st
     // Assign $a registers
     for (unsigned long i = 0; i < argRegisters.size(); i++)
     {
-        output += "move $a" + std::to_string(i) + ", " + argRegisters.at(i) + "\n";
+        output += "\t move $a" + std::to_string(i) + ", " + argRegisters.at(i) + "\n";
     }
 
-    output += "jal " + getFunctionLabel(functionId) + "\n";
+    output += "\t jal " + getFunctionLabel(functionId) + "\n";
 }
 
 void CodeGenerator::mipsModifyGlobalVarValue(std::string globalVarLabel, std::string newValReg)
 {
     std::string addressReg = getRegister();
-    output += "la " + addressReg + "," + "__" + globalVarLabel + "\n";
-    output += "sw " + newValReg + ",0(" + addressReg + ") \n";
+    output += "\t la " + addressReg + "," + "__" + globalVarLabel + "\n";
+    output += "\t sw " + newValReg + ",0(" + addressReg + ") \n";
     freeRegister(addressReg);
 }
 
 // Remember to Free register after calling and using this function
 void CodeGenerator::mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg)
 {
-    output += "lw " + returnReg + "," + "__" + globalVarLabel + "\n";
+    output += "\t lw " + returnReg + "," + "__" + globalVarLabel + "\n";
 }
 
 void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal, std::string middleVal, std::string rightVal)
 {
     if (rightVal != "")
-        output += instruction + " " + leftVal + "," + middleVal + "," + rightVal + "\n";
+        output +="\t "+instruction + " " + leftVal + "," + middleVal + "," + rightVal + "\n";
     else if (middleVal != "")
-        output += instruction + " " + leftVal + "," + middleVal + "\n";
+        output +="\t "+instruction + " " + leftVal + "," + middleVal + "\n";
     else
-        output += instruction + " " + leftVal + "\n";
+        output += "\t "+instruction + " " + leftVal + "\n";
 }
 
 /** J-- Library Functions Code Gen **/
