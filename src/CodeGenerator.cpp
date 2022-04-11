@@ -8,6 +8,8 @@ CodeGenerator::CodeGenerator(Node *node)
     output += "div_error_msg: .asciiz \"division by zero\"  \n";
     output += "boolean_true: .asciiz \"true\\n\"  \n";
     output += "boolean_false: .asciiz \"false\\n\"  \n";
+    output += "EOF_msg: .asciiz \"EOF DETECTED: exiting program\\n\"  \n";
+    output += "input_char: .space 2 \n";
 }
 
 // Traversal Engine
@@ -84,7 +86,7 @@ void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
         else if (node->type == "string")
         {
             node->codeGenLabel = createLabel();
-            output += node->codeGenLabel+": "+ stringToBytes(node->value)+" \n";
+            output += node->codeGenLabel + ": " + stringToBytes(node->value) + " \n";
         }
     }
 }
@@ -775,6 +777,20 @@ void CodeGenerator::mipsDivError()
     output += "syscall\n";
 }
 
+void CodeGenerator::mipsEOFReached()
+{
+    // Print Error
+    output += "li $v0,4\n";
+    output += "la $a0,EOF_msg\n";
+    output += "syscall\n";
+
+    // Exit
+    output += "li $v0,10\n";
+    output += "syscall\n";
+}
+
+
+
 void CodeGenerator::mipsFunctionCall(std::string functionId, std::vector<std::string> argRegisters) // CHECK IF THERE ARE ANY FUNCTIONS WITH MORE THAN 4 ARGS
 {
     if (argRegisters.size() > 4)
@@ -839,9 +855,9 @@ std::string CodeGenerator::stringToBytes(std::string string)
     {
         std::string tempString = std::to_string(int(string[i]));
 
-        if (tempString == "92")     //Escape character Check
+        if (tempString == "92") // Escape character Check
         {
-            i++;   //Consume slash
+            i++; // Consume slash
             tempString = std::to_string(int(string[i]));
             if (tempString == "98")
             {
@@ -871,7 +887,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
 
             else if (tempString == "0")
             {
-                tempString = "0"; // Null char
+                tempString = "-1"; // Return -1 if EOF detected?
             }
         }
 
@@ -879,7 +895,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
     }
 
     retString.pop_back();
-    retString+= " 0";
+    retString += " 0";
     retString += "\n.align 2\n";
     return retString;
 }
@@ -890,7 +906,9 @@ void CodeGenerator::mipsGetChar()
 {
     createFunctionLabel("getchar");
     output += getFunctionLabel("getchar") + ": \n";
-    output += "li $v0,12\n";
+    mipsInstruction("li", "$v0", "8");
+    mipsInstruction("la", "$a0", "input_char");
+    mipsInstruction("li", "$a1", "2");
     output += "syscall\n"; // v0 Contains the return value
     output += "jr $ra \n";
 }
