@@ -86,6 +86,7 @@ JCC::Parser::token::token_kind_type Lexer::lex(JCC::Parser::semantic_type *yylva
 
                 // Read Chars until second Quotation Found. Set Current token to String
                 readString();
+                std::string test = "\b\t\n\f\r\"\'\\";
                 yylval->strVal = new std::string(lexeme);
 
             // If no error in string, return the token
@@ -201,12 +202,22 @@ void Lexer::readString()
                     lexeme.push_back('\\');
                 }
                 // Add the character following the backslashes
-                lexeme.push_back(in->get());
+                char addChar = in->get();
+                lexeme.push_back(addChar);
+                c = in->peek();
+            }
+
+            else if(escapeCount % 2 == 0 && in->peek() == '\"')
+            {
+                for (int i = 0; i < escapeCount; i++)
+                {
+                    lexeme.push_back('\\');
+                }
                 c = in->peek();
             }
         }
     }
-    in->get();
+    in->get();  //Adds the end quote at the end
     
 }
 

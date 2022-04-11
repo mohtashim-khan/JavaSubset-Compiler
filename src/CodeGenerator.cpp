@@ -84,7 +84,7 @@ void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
         else if (node->type == "string")
         {
             node->codeGenLabel = createLabel();
-            output += stringToBytes(node->value);
+            output += node->codeGenLabel+": "+ stringToBytes(node->value)+" \n";
         }
     }
 }
@@ -841,6 +841,8 @@ std::string CodeGenerator::stringToBytes(std::string string)
 
         if (tempString == "92")     //Escape character Check
         {
+            i++;   //Consume slash
+            tempString = std::to_string(int(string[i]));
             if (tempString == "98")
             {
                 tempString = "8"; // \b
@@ -877,6 +879,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
     }
 
     retString.pop_back();
+    retString+= ",0";
     retString += "\n.align 2\n";
     return retString;
 }
