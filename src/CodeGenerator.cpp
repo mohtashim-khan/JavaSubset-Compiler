@@ -879,7 +879,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
     }
 
     retString.pop_back();
-    retString+= ",0";
+    retString+= " 0";
     retString += "\n.align 2\n";
     return retString;
 }
