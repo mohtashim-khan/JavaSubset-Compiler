@@ -134,8 +134,6 @@ for test in tests:
 
         test_spim_output = do_spim_run(test_compiler_asm_path, stdin_buffer)
         reference_spim_output = do_spim_run(reference_compiler_asm_path, stdin_buffer)
-        test_spim_output.replace("\\n","\n")
-        reference_spim_output.replace("\\n","\n")
         if test_spim_output != reference_spim_output:
             print('\033[91m' + "FAIL" + '\033[0m')
             if SHOW_DIFF_OUTPUT:
