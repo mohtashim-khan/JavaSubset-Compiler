@@ -6,8 +6,8 @@ CodeGenerator::CodeGenerator(Node *node)
     output += ".data\n";
     output += "error_msg: .asciiz \"Function did not return a value!\"  \n";
     output += "div_error_msg: .asciiz \"division by zero\"  \n";
-    output += "boolean_true: .asciiz \"true\\n\"  \n";
-    output += "boolean_false: .asciiz \"false\\n\"  \n";
+    output += "boolean_true: .asciiz \"true\"  \n";
+    output += "boolean_false: .asciiz \"false\"  \n";
 }
 
 // Traversal Engine

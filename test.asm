@@ -1,8 +1,8 @@
 .data
 error_msg: .asciiz "Function did not return a value!"  
 div_error_msg: .asciiz "division by zero"  
-boolean_true: .asciiz "true\n"  
-boolean_false: .asciiz "false\n"  
+boolean_true: .asciiz "true"  
+boolean_false: .asciiz "false"  
 __a: .word 0 
 __b: .word 0 
 __c: .word 0 
