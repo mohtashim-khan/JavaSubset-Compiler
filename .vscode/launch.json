@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Tests/final/gen.t18"
+        "./Tests/final/gen.t29"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",
