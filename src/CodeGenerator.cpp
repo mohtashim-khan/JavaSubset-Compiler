@@ -84,7 +84,7 @@ void CodeGenerator::globalVarsCodeGen(Node *node, bool processedChildren)
         else if (node->type == "string")
         {
             node->codeGenLabel = createLabel();
-            output += node->codeGenLabel + ": .asciiz \"" + node->value + "\" \n";
+            output += stringToBytes(node->value);
         }
     }
 }
@@ -236,7 +236,6 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             mipsInstruction("addu", node->returnRegister, "1");
             mipsJump(exitLabel);
 
-
             output += falseLabel + ": \n";
             mipsInstruction("addu", node->returnRegister, "0");
 
@@ -265,7 +264,9 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
 
         else if (node->type == "variableDeclaration" && node->getParentNode()->type != "globalVardeclaration")
         {
+
             node->childNodes[1]->semanticInformation->idRegister = getRegister(); // Assign every variable declaration its own register to map to.
+            mipsInstruction("move", node->childNodes[1]->semanticInformation->idRegister, "$zero");
         }
 
         else if (node->type == "formalParameters")
@@ -827,6 +828,57 @@ void CodeGenerator::mipsInstruction(std::string instruction, std::string leftVal
         output += "\t " + instruction + " " + leftVal + "," + middleVal + "\n";
     else
         output += "\t " + instruction + " " + leftVal + "\n";
+}
+
+/**String to Byte Conversion Function**/
+std::string CodeGenerator::stringToBytes(std::string string)
+{
+    std::string retString;
+    retString += ".byte ";
+    for (unsigned long i = 0; i < string.size(); i++)
+    {
+        std::string tempString = std::to_string(int(string[i]));
+
+        if (tempString == "92")     //Escape character Check
+        {
+            if (tempString == "98")
+            {
+                tempString = "8"; // \b
+            }
+            else if (tempString == "102")
+            {
+                tempString = "12"; // \f
+            }
+            else if (tempString == "116")
+            {
+                tempString = "9"; // \t
+            }
+            else if (tempString == "114")
+            {
+                tempString = "31"; // \r
+            }
+            else if (tempString == "110")
+            {
+                tempString = "10"; // \n
+            }
+
+            else if (tempString == "92")
+            {
+                tempString = "92"; // another slash
+            }
+
+            else if (tempString == "0")
+            {
+                tempString = "0"; // Null char
+            }
+        }
+
+        retString += tempString + ",";
+    }
+
+    retString.pop_back();
+    retString += "\n.align 2\n";
+    return retString;
 }
 
 /** J-- Library Functions Code Gen **/

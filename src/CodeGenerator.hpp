@@ -58,6 +58,9 @@ public:
 
     void globalVarsCodeGen(Node *node, bool processedChildren);
 
+    //String to byte Conversion
+    std::string stringToBytes(std::string string);
+
     // Register Allocater
     std::string getRegister();
     void freeNodeRegister(Node *node);
