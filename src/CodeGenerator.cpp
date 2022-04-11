@@ -4,8 +4,8 @@ CodeGenerator::CodeGenerator(Node *node)
 {
     ast = node;
     output += ".data\n";
-    output += "error_msg: .asciiz \"MIPS ERROR: Function did not return!\\n\"  \n";
-    output += "div_error_msg: .asciiz \"division by zero\\n\"  \n";
+    output += "error_msg: .asciiz \"Function did not return a value!\"  \n";
+    output += "div_error_msg: .asciiz \"division by zero\"  \n";
     output += "boolean_true: .asciiz \"true\\n\"  \n";
     output += "boolean_false: .asciiz \"false\\n\"  \n";
 }
