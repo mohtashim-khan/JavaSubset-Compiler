@@ -3,16 +3,7 @@ error_msg: .asciiz "Function did not return a value!"
 div_error_msg: .asciiz "division by zero"  
 boolean_true: .asciiz "true\n"  
 boolean_false: .asciiz "false\n"  
-L2: .byte 97,115,100,102,0
-.align 2
- 
-L3: .byte 8,9,10,12,31,34,39,92,0
-.align 2
- 
-L4: .byte 1,26,0
-.align 2
- 
-L5: .byte 0,32,97,115,100,102,0
+L2: .byte 72,101,108,108,111,44,32,119,111,114,108,100,33,10,0
 .align 2
  
 .text
@@ -21,15 +12,15 @@ main:
 	 jal L0
 li $v0,10
 syscall
-L6: 
+L3: 
 li $v0,12
 syscall
 jr $ra 
-L8: 
+L5: 
 li $v0,10
 syscall
 jr $ra 
-L10: 
+L7: 
 beq $a0, $zero, isFalse
 isTrue:
 la $a0, boolean_true
@@ -40,15 +31,15 @@ printBoolean:
 li $v0,4
 syscall
 jr $ra 
-L12: 
+L9: 
 li $v0,11
 syscall
 jr $ra 
-L14: 
+L11: 
 li $v0,1
 syscall
 jr $ra 
-L16: 
+L13: 
 li $v0,4
 syscall
 jr $ra 
@@ -102,30 +93,8 @@ L0:
 
 	 la $t0,L2
 	 move $a0, $t0
-	 la $t1,L16
+	 la $t1,L13
 	 jalr $t1
-	 la $t0,L3
-	 move $a0, $t0
-	 la $t1,L16
-	 jalr $t1
-	 la $t0,L4
-	 move $a0, $t0
-	 la $t1,L16
-	 jalr $t1
-	 addu $t0,$zero,1
-	 bne $t0,$zero,L18
-	 la $t1,L19
-	 jr $t1
-L18: 
-	 la $t0,L5
-	 move $a0, $t0
-	 la $t1,L16
-	 jalr $t1
-L19: 
-	 addu $t0,$zero,0
-	 move $a0, $t0
-	 la $t0,L12
-	 jalr $t0
 L1: 
 	 lw $s7, 0($sp) 
 	 addu $sp, $sp, 4 

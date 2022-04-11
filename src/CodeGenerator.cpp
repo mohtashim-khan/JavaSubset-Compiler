@@ -875,7 +875,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
             }
         }
 
-        retString += tempString + ",";
+        retString += tempString + " ";
     }
 
     retString.pop_back();
