@@ -197,7 +197,7 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             // Generate the second conditions code
             prePostTraversal(node->childNodes[1], &CodeGenerator::assignmentsAndOpsCodeGen);
             std::string secondReturnRegister = getReturnRegister(node->childNodes[1]);
-            mipsInstruction("bne", firstReturnRegister, "$zero", trueLabel); // if second condition is also true then go to the true label and exit
+            mipsInstruction("bne", secondReturnRegister, "$zero", trueLabel); // if second condition is also true then go to the true label and exit
 
             output += falseLabel + ": \n";
             mipsInstruction("addu", node->returnRegister, "0");

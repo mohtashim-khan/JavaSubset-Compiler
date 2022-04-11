@@ -695,7 +695,7 @@ L72:
 	 addu $s1,31
 	 sll $s0,$s0,$s1
 	 srl $s0,$s0,$s1
-	 bne $t9,$zero,L70
+	 bne $s0,$zero,L70
 L69: 
 	 addu $t8,0
 	 la $t9,L71
