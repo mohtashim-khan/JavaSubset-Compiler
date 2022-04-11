@@ -857,7 +857,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
             }
             else if (tempString == "114")
             {
-                tempString = "31"; // \r
+                tempString = "13"; // \r
             }
             else if (tempString == "110")
             {
