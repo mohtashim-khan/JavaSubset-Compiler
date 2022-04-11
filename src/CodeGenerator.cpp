@@ -5,6 +5,7 @@ CodeGenerator::CodeGenerator(Node *node)
     ast = node;
     output += ".data\n";
     output += "error_msg: .asciiz \"MIPS ERROR: Function did not return!\\n\"  \n";
+    output += "div_error_msg: .asciiz \"division by zero\\n\"  \n";
     output += "boolean_true: .asciiz \"true\\n\"  \n";
     output += "boolean_false: .asciiz \"false\\n\"  \n";
 }
@@ -384,6 +385,10 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            std::string goodLabel = createLabel();
+            mipsInstruction("bne", secondRegisterOperand, "$zero", goodLabel);
+            mipsDivError();
+            output+=goodLabel+": \n";
             mipsInstruction("div", firstRegisterOperand, secondRegisterOperand);
             mipsInstruction("mflo", node->returnRegister);
             freeChildReturnRegisters(node);
@@ -393,6 +398,10 @@ void CodeGenerator::assignmentsAndOpsCodeGen(Node *node, bool processedChildren)
             node->returnRegister = getRegister(); // store return of the function in this register
             std::string firstRegisterOperand = getReturnRegister(node->childNodes[0]);
             std::string secondRegisterOperand = getReturnRegister(node->childNodes[1]);
+            std::string goodLabel = createLabel();
+            mipsInstruction("bne", secondRegisterOperand, "$zero", goodLabel);
+            mipsDivError();
+            output+=goodLabel+": \n";
             mipsInstruction("div", firstRegisterOperand, secondRegisterOperand);
             mipsInstruction("mfhi", node->returnRegister);
             freeChildReturnRegisters(node);
@@ -735,6 +744,18 @@ void CodeGenerator::mipsError()
     // Print Error
     output += "li $v0,4\n";
     output += "la $a0,error_msg\n";
+    output += "syscall\n";
+
+    // Exit
+    output += "li $v0,10\n";
+    output += "syscall\n";
+}
+
+void CodeGenerator::mipsDivError()
+{
+    // Print Error
+    output += "li $v0,4\n";
+    output += "la $a0,div_error_msg\n";
     output += "syscall\n";
 
     // Exit

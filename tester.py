@@ -84,6 +84,7 @@ for test in tests:
 
     if(test_compiler_run.returncode != 0):
         print (f"Failed to compile for test: {test}")
+        fail_count+=1
         continue
         
     assert(reference_compiler_run.returncode == 0)

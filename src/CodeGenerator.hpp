@@ -75,6 +75,7 @@ public:
 
     // MIPS helper code generation functions
     void mipsError();
+    void mipsDivError();
     void mipsFunctionCall(std::string functionId, std::vector<std::string> args = {}); // args assigns $a0-$a3
     void mipsModifyGlobalVarValue(std::string globalVar, std::string reg);
     void mipsGetGlobalVarValueinReg(std::string globalVarLabel, std::string returnReg);
