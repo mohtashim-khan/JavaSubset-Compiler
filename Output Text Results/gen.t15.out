@@ -1,0 +1,7 @@
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t15.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+-123
+-2147483648
+-2147483648
+-2147483648
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$

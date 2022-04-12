@@ -1,0 +1,14 @@
+
+//Input = Hello World
+
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t13.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+Hello World
+dlroW olleHmohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ 
+
+//Input = RaceCar
+
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t13.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+RaceCar
+raCecaRmohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$

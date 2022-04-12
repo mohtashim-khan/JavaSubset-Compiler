@@ -1,0 +1,24 @@
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t18.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+(1+2)*3         
+ = 9
+2+2
+ = 4
+9124-9024
+ = 100
+
+//Ctrl D Input
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$
+
+//Erronus Input
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t18.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+t-2
+Error: invalid character.
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ -2
+
+//div by 0
+mohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ ~aycock/411/bin/spim -f gen.t18.asm
+Loaded: /home/profs/aycock/411/sw/share/spim/exceptions.s
+2/0
+division by zeromohtashim.khan@ms176-3wb:~/CPSC411/cpsc-411-compiler/Results$ 
