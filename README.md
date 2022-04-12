@@ -7,6 +7,6 @@ Run Instructions:
 
 **TEST RESULTS**
 
-The  Assembley files for the required test cases can be found in the "Results" directory.
+The Assembley files for the required test cases can be found in the "Results" directory.
 
-The text output for the required test cases can be found in "Output Text Results" directory.
+The Text output for the required test cases can be found in "Output Text Results" directory.
