@@ -6,6 +6,7 @@ Run Instructions:
 3) use command "~aycock/411/bin/spim -f output.asm" to run the Assembly files on the CPSC machines.
 
 **TEST RESULTS**
-The generated Assembley files for the required test cases can be found in the "Results" directory.
 
-The text output for the required test cases can be found in "Output Text Results"
+The  Assembley files for the required test cases can be found in the "Results" directory.
+
+The text output for the required test cases can be found in "Output Text Results" directory.
