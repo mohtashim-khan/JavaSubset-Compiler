@@ -7,7 +7,7 @@
       "request": "launch",
       "program": "${workspaceFolder}/output_debug",
       "args": [
-        "./Tests/final/gen.t22"
+        "testfile.txt"
       ],
       "stopAtEntry": false,
       "cwd": "${workspaceFolder}",

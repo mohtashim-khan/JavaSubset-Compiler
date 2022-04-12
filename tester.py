@@ -15,7 +15,8 @@ runtime_system = """
 	.data
     error_msg: .asciiz "MIPS ERROR: Function did not return!\n"  
     boolean_true: .asciiz "true\n"  
-    boolean_false: .asciiz "false\n"  
+    boolean_false: .asciiz "false\n"
+    __input_char_mips__: .space 2   
     .text
 # 
 error:
@@ -23,9 +24,15 @@ error:
 	j Lhalt
 
 Lgetchar: 
-li $v0,12
+li $v0,8
+la $a0,__input_char_mips__
+li $a1,2
 syscall
-jr $ra
+lbu $v0, __input_char_mips__
+bne $v0, $zero, Lgetchar_END
+addu $v0, $v0, -1 
+Lgetchar_END: 
+jr $ra 
 
 Lhalt: 
 li $v0,10

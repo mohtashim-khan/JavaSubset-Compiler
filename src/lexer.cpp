@@ -86,7 +86,6 @@ JCC::Parser::token::token_kind_type Lexer::lex(JCC::Parser::semantic_type *yylva
 
                 // Read Chars until second Quotation Found. Set Current token to String
                 readString();
-                std::string test = "\b\t\n\f\r\"\'\\";
                 yylval->strVal = new std::string(lexeme);
 
             // If no error in string, return the token

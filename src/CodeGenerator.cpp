@@ -9,7 +9,8 @@ CodeGenerator::CodeGenerator(Node *node)
     output += "boolean_true: .asciiz \"true\\n\"  \n";
     output += "boolean_false: .asciiz \"false\\n\"  \n";
     output += "EOF_msg: .asciiz \"EOF DETECTED: exiting program\\n\"  \n";
-    output += "input_char: .space 2 \n";
+    output += "__input_char_mips__: .space 2 \n";
+
 }
 
 // Traversal Engine
@@ -887,7 +888,7 @@ std::string CodeGenerator::stringToBytes(std::string string)
 
             else if (tempString == "0")
             {
-                tempString = "-1"; // Return -1 if EOF detected?
+                tempString = "0"; // Return -1 if EOF detected?
             }
         }
 
@@ -904,12 +905,17 @@ std::string CodeGenerator::stringToBytes(std::string string)
 
 void CodeGenerator::mipsGetChar()
 {
+    std::string succesLabel = createLabel();
     createFunctionLabel("getchar");
     output += getFunctionLabel("getchar") + ": \n";
     mipsInstruction("li", "$v0", "8");
-    mipsInstruction("la", "$a0", "input_char");
+    mipsInstruction("la", "$a0", "__input_char_mips__");
     mipsInstruction("li", "$a1", "2");
-    output += "syscall\n"; // v0 Contains the return value
+    output += "syscall\n"; 
+    output +="lbu $v0, __input_char_mips__\n";
+    output +="bne $v0, $zero, "+succesLabel+"\n";
+    output +="addu $v0, $v0, -1 \n";
+    output+=succesLabel+": \n";
     output += "jr $ra \n";
 }
 void CodeGenerator::mipsHalt()
