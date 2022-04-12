@@ -6,4 +6,6 @@ Run Instructions:
 3) use command "~aycock/411/bin/spim -f output.asm" to run the Assembly files on the CPSC machines.
 
 **TEST RESULTS**
-The Final test results can be found in the directory marked "Results". All .asm files are the generated assembly files, whilst the .out files correspond to output files.
+The generated Assembley files for the required test cases can be found in the "Results" directory.
+
+The text output for the required test cases can be found in "Output Text Results"
