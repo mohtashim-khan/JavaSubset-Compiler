@@ -105,7 +105,7 @@ public:
     void removeWhileExitLabel(){whileLabelStack.pop();};
     std::string getWhileExitLabel(){return whileLabelStack.top();};
     //Write to output file
-    void writetoOutputFile(std::string outputfile);
+    void writetoOutputFile();
 
     //Helper functions
     std::string getReturnRegister(Node *node);

@@ -51,7 +51,7 @@ void CodeGenerator::execute()
 
     // ACTUAL CODE GEN
     prePostTraversal(ast, &CodeGenerator::assignmentsAndOpsCodeGen);
-    writetoOutputFile("test.asm");
+    writetoOutputFile();
 }
 
 /**PASS FUNCTIONS**/
@@ -988,11 +988,11 @@ void CodeGenerator::generateLibraryFunctions()
 }
 
 /** Write To output file **/
-void CodeGenerator::writetoOutputFile(std::string outputFile)
+void CodeGenerator::writetoOutputFile()
 {
     std::cout << output;
     std::ofstream myfile;
-    myfile.open(outputFile);
+    myfile.open("output.asm");
     if (!myfile.is_open())
     {
         std::cout << "ERROR OPENING FILE \n";
