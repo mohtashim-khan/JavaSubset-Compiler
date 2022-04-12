@@ -1,0 +1,662 @@
+
+	.data
+    error_msg: .asciiz "MIPS ERROR: Function did not return!
+"  
+    boolean_true: .asciiz "true
+"  
+    boolean_false: .asciiz "false
+"
+    __input_char_mips__: .space 2   
+    .text
+# 
+error:
+    jal Lprints
+	j Lhalt
+
+Lgetchar: 
+li $v0,8
+la $a0,__input_char_mips__
+li $a1,2
+syscall
+lbu $v0, __input_char_mips__
+bne $v0, $zero, Lgetchar_END
+addu $v0, $v0, -1 
+Lgetchar_END: 
+jr $ra 
+
+Lhalt: 
+li $v0,10
+syscall
+jr $ra 
+
+Lprints: 
+li $v0,4
+syscall
+jr $ra
+
+Lprinti: 
+li $v0,1
+syscall
+jr $ra 
+
+Lprintc: 
+li $v0,11
+syscall
+jr $ra
+
+Lprintb: 
+beq $a0, $zero, isFalse
+isTrue:
+la $a0, boolean_true
+j printBoolean
+isFalse:
+la $a0, boolean_false
+printBoolean:
+li $v0,4
+syscall
+jr $ra 
+
+			.text
+			.globl main
+		main:
+		
+	jal L0
+
+
+			li $v0,10
+			syscall
+		
+	.data
+G0 :
+	.word 0
+	.text
+	.data
+G1 :
+	.word 0
+	.text
+	.data
+G2 :
+	.word 0
+	.text
+L1 :
+	subu $sp,$sp,4
+	sw $ra,0($sp)
+	.data
+LS0 :
+	.byte  101 , 118 , 97 , 108 , 117 , 97 , 116 , 101 , 100 , 32 , 65 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS0
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G0
+	move $v0,$t0
+	j L6
+	.data
+LS1 :
+	.byte  102 , 117 , 110 , 99 , 116 , 105 , 111 , 110 , 32 , 34 , 65 , 34 , 32 , 109 , 117 , 115 , 116 , 32 , 114 , 101 , 116 , 117 , 114 , 110 , 32 , 97 , 32 , 118 , 97 , 108 , 117 , 101 , 0
+	.align 2
+	.text
+	la $a0,LS1
+	j error
+L6 :
+	lw $ra,0($sp)
+	addu $sp,$sp,4
+	jr $ra
+L2 :
+	subu $sp,$sp,4
+	sw $ra,0($sp)
+	.data
+LS2 :
+	.byte  101 , 118 , 97 , 108 , 117 , 97 , 116 , 101 , 100 , 32 , 66 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS2
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G1
+	move $v0,$t0
+	j L7
+	.data
+LS3 :
+	.byte  102 , 117 , 110 , 99 , 116 , 105 , 111 , 110 , 32 , 34 , 66 , 34 , 32 , 109 , 117 , 115 , 116 , 32 , 114 , 101 , 116 , 117 , 114 , 110 , 32 , 97 , 32 , 118 , 97 , 108 , 117 , 101 , 0
+	.align 2
+	.text
+	la $a0,LS3
+	j error
+L7 :
+	lw $ra,0($sp)
+	addu $sp,$sp,4
+	jr $ra
+L3 :
+	subu $sp,$sp,4
+	sw $ra,0($sp)
+	.data
+LS4 :
+	.byte  101 , 118 , 97 , 108 , 117 , 97 , 116 , 101 , 100 , 32 , 67 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS4
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G2
+	move $v0,$t0
+	j L8
+	.data
+LS5 :
+	.byte  102 , 117 , 110 , 99 , 116 , 105 , 111 , 110 , 32 , 34 , 67 , 34 , 32 , 109 , 117 , 115 , 116 , 32 , 114 , 101 , 116 , 117 , 114 , 110 , 32 , 97 , 32 , 118 , 97 , 108 , 117 , 101 , 0
+	.align 2
+	.text
+	la $a0,LS5
+	j error
+L8 :
+	lw $ra,0($sp)
+	addu $sp,$sp,4
+	jr $ra
+L4 :
+	subu $sp,$sp,16
+	sw $ra,0($sp)
+	sw $a0,4($sp)
+	sw $a1,8($sp)
+	sw $a2,12($sp)
+	lw $t0,4($sp)
+	sw $t0,G0
+	lw $t0,8($sp)
+	sw $t0,G1
+	lw $t0,12($sp)
+	sw $t0,G2
+	.data
+LS6 :
+	.byte  105 , 102 , 32 , 40 , 40 , 65 , 32 , 38 , 38 , 32 , 66 , 41 , 32 , 124 , 124 , 32 , 67 , 41 , 32 , 123 , 46 , 46 , 46 , 125 , 32 , 101 , 108 , 115 , 101 , 32 , 123 , 46 , 46 , 46 , 125 , 44 , 32 , 119 , 105 , 116 , 104 , 32 , 65 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS6
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G0
+	move $a0,$t0
+	jal Lprintb
+
+	.data
+LS7 :
+	.byte  32 , 66 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS7
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G1
+	move $a0,$t0
+	jal Lprintb
+
+	.data
+LS8 :
+	.byte  32 , 67 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS8
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G2
+	move $a0,$t0
+	jal Lprintb
+
+	.data
+LS9 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS9
+	move $a0,$s8
+	jal Lprints
+
+ subu $sp,$sp,8
+ sw $t0,0($sp)
+ sw $t1,4($sp)
+	jal L1
+ lw $t0,0($sp)
+ lw $t1,4($sp)
+addu $sp,$sp,8
+	move $t2,$v0
+	move $t1,$t2
+	beqz $t1,L13
+ subu $sp,$sp,8
+ sw $t0,0($sp)
+ sw $t1,4($sp)
+	jal L2
+ lw $t0,0($sp)
+ lw $t1,4($sp)
+addu $sp,$sp,8
+	move $t2,$v0
+	move $t1,$t2
+L13 :
+	move $t0,$t1
+	bnez $t0,L12
+ subu $sp,$sp,4
+ sw $t0,0($sp)
+	jal L3
+ lw $t0,0($sp)
+addu $sp,$sp,4
+	move $t2,$v0
+	move $t0,$t2
+L12 :
+	beqz $t0,L10
+	.data
+LS10 :
+	.byte  105 , 102 , 45 , 112 , 97 , 114 , 116 , 32 , 101 , 120 , 101 , 99 , 117 , 116 , 101 , 100 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS10
+	move $a0,$s8
+	jal Lprints
+
+	j L11
+L10 :
+	.data
+LS11 :
+	.byte  101 , 108 , 115 , 101 , 45 , 112 , 97 , 114 , 116 , 32 , 101 , 120 , 101 , 99 , 117 , 116 , 101 , 100 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS11
+	move $a0,$s8
+	jal Lprints
+
+L11 :
+L9 :
+	lw $ra,0($sp)
+	addu $sp,$sp,16
+	jr $ra
+L5 :
+	subu $sp,$sp,20
+	sw $ra,0($sp)
+	sw $a0,4($sp)
+	sw $a1,8($sp)
+	sw $a2,12($sp)
+	lw $t0,4($sp)
+	sw $t0,G0
+	lw $t1,8($sp)
+	sw $t1,G1
+	lw $t2,12($sp)
+	sw $t2,G2
+	.data
+LS12 :
+	.byte  120 , 32 , 61 , 32 , 40 , 65 , 32 , 38 , 38 , 32 , 33 , 66 , 41 , 32 , 124 , 124 , 32 , 67 , 44 , 32 , 119 , 105 , 116 , 104 , 32 , 65 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS12
+	move $a0,$s8
+	jal Lprints
+
+	lw $t0,G0
+	move $a0,$t0
+	jal Lprintb
+
+	.data
+LS13 :
+	.byte  32 , 66 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS13
+	move $a0,$s8
+	jal Lprints
+
+	lw $t1,G1
+	move $a0,$t1
+	jal Lprintb
+
+	.data
+LS14 :
+	.byte  32 , 67 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS14
+	move $a0,$s8
+	jal Lprints
+
+	lw $t2,G2
+	move $a0,$t2
+	jal Lprintb
+
+	.data
+LS15 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS15
+	move $a0,$s8
+	jal Lprints
+
+ subu $sp,$sp,8
+ sw $t0,0($sp)
+ sw $t1,4($sp)
+	jal L1
+ lw $t0,0($sp)
+ lw $t1,4($sp)
+addu $sp,$sp,8
+	move $t2,$v0
+	move $t1,$t2
+	beqz $t1,L16
+ subu $sp,$sp,8
+ sw $t0,0($sp)
+ sw $t1,4($sp)
+	jal L2
+ lw $t0,0($sp)
+ lw $t1,4($sp)
+addu $sp,$sp,8
+	move $t2,$v0
+	xori $t2,$t2,1
+	move $t1,$t2
+L16 :
+	move $t0,$t1
+	bnez $t0,L15
+ subu $sp,$sp,4
+ sw $t0,0($sp)
+	jal L3
+ lw $t0,0($sp)
+addu $sp,$sp,4
+	move $t2,$v0
+	move $t0,$t2
+L15 :
+	sw $t0,16($sp)
+	.data
+LS16 :
+	.byte  120 , 61 , 0
+	.align 2
+	.text
+	la $s8,LS16
+	move $a0,$s8
+	jal Lprints
+
+	lw $t1,16($sp)
+	move $a0,$t1
+	jal Lprintb
+
+	.data
+LS17 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS17
+	move $a0,$s8
+	jal Lprints
+
+L14 :
+	lw $ra,0($sp)
+	addu $sp,$sp,20
+	jr $ra
+L0 :
+	subu $sp,$sp,4
+	sw $ra,0($sp)
+	li $t0,0
+	li $t1,0
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS18 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS18
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,0
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS19 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS19
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,1
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS20 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS20
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,1
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS21 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS21
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,0
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS22 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS22
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,0
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS23 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS23
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,1
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS24 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS24
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,1
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L4
+
+	.data
+LS25 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS25
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,0
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS26 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS26
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,0
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS27 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS27
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,1
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS28 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS28
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,0
+	li $t1,1
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS29 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS29
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,0
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS30 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS30
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,0
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS31 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS31
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,1
+	li $t2,0
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+	.data
+LS32 :
+	.byte  10 , 0
+	.align 2
+	.text
+	la $s8,LS32
+	move $a0,$s8
+	jal Lprints
+
+	li $t0,1
+	li $t1,1
+	li $t2,1
+	move $a0,$t0
+	move $a1,$t1
+	move $a2,$t2
+	jal L5
+
+L17 :
+	lw $ra,0($sp)
+	addu $sp,$sp,4
+	jr $ra

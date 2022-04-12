@@ -1,0 +1,84 @@
+
+	.data
+    error_msg: .asciiz "MIPS ERROR: Function did not return!
+"  
+    boolean_true: .asciiz "true
+"  
+    boolean_false: .asciiz "false
+"
+    __input_char_mips__: .space 2   
+    .text
+# 
+error:
+    jal Lprints
+	j Lhalt
+
+Lgetchar: 
+li $v0,8
+la $a0,__input_char_mips__
+li $a1,2
+syscall
+lbu $v0, __input_char_mips__
+bne $v0, $zero, Lgetchar_END
+addu $v0, $v0, -1 
+Lgetchar_END: 
+jr $ra 
+
+Lhalt: 
+li $v0,10
+syscall
+jr $ra 
+
+Lprints: 
+li $v0,4
+syscall
+jr $ra
+
+Lprinti: 
+li $v0,1
+syscall
+jr $ra 
+
+Lprintc: 
+li $v0,11
+syscall
+jr $ra
+
+Lprintb: 
+beq $a0, $zero, isFalse
+isTrue:
+la $a0, boolean_true
+j printBoolean
+isFalse:
+la $a0, boolean_false
+printBoolean:
+li $v0,4
+syscall
+jr $ra 
+
+			.text
+			.globl main
+		main:
+		
+	jal L0
+
+
+			li $v0,10
+			syscall
+		
+L0 :
+	subu $sp,$sp,4
+	sw $ra,0($sp)
+	.data
+LS0 :
+	.byte  72 , 101 , 108 , 108 , 111 , 44 , 32 , 119 , 111 , 114 , 108 , 100 , 33 , 10 , 0
+	.align 2
+	.text
+	la $s8,LS0
+	move $a0,$s8
+	jal Lprints
+
+L1 :
+	lw $ra,0($sp)
+	addu $sp,$sp,4
+	jr $ra

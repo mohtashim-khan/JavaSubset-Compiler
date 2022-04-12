@@ -1,8 +1,8 @@
-// A Bison parser, made by GNU Bison 3.7.5.
+// A Bison parser, made by GNU Bison 3.7.4.
 
 // Skeleton implementation for Bison LALR(1) parsers in C++
 
-// Copyright (C) 2002-2015, 2018-2021 Free Software Foundation, Inc.
+// Copyright (C) 2002-2015, 2018-2020 Free Software Foundation, Inc.
 
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -130,7 +130,7 @@
 #else // !YYDEBUG
 
 # define YYCDEBUG if (false) std::cerr
-# define YY_SYMBOL_PRINT(Title, Symbol)  YY_USE (Symbol)
+# define YY_SYMBOL_PRINT(Title, Symbol)  YYUSE (Symbol)
 # define YY_REDUCE_PRINT(Rule)           static_cast<void> (0)
 # define YY_STACK_PRINT()                static_cast<void> (0)
 
@@ -238,7 +238,7 @@ namespace JCC {
   {}
 
   void
-  Parser::by_kind::clear () YY_NOEXCEPT
+  Parser::by_kind::clear ()
   {
     kind_ = symbol_kind::S_YYEMPTY;
   }
@@ -347,7 +347,7 @@ namespace JCC {
       YY_SYMBOL_PRINT (yymsg, yysym);
 
     // User destructor.
-    YY_USE (yysym.kind ());
+    YYUSE (yysym.kind ());
   }
 
 #if YYDEBUG
@@ -356,7 +356,7 @@ namespace JCC {
   Parser::yy_print_ (std::ostream& yyo, const basic_symbol<Base>& yysym) const
   {
     std::ostream& yyoutput = yyo;
-    YY_USE (yyoutput);
+    YYUSE (yyoutput);
     if (yysym.empty ())
       yyo << "empty symbol";
     else
@@ -365,7 +365,7 @@ namespace JCC {
         yyo << (yykind < YYNTOKENS ? "token" : "nterm")
             << ' ' << yysym.name () << " ("
             << yysym.location << ": ";
-        YY_USE (yykind);
+        YYUSE (yykind);
         yyo << ')';
       }
   }
@@ -1818,7 +1818,7 @@ namespace JCC {
   const signed char
   Parser::yydefgoto_[] =
   {
-       0,     5,    63,    28,     7,     8,     9,    88,    11,    12,
+      -1,     5,    63,    28,     7,     8,     9,    88,    11,    12,
       16,    29,    30,    13,    14,    40,    41,    42,    43,    44,
       65,   108,    66,    67,    68,    69,    70,    71,    72,    73,
       74,    75,    76,    77
