@@ -1,12 +1,10 @@
-# CPSC 411 Compiler
+# JavaSubset Compiler!
+
+This compiler compiles J-- code (grammer defined below) into MIPS assembley code which can the be run via SPIM!
 
 Run Instructions:
 1) use makefile and bison to build the compiler using the command "cd src/ && bison parser.ypp && cd .. && make release"
 2) use command "./output filepath" to compile assembly -> the output for this assembley can be found in output.asm.
-3) use command "~aycock/411/bin/spim -f output.asm" to run the Generated Assembly file on the CPSC machines.
+3) use command "spim -f output.asm" to run the Generated Assembly file.
 
-**TEST RESULTS**
-
-The Assembley files for the required test cases can be found in the "Results" directory.
-
-The Text output for the required test cases can be found in "Output Text Results" directory.
+**OUTPUT EXAMPLES**
