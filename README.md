@@ -8,7 +8,11 @@ Run Instructions:
 3) use command "spim -f output.asm" to run the Generated Assembly file.
 
 **OUTPUT EXAMPLES**
-To see examples of the compiler in action, testing files are provided. The "Testing files" directory contains test files of J-- source code, The "Generated Assembley" directory contains the generated assembley for each respective testing file, whilst the "Test Outputs" directory contains the program output of running the assembley generated for each testing file.
+
+To see examples of the compiler in action, testing files are provided. 
+1) The "Testing files" directory contains test files of J-- source code
+2) The "Generated Assembley" directory contains the generated assembley for each respective testing file
+3) The "Test Outputs" directory contains the program output of running the assembley generated for each testing file.
 
 **J-- Grammer**
 
