@@ -6,8 +6,8 @@ Build Instructions:
 1) use makefile and bison to build the compiler using the command "cd src/ && bison parser.ypp && cd .. && make release"
 
 Run Instructions:
-2) use command "./output filepath" to compile assembly -> the output for this assembley can be found in output.asm.
-3) use command "spim -f output.asm" to run the Generated Assembly file.
+1) use command "./output filepath" to compile assembly -> the output for this assembley can be found in output.asm
+2) use command "spim -f output.asm" to run the Generated Assembly file
 
 **J-- Code Snippet**
 
