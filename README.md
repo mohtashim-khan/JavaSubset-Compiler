@@ -2,10 +2,38 @@
 
 This compiler compiles J-- code (grammer defined below) into MIPS assembley code which can the be run via SPIM!
 
-Run Instructions:
+Build Instructions:
 1) use makefile and bison to build the compiler using the command "cd src/ && bison parser.ypp && cd .. && make release"
+
+Run Instructions:
 2) use command "./output filepath" to compile assembly -> the output for this assembley can be found in output.asm.
 3) use command "spim -f output.asm" to run the Generated Assembly file.
+
+**J-- Code Snippet**
+
+The following is J-- source code for a recursive fibonacci sequence:
+
+main() {
+        int i;
+        i = 0;
+
+        while (i <= 47) {
+                prints("fib(");
+                printi(i);
+                prints(") = ");
+                printi(fib(i));
+                prints("\n");
+                i = i + 1;
+        }
+}
+
+int fib(int n) {
+        if (n == 0) return 0;
+        if (n == 1) return 1;
+        return fib(n-1) + fib(n-2);
+}
+
+Try running this code using the released binary and the run instructions!
 
 **OUTPUT EXAMPLES**
 
