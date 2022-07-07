@@ -13,25 +13,25 @@ Run Instructions:
 
 The following is J-- source code for a recursive fibonacci sequence:
 
-main() {
-        int i;
-        i = 0;
+        main() {
+                int i;
+                i = 0;
 
-        while (i <= 47) {
-                prints("fib(");
-                printi(i);
-                prints(") = ");
-                printi(fib(i));
-                prints("\n");
-                i = i + 1;
+                while (i <= 47) {
+                        prints("fib(");
+                        printi(i);
+                        prints(") = ");
+                        printi(fib(i));
+                        prints("\n");
+                        i = i + 1;
+                }
         }
-}
 
-int fib(int n) {
-        if (n == 0) return 0;
-        if (n == 1) return 1;
-        return fib(n-1) + fib(n-2);
-}
+        int fib(int n) {
+                if (n == 0) return 0;
+                if (n == 1) return 1;
+                return fib(n-1) + fib(n-2);
+        }
 
 Try running this code using the released binary and the run instructions!
 
