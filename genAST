@@ -1,0 +1,8 @@
+start {'type': 'start', 'lineno': 1} 
+	mainFunctionDeclaration {'type': 'mainFunctionDeclaration', 'lineno': 1} 
+		void {'type': 'void', 'lineno': 1} 
+		main {'type': 'id', 'lineno': 1, 'attr': 'main'} 
+		block {'type': 'block', 'lineno': 1} 
+			functionInvocation {'type': 'functionInvocation', 'lineno': 2} 
+				prints {'type': 'id', 'lineno': 2, 'attr': 'prints'} 
+				Hello, Murtaza!\n {'type': 'string', 'lineno': 2, 'attr': 'Hello, Murtaza!\n'} 
