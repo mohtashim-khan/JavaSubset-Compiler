@@ -34,7 +34,8 @@ The following is J-- source code for a recursive fibonacci sequence:
         }
  
  Which generates the following MIPS assembley:
-                .data
+        
+        .data
         error_msg: .asciiz "Function did not return a value!"  
         div_error_msg: .asciiz "division by zero"  
         boolean_true: .asciiz "true\n"  
@@ -370,6 +371,7 @@ The following is J-- source code for a recursive fibonacci sequence:
                  jr $ra 
 
 Which generates the following output:
+
         fib(0) = 0
         fib(1) = 1
         fib(2) = 1
@@ -394,9 +396,7 @@ Which generates the following output:
         fib(21) = 10946
         fib(22) = 17711
         fib(23) = 28657
-        .
-        .
-        .
+
                
 
 Try running this code yourself using the released binary and the run instructions!
