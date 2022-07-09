@@ -9,6 +9,17 @@ Run Instructions:
 1) use command "./output filepath" to compile assembly -> the output for this assembley can be found in output.asm
 2) use command "spim -f output.asm" to run the Generated Assembly file
 
+**J-- Overview**
+
+Here's a short list of what J-- supports:
+
+1) Data types. int and boolean are supported.
+2) Strings. Strings have very limited support. String literals may only be used as arguments to a run-time library routine; cannot declare a variable with the type “string”.
+3) Functions. Functions may take arguments, and must return either int, boolean, or void. Functions may be recursive. You may not have functions nested inside each other.
+4) Expressions. The usual operations: +, -, *, /, %, <, >, <=, >=, =, ==, !=, !, &&, ||, and unary minus. Java precedence and associativity rules apply, but can be modified with the use of parentheses. Logical AND (&&) and OR (||) are short-circuiting.
+5) Statements. break, return, if, if-else, and while.
+6) Strong type checking.
+
 **J-- Code Snippet**
 
 The following is J-- source code for a recursive fibonacci sequence:
